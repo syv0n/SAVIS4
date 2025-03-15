@@ -1,0 +1,14 @@
+.ng-invalid {
+  border: 1px solid red;
+}
+
+form.ng-invalid {
+  border: 1px solid transparent;
+}
+
+.green-line {
+  margin: 10px;
+  width: 100%;
+  height:4px;
+  background-color: green;
+}

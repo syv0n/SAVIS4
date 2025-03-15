@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "savias-c1f4d": {
+      "hosting": {
+        "Savis3": [
+          "savias-c1f4d"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "savias-c1f4d"
+  }
+}

@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap');
+
+:host {
+    margin: 0;
+    padding: 0;
+    background-size: cover;
+    background-image: url(https://www.pbahealth.com/cdn/2021/09/shutterstock_430195417-1.png);
+    /* filter: blur(1px); */
+    background-position: center 10%;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+
+
+/*SAVIS heading*/
+header {
+    /* background-color: rgb(140, 169, 140); */
+    padding: 20px 0;
+    text-align: center;
+    /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); */
+    font-family: 'Chakra Petch', sans-serif;
+    color:rgb(30, 70, 70);
+    font-size: 155%;
+}
+
+
+
+
+nav {
+    display: flex;
+    justify-content: space-around;
+    /* background-color: rgba(255,255,255,0.7); */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+/*home, about, download, user manual, sign out*/
+nav a {
+    color:black;
+    text-decoration: none;
+    padding: 5px 20px;
+    transition: color 0.3s;
+    font-family: 'DM Serif Display', serif;
+    font-size: 170%;
+}
+
+
+
+
+/*home hover*/
+nav a:hover {
+    color: #1e6542;
+}
+
+/* Top level container */
+.box-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+/* Styling for each column */
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1vh;
+}
+
+/* Individual box styling */
+.box, .box2, .box3 {
+    width: 310px;
+    padding: 2vh;
+    margin: 1vh auto;
+    background-color: rgb(52, 144, 110);
+    border-radius: 2px;
+    font-family: 'Poppins', sans-serif;
+    color: beige;
+    text-align: center;
+}
+
+/* Box hovering effects */
+.box:hover, .box2:hover, .box3:hover {
+    background-color: rgba(109, 147, 111, 0.7);
+    cursor: pointer;
+}
+
+/* Styling size based on user's display size */
+@media(max-width: 600px) {
+    .box-container{
+        flex-direction: column;
+    }
+}
+
+/* Tooltips styling */
+.tool1, .tool2, .tool3 {
+    margin: 2em auto 1em;
+    color: black;
+    text-align: center;
+    font-family: 'Roboto Slab', serif;
+    font-size: 1.5em;
+    width: 100%;
+    max-width: 310px;
+}
+
+footer{
+    padding-top: 19%;
+    text-align: center;
+}

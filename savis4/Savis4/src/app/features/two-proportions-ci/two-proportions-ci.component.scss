@@ -1,0 +1,110 @@
+.two-proportions {
+  h2 {
+    margin-left: 1em;
+  }
+  .lhs table {
+    width: 100%;
+  }
+
+  .chart-wrap {
+    height: 10em;
+    max-width: 40em;
+  }
+
+  .section {
+    margin-bottom: 2em;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+  }
+  input:not(:checked) + .section {
+    display: none;
+  }
+  .lhs, .rhs {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+  }
+  .lhs {
+    margin-left: 1em;
+    width: 26em;
+  }
+  .rhs {
+    flex-grow: 1;
+  }
+
+  .rhs-chart3 {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-grow: 1;
+    height:50vh;
+
+    .half-height {
+      height: 50%;
+    }
+  }
+  
+  .stats div {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    .stat {
+      margin-left: 2ch;
+      text-align: left;
+    }
+  }
+  .stats {
+    span {
+      display: block;
+      height: 1rem;
+      text-align: center;
+    }
+    [summary] {
+      margin-left: 4ch;
+    }
+  }
+}
+
+$primary-color: #5ebe5e;
+$secondary-color: #93cb52;
+$slider-active-color: #bfbfbf;
+$slider-track-color: #bfbfbf;
+
+button {
+  background: linear-gradient(180deg, lighten($secondary-color, 5%), $secondary-color);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background: linear-gradient(180deg, $secondary-color, darken($secondary-color, 5%));
+  }
+
+  &:disabled {
+    background: #bfbfbf;
+    cursor: not-allowed;
+  }
+}
+
+input[type="number"] {
+  margin: 2px;
+  border: 1px solid $slider-active-color;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.green-line {
+  margin: 10px;
+  width: 100%;
+  height:4px;
+  background-color: green;
+}

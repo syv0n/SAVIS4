@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>{{ 'load_title' | translate }}</h2>
+<mat-dialog-content>
+  <p>{{ 'load_question' | translate }}</p>
+  <mat-form-field>
+    <mat-label>{{ 'load_select_file' | translate }}</mat-label>
+    <mat-select [(value)]="selectedFile">
+      <mat-option *ngFor="let file of files" [value]="file">
+        {{ file.fileName }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <p>{{ 'load_prompt' | translate }}</p>
+  <mat-form-field style="width: 500px;">
+    <textarea
+      class="input-field"
+      *ngIf="selectedFile" 
+      matInput
+      [(ngModel)]="selectedFile.data"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button class="load" (click)="loadFile()" mat-dialog-close>{{ 'load_loadFile' | translate }}</button>
+  <button mat-button class="button" (click)="editFile()">{{ 'load_editFile' | translate }}</button>
+  <button mat-button class="button" (click)="deleteFile()">{{ 'load_deleteFile' | translate }}</button>
+  <button mat-button class="close" (click)="onNoClick()">{{ 'load_cancel' | translate }}</button>
+</mat-dialog-actions>

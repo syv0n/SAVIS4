@@ -1,0 +1,65 @@
+.header{
+    background-color: #333;
+    height: 100px;
+    color: #fff;
+    text-align: center;
+
+    .title {
+        text-align: center;
+        padding: 17px;
+        color: #54c242;
+    }
+}
+
+.footer {
+    background-color: #333;
+    height: 100px;
+    color: #fff;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+
+    .copyright{
+        text-align: center;
+        // color: #54c242;
+        padding: 17px;
+    }
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .rhs, .lhs {
+        flex: 1;
+        margin: 10px;
+    }
+    
+    .lhs {
+        margin-left: 2vh;
+    }
+}
+
+.chart {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 50px;
+
+    .chartData {
+        width: 1000px;
+        height: 500px;
+    }
+}
+
+.textarea {
+    width: 450px;
+    height: 250px;
+    resize: none;
+}
+
+.inputFile {
+    margin-left: 10px;
+}

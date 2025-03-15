@@ -1,0 +1,199 @@
+<app-navbar></app-navbar>
+<div class="p-4">
+  <h1 class="text-xl font-bold text-center my-5">{{ 'Tmci_Two_Means_Confidence_Interval' | translate }}
+  </h1>
+  <div class="flex justify-between">
+    <h2 class="text-xl font-bold">{{ 'Tmci_Enter_Data' | translate }}
+    </h2>
+    <input type="checkbox" (change)="toggleSection($event,'sectionOne')" checked>
+  </div>
+  <div class="flex gap-3"  [ngClass]="sections.sectionOne ? '' : 'hidden'">
+    <div class="w-3/12">
+      <div class="w-full">
+        <div class="border border-gray-300 rounded-md">
+          <select id="select" (change)="sampleSelect($event)"
+            class="w-full border-t-0 border-l-0 border-r-0 border-b focus:outline-none rounded-lg p-1">
+            <option disabled selected>{{ 'Tmci_Select_Sample_Data' | translate }}</option>
+            <option value="sample1">{{ 'Tmci_Sample_1' | translate }}</option>
+            <option value="sample2">{{ 'Tmci_Sample_2' | translate }}</option>
+          </select>
+          <textarea 
+          id="textArea" (drop)="onDrop($event)"  [(ngModel)]="csvraw" class="text-sm w-full p-1.5 placeholder:text-xs focus:outline-none  " rows="5"
+            placeholder="{{ 'Tmci_Enter_or_Drop_CSV' | translate }}"></textarea>
+        </div>
+        <button id="loadData" (click)="loadData()"
+          class="mt-1 border bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'Tmci_Load_Data' | translate }}</button>
+        <button id="reset" (click)="onResetChart()"
+          class="mt-1 border bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full"> {{ 'Tmci_Reset' | translate }}</button>
+        <label
+          id="uploadFile"
+          class="mt-1 block text-center border bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full"
+          for="fileInput">  {{ 'Tmci_Upload_Data_File' | translate }} </label>
+        <input type="file" id="fileInput" (change)="onFileSelected($event)" style="display: none;">
+      </div>
+      <div class="flex justify-center">
+        <app-save-load-buttons
+          [data]="csvraw"
+          [feature]="'TwoMeansCI'"
+        ></app-save-load-buttons>
+      </div>
+      <div class="text-sm font-medium mb-1">
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Size_n_Group_1' | translate }}</span>
+          <span>{{dataSize1}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Mean_Group_1' | translate }} </span>
+          <span>{{datamean1}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Standard_Deviation_Group_1' | translate }} </span>
+          <span>{{stDev1}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Size_n_Group_2' | translate }}</span>
+          <span> {{dataSize2}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Mean_Group_2' | translate }}</span>
+          <span>{{datamean2}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Standard_Deviation_Group_2' | translate }} </span>
+          <span>{{stDev2}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Difference_Of_Means' | translate }}</span>
+          <span>{{mean_diff}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="w-9/12">
+      <div style="display: block">
+        <div class="chart-wrap"><canvas id="data-chart-1" height="220"></canvas></div>
+        <p>
+          {{ 'opc_increase' | translate }}
+          <input type="number" [(ngModel)]="multiplier" step="1" min="10" id="increment" />
+          <button id="incrementBtn" (click)="incrementYValues('chart1')" class="custom-button">+</button>
+          
+      </p>
+
+      </div>
+      <div style="display: block">
+        <div class="chart-wrap"><canvas id="data-chart-2" height="220"></canvas></div>
+        <p>
+          {{ 'opc_increase' | translate }}
+          <input type = "number" step = "1" min = "10" id = "increment" [(ngModel)]="increment"/>
+          <button id="incrementButton" (click)="incrementYValues('chart2')" class="custom-button">+</button>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="flex justify-between">
+    <h2 class="text-xl font-bold">{{ 'Tmci_Run_Simulations' | translate }}</h2>
+    <input type="checkbox" checked (change)="toggleSection($event,'sectionTwo')">
+  </div>
+  <div class="flex gap-3" [ngClass]="sections.sectionTwo ? '' : 'hidden'">
+    <div class="w-3/12">
+      <h3 class="font-bold">{{ 'Tmci_Subheading_Number_Of_Simulations' | translate }}
+      </h3>
+      <input id="simInput" [(ngModel)]="numofSem" [disabled]="!activateSim"
+        class="w-full border border-gray-300 focus:border-gray-500 focus:outline-none p-2 rounded-lg ng-untouched ng-pristine ng-valid"
+        type="number" value="1" min="1" max="100" />
+      <button id="runSim" (click)="runSim()" *ngIf="activateSim"
+        class="mt-1 border bg-primary disabled: text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'Tmci_Run_Simulation' | translate }}
+      </button>
+      <button id="runSim" [disabled]="!activateSim" *ngIf="!activateSim"
+        class="mt-1 border bg-gray-400  text-gray-700 px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'Tmci_Run_Simulation' | translate }}
+      </button>
+      <div class="text-sm font-medium mb-1">
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Mean_Of_Randomized_Sample_To_Group_1' | translate }} </span>
+          <span summary="sampleMean1">{{simsummary.sampleMean1}} </span>
+        </div>
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Standard_Deviation_Of_Randomized_Sample_To_Group_1' | translate }} </span>
+          <span summary="sampleMean1">{{simsummary.stdev1sim}} </span>
+        </div>
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Mean_Of_Randomized_Sample_To_Group_2' | translate }}</span>
+          <span summary="sampleMean2">{{simsummary.sampleMean2}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Standard_Deviation_Of_Randomized_Sample_To_Group_2' | translate }} </span>
+          <span summary="sampleMean1">{{simsummary.stdev2sim}} </span>
+        </div>
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Difference_Of_Means_Randomized_Samples' | translate }}</span>
+          <span summary="sampleMeanDiff">{{simsummary.sampleMeanDiff}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="rhs w-9/12">
+      <h3>{{ 'Tmci_Most_Recent_Draw' | translate }}
+      </h3>
+      <div class="chart-wrap"><canvas id="data-chart-3" height="200"></canvas></div>
+      <div class="chart-wrap"><canvas id="data-chart-4" height="200"></canvas></div>
+    </div>
+  </div>
+  <div class="flex justify-between">
+
+    <h2 class="text-xl font-bold">{{ 'Tmci_Sampling_Distribution_Difference_Of_Means' | translate }}
+    </h2>
+    <input type="checkbox" checked (change)="toggleSection($event,'sectionThree')">
+  </div>
+   <div class="flex gap-3" [ngClass]="sections.sectionTwo ? '' : 'hidden'">
+    <div class=" w-3/12">
+      <table>
+        
+    </table>
+    <div class="text-center">
+      <label for="confidence-level">{{ 'Tmci_Confidence_level' | translate }} {{ confidenceLevel }}%</label>
+    </div>
+    <div class="flex justify-center">
+      <input type="range" min="1" max="100" step="1" style="width:50%" id="confidence-level" [(ngModel)]="confidenceLevel"/>
+    </div>
+    <br>
+    <button id="build" (click)="updateLastChart()" *ngIf="activateSim"
+        class="mt-1 border bg-primary disabled: text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'Tmci_Build' | translate }}
+    </button>
+    <button id="build" [disabled]="!activateSim" *ngIf="!activateSim"
+      class="mt-1 border bg-gray-400  text-gray-700 px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'Tmci_Build' | translate }}
+    </button>
+    <br>  
+      
+      <hr>
+      <div class="text-sm font-medium mb-1">
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Original_Dataset_Difference_Of_Means' | translate }}</span>
+          <span summary="dataMeanDiff">{{mean_diff}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Mean_Sample_Differences' | translate }}</span>
+          <span summary="mean">{{simsummary.sampleMeanDiff}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Standard_Deviation' | translate }}</span>
+          <span summary="stddev">{{stdevFinal}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Total_Num_Samples' | translate }} </span>
+          <span summary="total" summaryint>{{simulations.length}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Lower_Bound' | translate }} </span>
+          <span summary="lowerBound" summaryint>{{lowerBound}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>{{ 'Tmci_Upper_Bound' | translate }}</span>
+          <span summary="upperBound">{{upperBound }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="rhs w-9/12">
+      <canvas #chart5 style="height: 200;"></canvas>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

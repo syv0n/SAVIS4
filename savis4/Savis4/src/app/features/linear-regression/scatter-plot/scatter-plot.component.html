@@ -1,0 +1,14 @@
+<div>
+    <div>
+      <div>
+        {{ 'lr_least_squares' | translate }}: {{ leastSquares }}
+      </div>
+      <div>
+        <canvas baseChart
+                [datasets]="scatterChartData"
+                [options]="scatterChartOptions"
+                [chartType]="scatterChartType">
+        </canvas>
+      </div>
+    </div>
+  </div>

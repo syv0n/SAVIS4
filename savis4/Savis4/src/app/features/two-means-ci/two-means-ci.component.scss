@@ -1,0 +1,124 @@
+$primary-background: #4caf50;
+$text-color: white;
+$chart-height: 10rem;
+$button-margin: 0.5rem;
+$section-spacing: 1rem;
+$stat-block-width: calc(50% - 1rem); 
+
+#two-mean {
+  h1,
+  h2,
+  h3 {
+    margin-bottom: $section-spacing;
+  }
+
+  .section {
+    margin-bottom: $section-spacing;
+
+    &.lhs,
+    &.rhs {
+      flex: 1;
+    }
+
+    .lhs {
+      // Customize the data input area
+      textarea#csv-input {
+        width: 100%;
+        min-height: 8rem;
+        resize: vertical;
+        margin-bottom: $section-spacing;
+      }
+
+      button {
+        background-color: $primary-background;
+        color: $text-color;
+        margin-top: $button-margin;
+        padding: 0.5rem 1rem;
+        border: none;
+        cursor: pointer;
+      }
+    }
+
+    .rhs {
+      // Chart area styles
+      .chart-wrap {
+        height: $chart-height;
+        margin-bottom: $section-spacing;
+      }
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-top: $section-spacing;
+
+      > div {
+        width: $stat-block-width;
+        margin-right: $section-spacing;
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        .stat {
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  input[type="number"],
+  input[type="range"],
+  select {
+    width: 100%;
+    margin-bottom: $button-margin;
+  }
+
+  // Additional styles for specific elements
+  #how-many-stddev {
+    font-weight: bold;
+  }
+
+  // Styles for the sliders and buttons in the Sampling Distribution section
+  #confidence-level {
+    width: 50%;
+    margin-bottom: $section-spacing;
+  }
+
+  button#buildci {
+    width: 50%;
+    background-color: $primary-background;
+    color: $text-color;
+    padding: 0.5rem 1rem;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+// Media queries for responsiveness
+@media (max-width: 768px) {
+  #two-mean .stats > div {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: $button-margin;
+  }
+}
+.custom-button {
+  background-color: green;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  color: white;
+  text-align: center;
+  display: inline-block;
+  font-size: 20px;
+  margin-left: 10px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: lightgreen;
+    color: black;
+  }
+}

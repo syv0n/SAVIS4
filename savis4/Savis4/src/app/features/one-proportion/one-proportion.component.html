@@ -1,0 +1,68 @@
+<app-navbar></app-navbar>
+<div class="oneProportion">
+  <div class="left-container">
+    <div class="controls">
+      <div class="top">
+        <label for="probabilitySlider">{{ 'op_probability' | translate }} {{ probability }}</label>
+        <br>
+        <input type="range" id="probabilitySlider" class="slider" min="0" max="1" step="0.01" [(ngModel)]="probability">
+        <br>
+      
+        <label for="tossesInput">{{ 'op_tosses' | translate }}</label>
+        <input type="number" id="tossesInput" min="1" [(ngModel)]="noOfCoin" (ngModelChange)="recalculateSamples()" max="10000">
+  
+        <br>
+        <button (click)="reset()">{{ 'op_reset' | translate }}</button>
+        <div class="green-line"></div>
+      </div>
+
+
+
+      <br>
+      <div class="mid">
+        <label for="sampleSize">{{ 'op_add_samples' | translate }}</label>
+        <input type="number" min="1" id="sampleSize" [(ngModel)]="thisSampleSizes">
+
+        <br>
+
+        <button (click)="sampleDraw()">{{ 'op_draw_samples' | translate }}</button>
+        <div class="green-line"></div>
+      </div>
+
+      <div class="bottom">
+        <div class="stats">
+          <p>{{ 'op_num_samples' | translate }} {{ totalSamples }}</p>
+          <p>{{ 'op_mean' | translate }} {{ mean }}</p>
+          <p>{{ 'op_std_dev' | translate }} {{ std }}</p>
+        </div>
+    </div>
+  
+  
+      <div class="interval-selection">
+        <h3 class="font-bold">{{ 'op_selected_interval' | translate }} {{ noOfCoin }} {{'op_selected_interval2' | translate }}</h3>
+        <label for="minHeads">{{ 'op_min' | translate }} {{ lowerSelectedRange }}</label>
+        <input type="range" id="minHeads" min="0" [max]="noOfCoin" step="1" [(ngModel)]="lowerSelectedRange" (ngModelChange)="updateSelected()">
+  
+        <br>
+
+        <label for="maxHeads">{{ 'op_max' | translate }} {{ upperSelectedRange }}</label>
+        <input type="range" id="maxHeads" min="0" [max]="noOfCoin" step="1" [(ngModel)]="upperSelectedRange" (ngModelChange)="updateSelected()">
+
+        <br>
+        <label for="interval">{{ 'op_samples_interval' | translate }} {{ interval }}</label>
+        <br>
+        <label for="proportions">{{ 'op_proportion' | translate }} {{ proportion }}</label>
+      </div>
+    </div>
+  </div>
+  
+  <div class="right-container">
+    <h1>{{ 'op_title' | translate }}</h1>
+    <div class="chart-container">
+      <canvas #chartCanvas>
+      </canvas>
+    </div>
+  </div>
+
+</div>
+<app-footer></app-footer>

@@ -1,0 +1,124 @@
+#bar-chart-tutorial {
+  padding: 20px;
+  
+    form {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    h1 {
+      font-weight: bold;
+    }
+
+    h3 {
+      font-weight: bold;
+    }
+
+    h4 {
+      margin-top: 3px;
+    }
+    .chart-area {
+      display: flex;
+      //flex-wrap: wrap;
+      #control {
+        width: 10%;
+      }
+      #view {
+        margin-left: 50px;
+        width: 60%;
+        justify-content: center;
+      }
+      #result{
+        text-align: center;
+        width: 25%;
+        justify-content: center;
+        align-content: center;
+        margin: auto;
+        table{
+          font-size: 14px;
+          border-spacing: 0;
+          border-radius: 5px;
+          margin: auto;
+          width: 90%;
+        }
+        th, td{
+          padding: 5px;
+          border: 1px solid #000;
+        }
+      }
+      label {
+        display: block;
+        font-size: 12px;
+      }
+    }
+    .right-num {
+      text-align: right;
+      // float: right;
+    }
+    .btn{
+      width: 100%;
+      margin: 5px;
+    }
+    .text-display{
+      text-align: center;
+      margin: 5px;
+    }
+    .text-error {
+      text-align: center;
+      margin:5px;
+      color: red;
+    }
+    textarea{
+      border: 2px solid gray;
+      margin: 2px;
+      width: 100%;
+      border-radius: 5px;
+      resize: none;
+    }
+    select{
+      border: 1px solid gray;
+      width: 100%;
+      height: 30px;
+      border-radius: 5px;
+    }
+}
+
+$primary-color: #5ebe5e;
+$secondary-color: #93cb52;
+$slider-active-color: #bfbfbf;
+$slider-track-color: #bfbfbf;
+
+button {
+  background: linear-gradient(180deg, lighten($secondary-color, 5%), $secondary-color);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background: linear-gradient(180deg, $secondary-color, darken($secondary-color, 5%));
+  }
+
+  &:disabled {
+    background: #bfbfbf;
+    cursor: not-allowed;
+  }
+}
+
+input[type="number"] {
+  margin: 2px;
+  border: 1px solid $slider-active-color;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.green-line {
+  margin: 10px;
+  width: 100%;
+  height:4px;
+  background-color: green;
+}

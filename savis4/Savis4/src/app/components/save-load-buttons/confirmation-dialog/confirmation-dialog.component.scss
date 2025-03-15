@@ -1,0 +1,18 @@
+.yes {
+    border: 1px black solid;
+    background-color: rgba(0, 128, 0, 0.5);
+}
+
+.yes:hover {
+    background-color: rgba(0, 128, 0, 0.8);
+
+}
+
+.no {
+    border: 1px black solid;
+    background-color: rgba(255, 0, 0, 0.5);
+}
+
+.no:hover {
+    background-color: rgba(255, 0, 0, 0.8);
+}
