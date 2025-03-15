@@ -1,5 +1,5 @@
 {
-  "name": "savis3",
+  "name": "savis4",
   "version": "0.0.0",
   "main": "main.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "test:ci": "start-server-and-test start:ci 'http://localhost:4200' 'npm run cypress:run'"
   },
   "build": {
-    "appId": "com.savis3.app",
+    "appId": "com.savis4.app",
     "directories": {
       "output": "build"
     },

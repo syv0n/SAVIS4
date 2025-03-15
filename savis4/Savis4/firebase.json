@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/Savis3",
+    "public": "dist/Savis4",
     "ignore": [
       "firebase.json",
       "**/.*",
