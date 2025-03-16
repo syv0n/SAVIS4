@@ -9,7 +9,7 @@ let mainWindow;
 
 function createWindow() {
     const server = express();
-    server.use('/', express.static(path.join(__dirname, '/dist/Savis3')));
+    server.use('/', express.static(path.join(__dirname, '/dist/Savis4')));
     server.listen(4200);
 
     mainWindow = new BrowserWindow({
