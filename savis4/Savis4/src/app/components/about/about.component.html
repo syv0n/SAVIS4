@@ -1,57 +1,77 @@
 <app-navbar></app-navbar>
+
 <body>
-    <div class="flex flex-wrap mx-auto w-1/2">
-        <h1 class="text-center w-full p-2 text-4xl font-bold mt-5">SAVIS</h1>
-        <p class="p-4">{{ 'about_project' | translate }}</p>
-        <p class="p-4">{{ 'about_created' | translate }}</p>
-    </div>
-    <div class="flex flex-wrap mx-auto w-full items-center justify-center">
-        <div class="flex flex-col items-center w-1/4">
-            <h3 class="text-center w-full p-2 text-xl font-bold">{{ 'spring2019' | translate }}</h3>
-            <ul class="flex flex-col items-center">
-                <li>Matt Merrill</li>
-                <li>Jason Robinson</li>
-                <li>Mike Stepp</li>
-                <li>Ryan Bartoli</li>
-                <li>Isaac Israel</li>
-                <li>Josh Zurbuchen</li>
-                <li>Chun Yue Leung</li>
-            </ul>
+    <div class="flex w-full">
+        <div class="w-1/2 pl-8">
+            <h1 class="text-left w-full p-2 text-4xl font-bold mt-5 pt-8">What is SAVIS?</h1>
+            <p class="p-4 text-left">{{ 'about_project' | translate }}</p>
+            <p class="p-4 text-left">{{ 'about_created' | translate }}</p>
         </div>
+        <div class="w-1/2 pr-8">
+            <div class="flex flex-wrap w-full gap-y-6 mb-6">
+                <div class="flex flex-col items-start w-full md:w-1/2">
+                    <h3 class="text-center w-full p-2 text-xl font-bold mt-5 pt-32">{{ 'spring2019' | translate }}</h3>
+                    <ul class="flex flex-col items-start pl-4">
+                        <li class="ml-24">Matt Merrill</li>
+                        <li class="ml-24">Jason Robinson</li>
+                        <li class="ml-24">Mike Stepp</li>
+                        <li class="ml-24">Ryan Bartoli</li>
+                        <li class="ml-24">Isaac Israel</li>
+                        <li class="ml-24">Josh Zurbuchen</li>
+                        <li class="ml-24">Chun Yue Leung</li>
+                    </ul>
+                </div>
+                <div class="flex flex-col items-start w-full md:w-1/2">
+                    <h3 class="text-center w-full p-2 text-xl font-bold mt-5 pt-32">{{ 'spring2020' | translate }}</h3>
+                    <ul class="flex flex-col items-start pl-4">
+                        <li class="ml-24">Anand Rai</li>
+                        <li class="ml-24">Akshar Patel</li>
+                        <li class="ml-24">Daniel Kuzmin</li>
+                        <li class="ml-24">Brody Johnson</li>
+                        <li class="ml-24">Roberto Campos</li>
+                        <li class="ml-24">Muhammad Mazhar</li>
+                    </ul>
+                </div>
+            </div>
 
-        <div class="flex flex-col items-center w-1/4 mb-6">
-            <h3 class="text-center w-full p-2 text-xl font-bold">{{ 'spring2020' | translate }}</h3>
-            <ul class="flex flex-col items-center">
-                <li>Anand Rai</li>
-                <li>Akshar Patel</li>
-                <li>Daniel Kuzmin</li>
-                <li>Brody Johnson</li>
-                <li>Roberto Campos</li>
-                <li>Muhammad Mazhar</li>
-            </ul>
-        </div>
-
-        <div class="flex flex-col items-center w-1/4">
-            <h3 class="text-center w-full pt-4 text-xl font-bold mt-4">{{ 'spring2024' | translate }}</h3>
-            <ul class="flex flex-col items-center">
-                <li>Jason Yu</li>
-                <li>Albin Shabu</li>
-                <li>Hetvi Patel</li>
-                <li>Vaibhav Jain</li>
-                <li>Sri Charan Kondragunta</li>
-                <li>Sarthak Bhalla</li>
-                <li>Emad Sabir</li>
-                <li>Hormoz Halimi</li>
-                <li>Bikram Singh</li>
-            </ul>
+            <div class="flex flex-wrap w-full gap-y-6">
+                <div class="flex flex-col items-start w-full md:w-1/2">
+                    <h3 class="text-center w-full p-2 text-xl font-bold mt-5 pt-8">{{ 'spring2024' | translate }}</h3>
+                    <ul class="flex flex-col items-start pl-4">
+                        <li class="ml-24">Jason Yu</li>
+                        <li class="ml-24">Albin Shabu</li>
+                        <li class="ml-24">Hetvi Patel</li>
+                        <li class="ml-24">Vaibhav Jain</li>
+                        <li class="ml-24">Sri Charan Kondragunta</li>
+                        <li class="ml-24">Sarthak Bhalla</li>
+                        <li class="ml-24">Emad Sabir</li>
+                        <li class="ml-24">Hormoz Halimi</li>
+                        <li class="ml-24">Bikram Singh</li>
+                    </ul>
+                </div>
+                <div class="flex flex-col items-start w-full md:w-1/2">
+                    <h3 class="text-center w-full p-2 text-xl font-bold mt-5 pt-8">{{ 'spring2025' | translate }}</h3>
+                    <ul class="flex flex-col items-start pl-4">
+                        <li class="ml-24">Shayn Voon</li>
+                        <li class="ml-24">Steven Masters</li>
+                        <li class="ml-24">Xai Yang</li>
+                        <li class="ml-24">Alina Corpora</li>
+                        <li class="ml-24">Kenny Yang</li>
+                        <li class="ml-24">Veronika Tupy</li>
+                        <li class="ml-24">Jacob Rutter</li>
+                        <li class="ml-24">Danny Le</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
-    <hr class="mt-5">
+    <hr class="mt-24">
     <div class="mt-3 flex flex-col mx-auto w-full items-center justify-center">
         <p class="mb-3">{{ 'contact' | translate }}</p>
-        <a class="text-blue-500 underline hover:text-blue-700" href="https://www.csus.edu/faculty/d/rdiaz/" target="_blank">Rafael E Diaz Escamilla</a>
+        <a class="text-blue-500 underline hover:text-blue-700" href="https://www.csus.edu/faculty/d/rdiaz/"
+            target="_blank">Rafael E Diaz Escamilla</a>
     </div>
-    
-    
+
+
 </body>
 <app-footer class="fixed inset-x-0 bottom-0"></app-footer>
