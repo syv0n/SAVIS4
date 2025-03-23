@@ -158,3 +158,13 @@ $slider-track-color: #bfbfbf;
   height:4px;
   background-color: green;
 }
+
+.static-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #000000; 
+  color: #ffffff;
+  text-align: center;
+  padding: 10px 0; 
+}
