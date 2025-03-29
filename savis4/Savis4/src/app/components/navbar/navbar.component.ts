@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -8,7 +8,9 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent{
+export class NavbarComponent implements OnInit{
+
+  isAuth:  boolean = false;
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -16,10 +18,28 @@ export class NavbarComponent{
     private translate: TranslateService
   ) { }
 
-  signOut(){
+  /*signOut(){
     this.afAuth.signOut().then(() => {
       this.router.navigate(['/login'])
     })
+  }*/
+
+  ngOnInit() {
+    this.afAuth.authState.subscribe(user => {
+      this.isAuth = !!user;
+    });
+  }
+
+  signOut() {
+    this.afAuth.signOut().then(() => {
+      this.isAuth = false;
+      this.router.navigate(['/login'])
+    })
+  }
+
+  continueAsGuest() {
+    this.isAuth = false;
+    this.router.navigate(['/login'])
   }
 
 }
