@@ -1,12 +1,14 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { ChartDataSets, ChartOptions, ChartType, Chart } from 'chart.js'; // Change this line
 import { errorBarsPlugin } from '../../../Utils/chartjs-plugin';
+import { errorSquaresPlugin } from '../../../Utils/chartjs-plugin';
 import { BaseChartDirective } from 'ng2-charts';
 import { TranslateService } from '@ngx-translate/core';
 
 declare module 'chart.js' {
   interface ChartDataSets {
     errorBarsY1?: boolean;
+    errorSquares?: boolean;
   }
 }
 
@@ -27,7 +29,8 @@ export class ScatterPlotComponent implements OnChanges {
   private intercept: number = 0
 
   constructor(private translate: TranslateService) {
-    Chart.plugins.register(errorBarsPlugin)
+    Chart.plugins.register(errorBarsPlugin);
+    Chart.plugins.register(errorSquaresPlugin);
     this.scatterChartOptions = {
       scales: {
         yAxes: [{
@@ -47,7 +50,7 @@ export class ScatterPlotComponent implements OnChanges {
       this.updateChartData();
       this.leastSquares = this.calculateLeastSquares();
       
-      this.scatterChartData.push(this.calculateErrorBars());
+      //this.scatterChartData.push(this.calculateErrorBars());
     }
 
     if(this.chart && this.chart.chart) {
@@ -57,7 +60,9 @@ export class ScatterPlotComponent implements OnChanges {
 
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnDestroy(): void {
-    Chart.plugins.unregister(errorBarsPlugin)
+    Chart.plugins.unregister(errorBarsPlugin);
+    Chart.plugins.unregister(errorSquaresPlugin);
+
   }
 
   private updateChartData(): void {
@@ -95,7 +100,9 @@ export class ScatterPlotComponent implements OnChanges {
         fill: '-1',
         borderColor: 'rgba(0, 0, 255, 0.5)',
         cubicInterpolationMode: 'monotone'
-      }
+      },
+      this.calculateErrorBars(),
+      this.calculateErrorSquares(),
     ] as ChartDataSets[];
   }
 
@@ -160,7 +167,24 @@ export class ScatterPlotComponent implements OnChanges {
     }
   
     return sumSquaredResiduals;
-  }  
+  }
+  
+  private calculateErrorSquares(): ChartDataSets {
+    return {
+      type: 'scatter', // Changed from 'line' to 'scatter'
+      label: 'Residual Squares',
+      data: this.dataPoints.map(point => ({
+        x: point.x,
+        y: this.calculateRegressionY(point.x),
+        y1: point.y
+      })),
+      showLine: false,
+      pointRadius: 0,
+      borderColor: 'rgba(23, 12, 233, 1)',
+      borderWidth: 1,
+      errorSquares: true
+    };
+  }
 
   private calculateErrorBars(): ChartDataSets {
     const errorBarsData = this.dataPoints.map(point => {
