@@ -2,8 +2,9 @@
 <p align="center">
     <img alt="savisLogo" src="https://github.com/syv0n/SAVIS4/blob/master/savis4/Savis4/src/assets/SavisLogo.png">
 </p>
-SAVIS4 is a website built at the request of Prof. Rafael Diaz who teaches at California State University, Sacramento. SAVIS4 aims to provide an open-source educational platform for students around the world to help them better understand statistics. This platform provides a myriad of visualization tools, allowing users to actively engage with various statistical concepts and enhance their comprehension. 
+SAVIS4 is a statistical analysis website built at the request of Professor Rafael Diaz who teaches at California State University, Sacramento. SAVIS4 aims to provide an open-source educational platform for students around the world to help them better understand statistics. This platform provides a myriad of visualization tools, allowing users to actively engage with various statistical concepts and enhance their comprehension. 
 
+# Features
 ### One Proportion Confidence Interval
 <img width="1721" alt="savis_regression" src="https://github.com/syv0n/SAVIS4/blob/master/savis4/Savis4/src/assets/OPCI.png">
 This feature helps in estimating a range where the true population proportion lies based on a sample proportion. Here, we take in success and failure and show the proportion of success and the calculation involves the sample size with a chosen level of confidence (eg. 95%). We are able to see mean, standard deviation, lower and upper bounds of the intervals.
@@ -39,7 +40,7 @@ A two-proportions confidence interval graph typically displays the difference be
 
 
 # Pre-requisites
-* NodeJS a
+* NodeJS
 * NPM
 * Angular CLI
 
@@ -93,7 +94,8 @@ To package the project for Linux, Windows, and Mac, run `npm run electron:packag
 ### Further help
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference page](https://angular.io/cli).
 
-## SAVIS3 Team
+# Contributors
+### SAVIS3 Team
 - Bikram Singh (bikramsingh@csus.edu)
 - Jason Yu (jasonyu@csus.edu)
 - Albin Shabu (albinshabu@csus.edu)
@@ -104,7 +106,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 - Hormoz Halimi (hormozhalimi@csus.edu)
 - Sarthak Bhalla (sarthakbhalla@csus.edu)
 
-## SAVIS4 Team
+### SAVIS4 Team
 - Shayn Voon (shaynvoon@csus.edu)
 - Steven Masters (stevenmasters@csus.edu)
 - Kenny Yang (Kyang14@csus.edu)
