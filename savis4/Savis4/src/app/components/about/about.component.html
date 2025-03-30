@@ -1,67 +1,107 @@
 <app-navbar></app-navbar>
 
 <body>
-    <div class="flex w-full">
+    <div class="flex w-full gap-8">
         <div class="w-1/2 pl-8">
-            <h1 class="text-left w-full p-2 text-4xl font-bold mt-5 pt-8">What is SAVIS?</h1>
-            <p class="p-4 text-left">{{ 'about_project' | translate }}</p>
-            <p class="p-4 text-left">{{ 'about_created' | translate }}</p>
-        </div>
-        <div class="w-1/2 pr-8">
-            <div class="flex flex-wrap w-full gap-y-6 mb-6">
-                <div class="flex flex-col items-start w-full md:w-1/2">
-                    <h3 class="text-center w-full p-2 text-xl font-bold mt-5 pt-32">{{ 'spring2019' | translate }}</h3>
-                    <ul class="flex flex-col items-start pl-4">
-                        <li class="ml-24">Matt Merrill</li>
-                        <li class="ml-24">Jason Robinson</li>
-                        <li class="ml-24">Mike Stepp</li>
-                        <li class="ml-24">Ryan Bartoli</li>
-                        <li class="ml-24">Isaac Israel</li>
-                        <li class="ml-24">Josh Zurbuchen</li>
-                        <li class="ml-24">Chun Yue Leung</li>
-                    </ul>
-                </div>
-                <div class="flex flex-col items-start w-full md:w-1/2">
-                    <h3 class="text-center w-full p-2 text-xl font-bold mt-5 pt-32">{{ 'spring2020' | translate }}</h3>
-                    <ul class="flex flex-col items-start pl-4">
-                        <li class="ml-24">Anand Rai</li>
-                        <li class="ml-24">Akshar Patel</li>
-                        <li class="ml-24">Daniel Kuzmin</li>
-                        <li class="ml-24">Brody Johnson</li>
-                        <li class="ml-24">Roberto Campos</li>
-                        <li class="ml-24">Muhammad Mazhar</li>
-                    </ul>
+            <div class="bg-darkGray p-8 mt-16">
+                <div class="bg-lightGray p-4 mt-2 -mr-24 -mb-24 relative z-10">
+                    <h1 class="text-4xl font-bold mt-5 pt-8 border-b-4 border-darkGray pb-2 inline-block">What is SAVIS?</h1>
+                    <p class="p-4 text-left text-sm md:text-base">{{ 'about_project' | translate }}</p>
+                    <p class="p-4 text-left text-sm md:text-base">{{ 'about_created' | translate }}</p>
                 </div>
             </div>
+            <div class="flex justify-center gap-12 mt-40">
+                <div class="w-14 h-14 bg-darkGray rounded-full"></div>
+                <div class="w-14 h-14 bg-darkMintGreen rounded-full"></div>
+                <div class="w-14 h-14 bg-darkGray rounded-full"></div>
+                <div class="w-14 h-14 bg-darkMintGreen rounded-full"></div>
+                <div class="w-14 h-14 bg-darkGray rounded-full"></div>
+                <div class="w-14 h-14 bg-darkMintGreen rounded-full"></div>
+                <div class="w-14 h-14 bg-darkGray rounded-full"></div>
 
-            <div class="flex flex-wrap w-full gap-y-6">
-                <div class="flex flex-col items-start w-full md:w-1/2">
-                    <h3 class="text-center w-full p-2 text-xl font-bold mt-5 pt-8">{{ 'spring2024' | translate }}</h3>
-                    <ul class="flex flex-col items-start pl-4">
-                        <li class="ml-24">Jason Yu</li>
-                        <li class="ml-24">Albin Shabu</li>
-                        <li class="ml-24">Hetvi Patel</li>
-                        <li class="ml-24">Vaibhav Jain</li>
-                        <li class="ml-24">Sri Charan Kondragunta</li>
-                        <li class="ml-24">Sarthak Bhalla</li>
-                        <li class="ml-24">Emad Sabir</li>
-                        <li class="ml-24">Hormoz Halimi</li>
-                        <li class="ml-24">Bikram Singh</li>
-                    </ul>
+            </div>
+        </div>
+
+
+        <div class="w-1/2 pr-8">
+
+            <div class="flex justify-center gap-12 mt-8">
+                <div class="w-14 h-14 bg-darkGray rounded-full"></div>
+                <div class="w-14 h-14 bg-darkMintGreen rounded-full"></div>
+                <div class="w-14 h-14 bg-darkGray rounded-full"></div>
+                <div class="w-14 h-14 bg-darkMintGreen rounded-full"></div>
+                <div class="w-14 h-14 bg-darkGray rounded-full"></div>
+                <div class="w-14 h-14 bg-darkMintGreen rounded-full"></div>
+                <div class="w-14 h-14 bg-darkGray rounded-full"></div>
+           
+
+            </div>
+
+
+            <div class="bg-darkMintGreen p-10 mt-28 ">
+                <div class="bg-lightMintGreen p-4 mt-2 -ml-24 -mt-24 relative">
+                    <div class="absolute left-1/2 ml-4 top-28 bottom-6 w-1 bg-greenBar z-10"></div>
+                    <div class="absolute left-36 right-16 top-1/2 mt-6 h-1 bg-greenBar"></div>
+                    <h1 class="text-4xl font-bold mt-5 pt-8 inline-block pl-40">Team Members</h1>
+                    <div class="border-b-4 border-darkGray w-1/4 mb-4 ml-40 -mt-2"></div>
+                    <div class="flex flex-wrap w-full gap-y-6 mb-6">
+                        <div class="flex flex-col items-start w-full md:w-1/2 ">
+                            <ul class="flex flex-col items-start pl-16">
+                                <li class="font-medium text-base ml-24 mb-3">{{ 'spring2019' | translate }}</li>
+                                <li class="ml-24">Matt Merrill</li>
+                                <li class="ml-24">Jason Robinson</li>
+                                <li class="ml-24">Mike Stepp</li>
+                                <li class="ml-24">Ryan Bartoli</li>
+                                <li class="ml-24">Isaac Israel</li>
+                                <li class="ml-24">Josh Zurbuchen</li>
+                                <li class="ml-24">Chun Yue Leung</li>
+                            </ul>
+                        </div>
+                        <div class="flex flex-col items-start w-full md:w-1/2">
+                            <ul class="flex flex-col items-start pl-4">
+                                <li class="font-medium text-base ml-24 mb-3">{{ 'spring2020' | translate }}</li>
+                                <li class="ml-24">Anand Rai</li>
+                                <li class="ml-24">Akshar Patel</li>
+                                <li class="ml-24">Daniel Kuzmin</li>
+                                <li class="ml-24">Brody Johnson</li>
+                                <li class="ml-24">Roberto Campos</li>
+                                <li class="ml-24">Muhammad Mazhar</li>
+                            </ul>
+                        </div>
+                    </div>
+        
+                    <div class="flex flex-wrap w-full gap-y-6">
+                        <div class="flex flex-col items-start w-full md:w-1/2 ">
+                            <ul class="flex flex-col items-start pl-16">
+                                <li class="font-medium text-base ml-24 mb-3">{{ 'spring2024' | translate }}</li>
+                                <li class="ml-24">Jason Yu</li>
+                                <li class="ml-24">Albin Shabu</li>
+                                <li class="ml-24">Hetvi Patel</li>
+                                <li class="ml-24">Vaibhav Jain</li>
+                                <li class="ml-24">Sri Charan Kondragunta</li>
+                                <li class="ml-24">Sarthak Bhalla</li>
+                                <li class="ml-24">Emad Sabir</li>
+                                <li class="ml-24">Hormoz Halimi</li>
+                                <li class="ml-24">Bikram Singh</li>
+                            </ul>
+                        </div>
+                        <div class="flex flex-col items-start w-full md:w-1/2">
+                            <ul class="flex flex-col items-start pl-4">
+                                <li class="font-medium text-base ml-24 mb-3">{{ 'spring2025' | translate }}</li>
+                                <li class="ml-24">Shayn Voon</li>
+                                <li class="ml-24">Steven Masters</li>
+                                <li class="ml-24">Xai Yang</li>
+                                <li class="ml-24">Alina Corpora</li>
+                                <li class="ml-24">Kenny Yang</li>
+                                <li class="ml-24">Veronika Tupy</li>
+                                <li class="ml-24">Jacob Rutter</li>
+                                <li class="ml-24">Danny Le</li>
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="flex flex-col items-start w-full md:w-1/2">
-                    <h3 class="text-center w-full p-2 text-xl font-bold mt-5 pt-8">{{ 'spring2025' | translate }}</h3>
-                    <ul class="flex flex-col items-start pl-4">
-                        <li class="ml-24">Shayn Voon</li>
-                        <li class="ml-24">Steven Masters</li>
-                        <li class="ml-24">Xai Yang</li>
-                        <li class="ml-24">Alina Corpora</li>
-                        <li class="ml-24">Kenny Yang</li>
-                        <li class="ml-24">Veronika Tupy</li>
-                        <li class="ml-24">Jacob Rutter</li>
-                        <li class="ml-24">Danny Le</li>
-                    </ul>
-                </div>
+
             </div>
         </div>
     </div>
@@ -74,4 +114,4 @@
 
 
 </body>
-<app-footer class="fixed inset-x-0 bottom-0"></app-footer>
+<app-footer class="w-full"></app-footer>
