@@ -21,7 +21,7 @@
             <a routerLink="/user-manual" class="block py-2 px-3 text-gray-100 md:border-0 md:hover:text-green md:p-0 bg-navbar">{{ 'nav_user_manual' | translate }}</a>
           </li>
           <li>
-            <a class="block py-2 px-3 text-gray-100 rounded  md:border-0 md:hover:text-green md:p-0 bg-navbar cursor-pointer" (click)="signOut()">{{ 'nav_sign_out' | translate }}</a>
+            <a class="block py-2 px-3 text-gray-100 rounded  md:border-0 md:hover:text-green md:p-0 bg-navbar cursor-pointer" (click)="isAuth ? signOut() : continueAsGuest()">{{ isAuth ? ('nav_sign_out' | translate) : ('nav_sign_in' | translate) }}</a>
           </li>
         </ul>
       </div>
