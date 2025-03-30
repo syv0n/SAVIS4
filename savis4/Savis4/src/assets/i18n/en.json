@@ -268,7 +268,7 @@
     "correlation_file_format": "File could be csv, xlsx",
     "correlation_chose_file": "Choose File",
     "correlation_no_file": "No file chosen",
-    "correlation_result": "Result of Correlation:",
+    "correlation_result": "Result of Correlation(R-Value): ",
     "correlation_display": "Displaying File Data:",
     "correlation_two_columns": "Select any two Columns from Available Column Names:",
     "correlation_file_input": "File Input",

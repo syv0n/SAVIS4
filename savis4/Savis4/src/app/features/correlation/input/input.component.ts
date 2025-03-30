@@ -122,31 +122,78 @@ export class InputComponent implements OnInit {
     return [xValuesArray, yValuesArray];
   }
 
-  calculate() {
+  computeRegressionLine(xValues: number[], yValues: number[]): { x: number; y: number }[] {
+    const n = xValues.length;
+    const xMean = xValues.reduce((sum, val) => sum + val, 0) / n;
+    const yMean = yValues.reduce((sum, val) => sum + val, 0) / n;
+    
+    let numerator = 0;
+    let denominator = 0;
+    for (let i = 0; i < n; i++) {
+      numerator += (xValues[i] - xMean) * (yValues[i] - yMean);
+      denominator += Math.pow(xValues[i] - xMean, 2);
+    }
+    
+    const slope = numerator / denominator;
+    const intercept = yMean - slope * xMean;
+    
+    // Define the line using the min and max x values
+    const xMin = Math.min(...xValues);
+    const xMax = Math.max(...xValues);
+    
+    return [
+      { x: xMin, y: slope * xMin + intercept },
+      { x: xMax, y: slope * xMax + intercept }
+    ];
+  }  
+
+  calculate(): void {
     let [xValuesArray, yValuesArray] = this.getFormValues();
-    // this.demodata = [];
-    // console.log(this.demodata1);
+  
+    // Populate demodata1 with scatter points
     xValuesArray.forEach((val: number, idx: number) => {
       this.demodata1.push({ x: val, y: yValuesArray[idx] });
     });
-
-    if (xValuesArray.length != yValuesArray.length || xValuesArray < 2) {
+  
+    // Validate inputs: ensure arrays have the same length and at least 2 points.
+    if (xValuesArray.length !== yValuesArray.length || xValuesArray.length < 2) {
       alert('Incorrect Inputs');
       this.xValues?.setErrors({ notEqual: true });
       this.yValues?.setErrors({ notEqual: true });
       return;
     }
-    // console.log(xValuesArray, yValuesArray);
-    this.correlationValue1 = sampleCorrelation(
-      xValuesArray,
-      yValuesArray
-    ).toFixed(2);
-    // Disable file input
-    // this.isFileData = false;
-    this.updateChart(this.chart1, this.demodata1);
+    // Calculate correlation coefficient
+    this.correlationValue1 = sampleCorrelation(xValuesArray, yValuesArray).toFixed(2);
+    // Begin Regression Line Integration 
+
+    // Compute the regression line data (returns two points)
+    const regressionData = this.computeRegressionLine(xValuesArray, yValuesArray);
+    // Update the scatter dataset (first dataset) with demodata1
+    this.chart1.data.datasets[0].data = this.demodata1;
+    // Check if the regression line dataset exists; if not, add it.
+    if (this.chart1.data.datasets.length < 2) {
+      this.chart1.data.datasets.push({
+        label: 'Regression Line',
+        data: regressionData,
+        type: 'line',           // Render as a line chart
+        borderColor: 'red',
+        borderWidth: 2,
+        fill: false,
+        pointRadius: 0,         // Hide individual points on the regression line
+        tension: 0              // Keep the line straight
+      });
+    } else {
+      // Otherwise, update the existing regression dataset.
+      this.chart1.data.datasets[1].data = regressionData;
+    }
+    // Refresh the chart to display updates.
+    this.chart1.update();
+    // End Regression Line Integration 
+    
+    // Clear demodata1 for the next calculation
     this.demodata1 = [];
   }
-
+  
   updateChart(chart: any, data: any) {
     chart!.data.datasets[0].data = data;
     chart!.update();
