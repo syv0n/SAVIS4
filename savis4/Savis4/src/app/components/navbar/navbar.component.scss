@@ -1,0 +1,18 @@
+.modeSwitcher{
+    height: 10%;
+    width:10%;
+    right:-25px;
+    bottom: 25px;
+    position: fixed;
+    cursor:pointer;
+}
+:root{
+    --homeBgImg: url(https://www.pbahealth.com/cdn/2021/09/shutterstock_430195417-1.png);
+    --first-col:white;
+    --second-col:black;
+}
+.darkMode{
+    --homeBgImg: url(../../../assets/darkMode_bg.png);
+    --first-col: black;
+    --second-col:white;
+}
