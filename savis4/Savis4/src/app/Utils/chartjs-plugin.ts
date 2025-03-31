@@ -35,6 +35,72 @@ export const errorBarsPlugin = {
     }
 };
 
+export const errorSquaresPlugin = {
+  id: 'errorSquares',
+  afterDatasetsDraw(chart: any) {
+    const ctx = chart.ctx;
+    const yAxis = chart.scales['y-axis-0'];
+    const xAxis = chart.scales['x-axis-0'];
+    const chartArea = chart.chartArea;
+
+    if (!yAxis || !xAxis || !chartArea) return;
+
+    const rightBoundary = chartArea.right;
+    const leftBoundary = chartArea.left;
+    const padding = 10; // pixels from edge to switch direction
+
+    chart.data.datasets.forEach((dataset: any, datasetIndex: number) => {
+      if (dataset.errorSquares) {
+        const meta = chart.getDatasetMeta(datasetIndex);
+        if (meta.hidden) return;
+
+        meta.data.forEach((element: any, index: number) => {
+          const point = dataset.data[index];
+          if (!point) return;
+
+          const {x: centerX} = element.getCenterPoint();
+          const regressY = yAxis.getPixelForValue(point.y);
+          const dataY = yAxis.getPixelForValue(point.y1);
+          let squareSize = Math.abs(dataY - regressY);
+
+          // Ensure minimum size for visibility
+          squareSize = Math.max(squareSize, 5);
+
+          // Determine drawing direction
+          let leftX, rightX;
+          if (centerX + squareSize > rightBoundary - padding) {
+            // Extend left when near right edge
+            leftX = Math.max(centerX - squareSize, leftBoundary);
+            rightX = centerX;
+          } else {
+            // Default to right extension
+            leftX = centerX;
+            rightX = Math.min(centerX + squareSize, rightBoundary);
+          }
+
+          // Draw the filled square
+          ctx.save();
+          
+          // Semi-transparent fill (same color as border but with 20% opacity)
+          ctx.fillStyle = dataset.borderColor 
+            ? dataset.borderColor.replace(/[\d\.]+\)$/, '0.2)') 
+            : 'rgba(255, 0, 0, 0.2)';
+          ctx.fillRect(leftX, Math.min(regressY, dataY), 
+                      rightX - leftX, squareSize);
+
+          // Border
+          ctx.strokeStyle = dataset.borderColor || 'rgba(255, 0, 0, 0.7)';
+          ctx.lineWidth = dataset.borderWidth || 1;
+          ctx.strokeRect(leftX, Math.min(regressY, dataY), 
+                        rightX - leftX, squareSize);
+          
+          ctx.restore();
+        });
+      }
+    });
+  }
+};
+
 // Could be used to generate squares on linear regression chart in the future?
 export const squareDemo = {
   afterDatasetsDraw: function(chartInstance: any) {
