@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@1&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap');
+@import url('../navbar/navbar.component.scss');
 
 :host {
     margin: 0;
@@ -15,8 +16,6 @@
     flex-direction: column;
     min-height: 100vh;
 }
-
-
 
 
 /*SAVIS heading*/

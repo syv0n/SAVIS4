@@ -7,9 +7,8 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./homepage.component.scss']
 })
 export class HomepageComponent{
-
+    
   constructor(
     private translate: TranslateService
-  ) { }
-
+  ) {}
 }
