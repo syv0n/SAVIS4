@@ -27,7 +27,8 @@ export class ScatterPlotComponent implements OnChanges {
   leastSquares: number = 0
   private slope: number = 0
   private intercept: number = 0
-
+  public regressionFormula: string = ''
+  
   constructor(private translate: TranslateService) {
     Chart.plugins.register(errorBarsPlugin);
     Chart.plugins.register(errorSquaresPlugin);
@@ -220,6 +221,8 @@ export class ScatterPlotComponent implements OnChanges {
 
     this.slope = numerator / denominator
     this.intercept = meanY - this.slope * meanX
+
+    this.regressionFormula = `y = ${this.slope.toFixed(2)}x ${this.intercept >= 0 ? '+' : '-'} ${Math.abs(this.intercept).toFixed(2)}`;
   }
 
   private calculateRegressionY(x: number): number {
