@@ -21,4 +21,48 @@
   button {
     margin-top: 10px;
   }
+
+  .least-squares-badge {
+    display: inline-flex;
+    align-items: center;
+    background: #f8f9fa;
+    border-radius: 24px;
+    padding: 8px 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 4px;
+  }
+  
+  .least-squares-label {
+    font-weight: 500;
+    color: #555;
+    margin-right: 8px;
+  }
+  
+  .least-squares-value {
+    font-weight: 500;
+    color: #0e0f0f;
+    font-size: 1.1em;
+  }
+
+  .regression-formula {
+    display: inline-flex;
+    align-items: center;
+    background: #f8f9fa;
+    border-radius: 24px;
+    padding: 8px 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 4px;
+  }
+  
+  .regression-formula-label {
+    font-weight: 500;
+    color: #555;
+    margin-right: 8px;
+  }
+  
+  .regression-formula-value {
+    font-weight: 500;
+    color: #0e0f0f;
+    font-size: 1.1em;
+  }
   
