@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/
 import { ChartDataSets, ChartOptions, ChartType, Chart } from 'chart.js'; // Change this line
 import { errorBarsPlugin } from '../../../Utils/chartjs-plugin';
 import { errorSquaresPlugin } from '../../../Utils/chartjs-plugin';
+import { movableReferenceLinePlugin } from '../../../Utils/chartjs-plugin';
 import { BaseChartDirective } from 'ng2-charts';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -9,6 +10,11 @@ declare module 'chart.js' {
   interface ChartDataSets {
     errorBarsY1?: boolean;
     errorSquares?: boolean;
+  }
+
+  interface ChartOptions {
+    referenceLinePosition?: number;
+    _draggingRefLine?: boolean;
   }
 }
 
@@ -23,16 +29,20 @@ export class ScatterPlotComponent implements OnChanges {
   @Input() scatterChartOptions: ChartOptions = {};
   @Input() scatterChartLegend: boolean = true;
   @Input() scatterChartType: ChartType = 'scatter'; // Change this line
+  @Input() referenceLinePosition: number = .5;
   @ViewChild(BaseChartDirective) chart!: BaseChartDirective;
-  leastSquares: number = 0
-  private slope: number = 0
-  private intercept: number = 0
-  public regressionFormula: string = ''
+  leastSquares: number = 0;
+  private slope: number = 0;
+  private intercept: number = 0;
+  public regressionFormula: string = '';
   
   constructor(private translate: TranslateService) {
     Chart.plugins.register(errorBarsPlugin);
     Chart.plugins.register(errorSquaresPlugin);
+    Chart.plugins.register(movableReferenceLinePlugin);
+
     this.scatterChartOptions = {
+      referenceLinePosition: .5,
       scales: {
         yAxes: [{
           id: 'y-axis-0',
@@ -40,14 +50,13 @@ export class ScatterPlotComponent implements OnChanges {
         xAxes: [{
           id: 'x-axis-0',
         }]
-      }
+      },
     };
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataPoints']) {
       this.updateRegressionParameters();
-      
       this.updateChartData();
       this.leastSquares = this.calculateLeastSquares();
       
@@ -63,7 +72,7 @@ export class ScatterPlotComponent implements OnChanges {
   ngOnDestroy(): void {
     Chart.plugins.unregister(errorBarsPlugin);
     Chart.plugins.unregister(errorSquaresPlugin);
-
+    Chart.plugins.unregister(movableReferenceLinePlugin);
   }
 
   private updateChartData(): void {
@@ -232,5 +241,4 @@ export class ScatterPlotComponent implements OnChanges {
   private mean(values: number[]): number {
     return values.reduce((a, b) => a + b, 0) / values.length
   }
-  
 }
