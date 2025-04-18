@@ -14,6 +14,8 @@ module.exports = {
         greenBar: '#D0E4C0',
         lightGray: '#D6DCD5',
         darkGray: '#B5BAB5',
+        forestGreen: '#249D73',
+        darkForestGreen: '#1e6542',
       },
     },
   },
