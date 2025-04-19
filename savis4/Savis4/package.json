@@ -60,6 +60,7 @@
     "express": "^4.19.2",
     "firebase": "^7.0 || ^8.0",
     "jstat": "^1.9.6",
+    "mathjs": "^14.4.0",
     "ng2-charts": "^2.4.3",
     "papaparse": "^5.4.1",
     "rxjs": "~6.6.0",

@@ -46,6 +46,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { UserManualComponent } from './user-manual/user-manual.component';
 import { DownloadPageComponent } from './download-page/download-page.component';
+import { CalculatorComponent } from './components/calculator/calculator.component';
 
 export function HttpLoaderFactory(http: HttpClient){
   return new TranslateHttpLoader(http)
@@ -93,7 +94,8 @@ export function setupTranslateFactory(service : TranslateService): Function {
     BarChartComponent,
     DotChartComponent,
     UserManualComponent,
-    DownloadPageComponent
+    DownloadPageComponent,
+    CalculatorComponent
 
   ],
   imports: [

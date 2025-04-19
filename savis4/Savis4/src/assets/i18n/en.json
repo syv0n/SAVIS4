@@ -456,5 +456,6 @@
     "lr_regression_line": "Regression Line",
     "lr_upper_bound": "Upper Bound",
     "lr_lower_bound": "Lower Bound",
-    "lr_error_bars": "Error Bars"
+    "lr_error_bars": "Error Bars",
+    "calc_switch": "Calculator"
 }
