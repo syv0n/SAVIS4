@@ -157,3 +157,91 @@ export const oneProportionDynamicBubbleSize = {
     }
   }
 }
+
+
+
+export const movableReferenceLinePlugin = {
+  id: 'ReferenceLine',
+  dragging: false,
+  initialY: 0,
+
+  afterDraw: function (chart: any) {
+    const refLineY = chart.options.referenceLinePosition;
+
+    if (refLineY == null) return;
+
+    const ctx = chart.chart.ctx;
+    const yAxis = chart.scales['y-axis-0'];
+
+    if (!yAxis) return;
+
+    // Convert data value to pixel
+    const y = yAxis.getPixelForValue(refLineY);
+
+    // Draw reference line
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(chart.chartArea.left, y);
+    ctx.lineTo(chart.chartArea.right, y);
+    ctx.strokeStyle = 'rgb(99, 255, 120)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 5]);
+    ctx.stroke();
+    ctx.restore();
+  },
+  
+  beforeInit: function (chart: any) {
+    console.log('Plugin initialized, adding event listeners');
+    const canvas = chart.chart.canvas;
+
+    // Add mousedown event listener
+    canvas.addEventListener('mousedown', function (event: MouseEvent) {
+      const refLineY = chart.options.referenceLinePosition;
+      const yAxis = chart.scales['y-axis-0'];
+
+      if (yAxis) {
+        // Get the canvas position relative to the screen
+        const canvasRect = chart.chart.canvas.getBoundingClientRect();
+        const mouseY = event.clientY - canvasRect.top;  // Correct mouse Y position relative to canvas
+
+        const y = yAxis.getPixelForValue(refLineY);
+        console.log('Mouse Y:', mouseY);  // Log mouse Y position
+        console.log('Reference Line Y:', y);  // Log reference line Y position
+        console.log('Difference:', Math.abs(mouseY - y));  // Log the difference
+        console.log('refLineY value:', refLineY);
+
+        // Check if the click is near the reference line
+        if (Math.abs(mouseY - y) < 10) {
+          console.log('Dragging started');
+          movableReferenceLinePlugin.dragging = true;
+          movableReferenceLinePlugin.initialY = mouseY;
+          chart.options._draggingRefLine = true;
+        }
+      }
+    });
+
+    // Add mousemove event listener for dragging functionality
+    canvas.addEventListener('mousemove', function (event: MouseEvent) {
+      if (movableReferenceLinePlugin.dragging) {
+        // Get the canvas position relative to the screen
+        const canvasRect = chart.chart.canvas.getBoundingClientRect();
+        const mouseY = event.clientY - canvasRect.top;  // Correct mouse Y position relative to canvas
+
+        // Convert mouse position back to chart's data value
+        const yAxis = chart.scales['y-axis-0'];
+        const refLineValue = yAxis.getValueForPixel(mouseY);
+
+        // Update the reference line position in chart's options
+        chart.options.referenceLinePosition = refLineValue;
+        chart.update();
+      }
+    });
+
+    // Add mouseup event listener to stop dragging
+    canvas.addEventListener('mouseup', function () {
+      movableReferenceLinePlugin.dragging = false;
+      chart.options._draggingRefLine = false;
+      console.log('Dragging stopped');
+    });
+  }
+};
