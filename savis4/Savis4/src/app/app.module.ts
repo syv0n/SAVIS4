@@ -45,6 +45,7 @@ import { DotChartComponent } from './features/dot-chart/dot-chart.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { UserManualComponent } from './user-manual/user-manual.component';
+import { DownloadPageComponent } from './download-page/download-page.component';
 import { CalculatorComponent } from './components/calculator/calculator.component';
 
 export function HttpLoaderFactory(http: HttpClient){
@@ -93,6 +94,7 @@ export function setupTranslateFactory(service : TranslateService): Function {
     BarChartComponent,
     DotChartComponent,
     UserManualComponent,
+    DownloadPageComponent,
     CalculatorComponent
 
   ],
