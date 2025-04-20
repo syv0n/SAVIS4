@@ -1,4 +1,3 @@
-import { HtmlParser } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -11,21 +10,11 @@ export class CalculatorComponent implements OnInit {
   firstOperand: number | null = null; 
   operator: string | null = null; 
   waitingForSecondOperand: boolean = false; //track second number
-  hasDecimal: boolean = false; //track decimal
-  advancedMode: boolean = false; // track if advanced mode is on or not
+  hasDecimal: boolean = false; //track decimal 
 
   constructor() {}
 
   ngOnInit(): void {}
-
-  toggleAdvancedMode(): string {
-    this.advancedMode = !this.advancedMode;
-    if (this.advancedMode == true) {
-      return "Advanced\nMode: On";
-    } else {
-      return "Advanced\nMode: Off"
-    }
-  }
 
   // Handle number button clicks (0-9)
   onNumberClick(value: string): void {
