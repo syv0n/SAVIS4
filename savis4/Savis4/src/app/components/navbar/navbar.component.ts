@@ -16,6 +16,7 @@ export class NavbarComponent implements OnInit{
   public modeIcon=this.onLightMode;
 
   isAuth:  boolean = false;
+  showCalculator: boolean = false;
 
   constructor(
     private afAuth: AngularFireAuth,

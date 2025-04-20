@@ -19,6 +19,7 @@ import { ForgotpasswordComponent } from './components/forgotpassword/forgotpassw
 import { BarChartComponent } from './features/bar-chart/bar-chart.component';
 import { DotChartComponent } from './features/dot-chart/dot-chart.component';
 import { UserManualComponent } from './user-manual/user-manual.component';
+import { DownloadPageComponent } from './download-page/download-page.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -40,7 +41,8 @@ export const routes: Routes = [
   { path: 'forgotpassword', component: ForgotpasswordComponent },
   { path: 'barchart', component: BarChartComponent },
   { path: 'dotplot', component: DotChartComponent },
-  { path: 'user-manual', component: UserManualComponent }
+  { path: 'user-manual', component: UserManualComponent },
+  { path: 'download-page', component: DownloadPageComponent }
 ];
 
 @NgModule({

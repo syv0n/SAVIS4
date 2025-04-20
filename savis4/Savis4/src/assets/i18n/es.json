@@ -449,5 +449,6 @@
     "lr_regression_line": "Línea de Regresión",
     "lr_upper_bound": "Límite Superior",
     "lr_lower_bound": "Límite Inferior",
-    "lr_error_bars": "Barras de Error"
+    "lr_error_bars": "Barras de Error",
+    "calc_switch": "Calculadora"
 }

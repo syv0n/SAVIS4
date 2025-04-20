@@ -1,31 +1,44 @@
 <nav class="bg-navbar">
     <div class="w-full flex flex-wrap items-center ml-0 justify-between p-4">
       <ul>
-        <li><a routerLink="/homepage" class="text-green text-2xl">SAVIS</a></li>
+        <li><a routerLink="/homepage" class="text-newGreen text-2xl">SAVIS</a></li>
       </ul>
       <div class="hidden w-full md:block md:w-auto">
         <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-navbar md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 justify-end">
           <li>
-            <app-language-switcher class="block py-2 px-3 text-gray-100 rounded -my-1 md:border-0 md:hover:text-green md:p-0 bg-navbar"></app-language-switcher>
+            <app-language-switcher class="block py-2 px-3 text-gray-100 rounded -my-1 md:border-0 md:hover:text-newGreen md:p-0 bg-navbar"></app-language-switcher>
           </li>
           <li>
-            <a routerLink="/homepage" class="block py-2 px-3 text-gray-100 rounded  md:border-0 md:hover:text-green md:p-0 bg-navbar">{{'nav_home' | translate }}</a>
+            <a routerLink="/homepage" class="block py-2 px-3 text-gray-100 rounded  md:border-0 md:hover:text-newGreen md:p-0 bg-navbar">{{'nav_home' | translate }}</a>
           </li>
           <li>
-            <a href="about" class="block py-2 px-3 text-gray-100 md:border-0 md:hover:text-green md:p-0 bg-navbar">{{ 'nav_about' | translate }}</a>
+            <a routerLink="/about" class="block py-2 px-3 text-gray-100 md:border-0 md:hover:text-newGreen md:p-0 bg-navbar">{{ 'nav_about' | translate }}</a>
           </li>
           <li>
-            <a href="https://www.csus.edu/faculty/d/rdiaz/" target="_blank"  class="block py-2 px-3 text-gray-100 md:border-0 md:hover:text-green md:p-0 bg-navbar">{{ 'nav_download' | translate }}</a>
+            <a routerLink="/download-page" class="block py-2 px-3 text-gray-100 md:border-0 md:hover:text-newGreen md:p-0 bg-navbar">{{ 'nav_download' | translate }}</a>
           </li>
           <li>
-            <a routerLink="/user-manual" class="block py-2 px-3 text-gray-100 md:border-0 md:hover:text-green md:p-0 bg-navbar">{{ 'nav_user_manual' | translate }}</a>
+            <a routerLink="/user-manual" class="block py-2 px-3 text-gray-100 md:border-0 md:hover:text-newGreen md:p-0 bg-navbar">{{ 'nav_user_manual' | translate }}</a>
           </li>
           <li>
-            <a class="block py-2 px-3 text-gray-100 rounded  md:border-0 md:hover:text-green md:p-0 bg-navbar cursor-pointer" (click)="isAuth ? signOut() : continueAsGuest()">{{ isAuth ? ('nav_sign_out' | translate) : ('nav_sign_in' | translate) }}</a>
+            <a class="block py-2 px-3 text-gray-100 rounded  md:border-0 md:hover:text-newGreen md:p-0 bg-navbar cursor-pointer" (click)="isAuth ? signOut() : continueAsGuest()">{{ isAuth ? ('nav_sign_out' | translate) : ('nav_sign_in' | translate) }}</a>
+          </li>
+
+          <!---Toggle Switch for Cacluator-->
+          <li>
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="showCalculator">
+              <span class="slider round"></span>
+            </label>
+            <span class="ml-2 text-gray-100">{{ showCalculator ? ('calc_switch' | translate) : ('calc_switch' | translate) }}</span>            
           </li>
         </ul>
       </div>
       <img [src]="modeIcon" id="modeSwitch" class="modeSwitcher" title="Dark Mode" (click)="checkMode()"/>
+    </div>
+    <!---Caclulator Container-->
+    <div class="calculator-container" *ngIf="showCalculator">
+      <app-calculator></app-calculator>
     </div>
   </nav>
   
