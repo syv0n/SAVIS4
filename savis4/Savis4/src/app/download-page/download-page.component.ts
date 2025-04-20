@@ -12,4 +12,18 @@ export class DownloadPageComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  downloadWindows() {
+    window.open(
+      'https://github.com/syv0n/SAVIS4/releases/download/v1.0.0/Savis4-Portable-Windows.zip',
+      '_blank'
+    );
+  }
+  
+  downloadLinux() {
+    window.open(
+      'https://github.com/syv0n/SAVIS4/releases/download/v1.0.0/Savis4-Portable-Linux.zip', 
+      '_blank'
+    );
+  }
+
 }
