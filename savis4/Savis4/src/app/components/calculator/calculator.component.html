@@ -4,18 +4,30 @@
     shadow-xl
     text-gray-800
     relative
-    overflow-hidden" style="max-width: 350px">
+    overflow-hidden" id="draggable" draggable="true" style="max-width: 700px">
 
     <h1 class="text-center text-white py-2 text-3xl font-bold invisible">Calculator For Savis4</h1>
 
+    <!--Calculator screen: scientific mode-->
+        <!--TBD-->
 
-    <!--caclulator screen-->
+    <!--Calculator screen: non-scientific mode-->
         <div class="w-full
-            h-20
             bg-gradient-to-b
             from-gray-800
             to-gray-700
             text-right">
+
+            <!--Scientific Button-->
+            <button class = "w-full
+            text-white
+            font-light
+            text-left
+            px-3
+            py-3"
+            (click)="toggleAdvancedMode()">
+            {{toggleAdvancedMode()}}
+            </button>
 
             <!--Number screen-->
             <div class="w-full
@@ -30,7 +42,7 @@
         <!--End of caclulator screen-->
 
 
-        <!--caclulator button area-->
+        <!--calculator button area-->
         <div class="w-full bg-gradient-to-b from-green-500 to-green-800">
 
                 <!--First button row-->
