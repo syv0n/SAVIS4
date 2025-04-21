@@ -99,10 +99,11 @@
 $primary-color: var(--seventh-col);
 $secondary-color: #5ebe5e;
 $slider-active-color: var(--ninth-col);
-$slider-track-color: var(--ninth-col);;
+$slider-track-color: var(--ninth-col);
 
 button {
-  background: linear-gradient(180deg, lighten($secondary-color, 5%), $secondary-color);
+  //background: linear-gradient(180deg, lighten($secondary-color, 5%), $secondary-color);
+  background: var(--third-col);
   color: white;
   padding: 10px;
   border: none;
@@ -111,7 +112,8 @@ button {
   transition: background-color 0.3s;
 
   &:hover {
-    background: linear-gradient(180deg, $secondary-color, darken($secondary-color, 5%));
+    //background: linear-gradient(180deg, $secondary-color, darken($secondary-color, 5%));
+    background: var(--fourth-col);
   }
 
   &:disabled {

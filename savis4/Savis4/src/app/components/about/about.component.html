@@ -107,11 +107,13 @@
     </div>
     <hr class="mt-24">
     <div class="mt-3 flex flex-col mx-auto w-full items-center justify-center">
-        <p class="mb-3">{{ 'contact' | translate }}</p>
-        <a class="text-blue-500 underline hover:text-blue-700" href="https://www.csus.edu/faculty/d/rdiaz/"
+        <p class="mb-3" id="contactTitle">{{ 'contact' | translate }}</p>
+        <a class="text-black-500 underline hover:text-blue-700" href="https://www.csus.edu/faculty/d/rdiaz/"
             target="_blank">Rafael E Diaz Escamilla</a>
     </div>
 
 
 </body>
-<app-footer class="w-full"></app-footer>
+<footer class="static-footer">
+    {{ "nav_copyright" | translate }}
+  </footer>

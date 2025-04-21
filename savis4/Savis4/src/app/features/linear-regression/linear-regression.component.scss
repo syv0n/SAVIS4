@@ -1,3 +1,7 @@
+.linearRegressionBox{
+    background-color: var(--fifth-col);
+    min-height: 100vh;
+}
 .header{
     background-color: #333;
     height: 100px;
@@ -31,6 +35,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: var(--second-col);
 
     .rhs, .lhs {
         flex: 1;
@@ -47,7 +52,6 @@
     justify-content: space-around;
     align-items: center;
     margin-top: 50px;
-
     .chartData {
         width: 1000px;
         height: 500px;
@@ -55,6 +59,9 @@
 }
 
 .textarea {
+    background-color: var(--fifth-col);
+    border: 2px solid var(--ninth-col);
+    color:var(--second-col);
     width: 450px;
     height: 250px;
     resize: none;
@@ -72,4 +79,24 @@
     color: #ffffff;
     text-align: center;
     padding: 10px 0; 
+  }
+
+  h1 {
+    margin-top: 0.67em;
+    font-weight: bold;
+    color: var(--second-col);
+  }
+
+  .btn{
+    background: var(--third-col);
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .btn:hover{
+    background: var(--fourth-col);
   }

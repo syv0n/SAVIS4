@@ -1,170 +1,200 @@
 #one-proportion {
-    p {
-      margin-top: 0;
-      margin-bottom: 0;
-    }
 
-    h4 {
-      margin-top: 3px;
-    }
+  p {
+    margin-top: 0;
+    margin-bottom: 0;
+    color:var(--second-col);
+  }
 
-    .chart-input-form {
-      display: flex;
-      
-      #control {
-        width: 300ch;
-        margin: auto;
-      }
+  h4 {
+    margin-top: 3px;
+    color:var(--second-col);
+  }
 
-      label {
-        display: block;
-        font-size: 12px;
-      }
-    }
+  .chart-input-form {
+    display: flex;
+    color:var(--second-col);
     
-    table {
+    #control {
+      width: 300ch;
       margin: auto;
+    }
+
+    label {
+      display: block;
       font-size: 12px;
-    }
-    
-    .right-num {
-      text-align: right;
-      // float: right;
-    }
-    
-    .btn{
-      width: 100%;
+      color:var(--second-col);
     }
   }
-
-.oneProportion {
-  display: flex;
-
-  .left-container {
-    width: 25%;
-    padding: 0 10px;
-    justify-content: center;
-    margin-top: 25px;
-    transform: translateX(25px);
+  
+  table {
+    margin: auto;
+    font-size: 12px;
   }
-
-  .right-container{
-    width:75%;
-    padding: 0 10px;
-    justify-content: center;
-    margin-top: 25px;
-    text-align: center;
-    user-select: none;
+  
+  .right-num {
+    text-align: right;
+    // float: right;
+  }
+  
+  .btn{
+    width: 100%;
   }
 }
+label,p,h3{
+  color:var(--second-col);
+}
 
-$primary-color: #5ebe5e;
+.oneProportion {
+display: flex;
+background-color: var(--fifth-col);
+min-height: 100vh;
+
+.left-container {
+  width: 25%;
+  padding: 0 10px;
+  justify-content: center;
+  margin-top: 25px;
+  transform: translateX(25px);
+}
+
+.right-container{
+  width:75%;
+  padding: 0 10px;
+  justify-content: center;
+  margin-top: 25px;
+  text-align: center;
+  user-select: none;
+}
+
+.chart-container{
+  background-color: var(--eighth-col);
+  border-radius: 10px;
+}
+}
+
+$primary-color: var(--seventh-col);
 $secondary-color: #93cb52;
 $slider-active-color: #bfbfbf;
 $slider-track-color: #bfbfbf;
 
 .controls {
-  max-width: 900px;
-  margin: auto;
+max-width: 900px;
+margin: auto;
 
-  input, button {
-    display: block;
-    margin-bottom: 1rem;
-    width: 50%;
-  }
+input, button {
+  display: block;
+  margin-bottom: 1rem;
+  width: 50%;
+  color:var(--second-col);
+}
 
-  // Slider thumb
-  input[type="range"] {
+// Slider thumb
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+
+  &::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    background: transparent;
-
-    &::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      background: $primary-color;
-      border-radius: 50%;
-      cursor: pointer;
-      height: 20px;
-      width: 20px;
-      border: 1px solid darken($primary-color, 15%)
-    }
-
-    &:focus {
-      outline: none;
-    }
-
-    &::-webkit-slider-runnable-track {
-      width: 50%;
-      height: 22px;
-      background: $slider-track-color;
-      border-radius: 5px;
-      border: 1px  solid darken($slider-active-color, $amount: 15%)
-    }
-
-    &::-moz-range-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      background: $primary-color;
-      border-radius: 50%;
-      cursor: pointer;
-      height: 20px;
-      width: 20px;
-      border: 1px solid darken($primary-color, 15%)
-    }
-
-    &::-moz-range-track {
-      width: 100%;
-      height: 22px;
-      background: $slider-track-color;
-      border-radius: 5px;
-      border: 1px  solid darken($slider-active-color, $amount: 15%)
-    }
-  }
-
-  button {
-    background: linear-gradient(180deg, lighten($secondary-color, 5%), $secondary-color);
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
+    background: $primary-color;
+    border-radius: 50%;
     cursor: pointer;
-    transition: background-color 0.3s;
-
-    &:hover {
-      background: linear-gradient(180deg, $secondary-color, darken($secondary-color, 5%));
-    }
+    height: 20px;
+    width: 20px;
+    //border: 1px solid darken($primary-color, 15%)
+    border: 1px solid var(--seventh-col);
   }
 
-  input[type="number"] {
-    border: 1px solid $slider-active-color;
-    border-radius: 4px;
-    padding: 10px;
-    font-size: 1rem;
-    width: 45%;
+  &:focus {
+    outline: none;
   }
 
-  @media (max-width: 768px) {
+  &::-webkit-slider-runnable-track {
+    width: 50%;
+    height: 22px;
+    background-color: var(--ninth-col);
+    border: 1px solid var(--seventh-col);
+    border-radius: 5px;
+    //border: 1px  solid darken($slider-active-color, $amount: 15%)
   }
-  
-  body {
-    font-family: 'Arial', sans-serif;
+
+  &::-moz-range-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    background: $primary-color;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
+    //border: 1px solid darken($primary-color, 15%)
+    border: 1px solid var(--seventh-col);
   }
- 
+
+  &::-moz-range-track {
+    width: 100%;
+    height: 22px;
+    background: $slider-track-color;
+    border-radius: 5px;
+    border: 1px  solid darken($slider-active-color, $amount: 15%)
+  }
+}
+
+button {
+  //background: linear-gradient(180deg, lighten($secondary-color, 5%), $secondary-color);
+  background: var(--third-col);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    //background: linear-gradient(180deg, $secondary-color, darken($secondary-color, 5%));
+    background: var(--fourth-col);
+  }
+}
+
+input[type="number"] {
+  margin: 2px;
+  background-color: var(--fifth-col);
+  border: 2px solid var(--ninth-col);
+  //border: 1px solid $slider-active-color;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 1rem;
+  width: 45%;
+}
+
+@media (max-width: 768px) {
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  color: var(--second-col);
+}
+
 }
 
 .green-line {
-  width: 50%;
-  height:4px;
-  background-color: green;
+width: 50%;
+height:4px;
+background-color: green;
 }
 
 .static-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background-color: #000000; 
-  color: #ffffff;
-  text-align: center;
-  padding: 10px 0; 
+position: fixed;
+bottom: 0;
+width: 100%;
+background-color: #000000; 
+color: #ffffff;
+text-align: center;
+padding: 10px 0; 
+}
+
+h1 {
+font-weight: bold;
+color: var(--second-col);
 }
