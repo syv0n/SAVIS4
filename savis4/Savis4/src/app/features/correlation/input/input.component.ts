@@ -145,54 +145,113 @@ export class InputComponent implements OnInit {
       { x: xMin, y: slope * xMin + intercept },
       { x: xMax, y: slope * xMax + intercept }
     ];
-  }  
+  }
+    
+  //For each point, residual = yᵢ – (m·xᵢ + b).
+  computeResiduals(
+    xVals: number[],
+    yVals: number[],
+    regressionData: { x: number; y: number }[]
+  ): number[] {
+    const [p1, p2] = regressionData;
+    const slope = (p2.y - p1.y) / (p2.x - p1.x);
+    const intercept = p1.y - slope * p1.x;
+    return xVals.map((x, i) =>
+      yVals[i] - (slope * x + intercept)
+    );
+  }
+
+  //Simple density estimator
+  computeDensities(
+    data: { x: number; y: number }[],
+    radius: number = 5
+  ): number[] {
+    return data.map((pt, _, arr) =>
+      arr.reduce((count, other) => {
+        const dx = pt.x - other.x;
+        const dy = pt.y - other.y;
+        return count + (Math.hypot(dx, dy) <= radius ? 1 : 0);
+      }, 0)
+    );
+  }
+
 
   calculate(): void {
     let [xValuesArray, yValuesArray] = this.getFormValues();
   
     // Populate demodata1 with scatter points
+    this.demodata1 = [];
     xValuesArray.forEach((val: number, idx: number) => {
       this.demodata1.push({ x: val, y: yValuesArray[idx] });
     });
   
-    // Validate inputs: ensure arrays have the same length and at least 2 points.
+    // Validate inputs
     if (xValuesArray.length !== yValuesArray.length || xValuesArray.length < 2) {
       alert('Incorrect Inputs');
       this.xValues?.setErrors({ notEqual: true });
       this.yValues?.setErrors({ notEqual: true });
       return;
     }
-    // Calculate correlation coefficient
+  
+    // Calculate correlation coefficient (r‑value)
     this.correlationValue1 = sampleCorrelation(xValuesArray, yValuesArray).toFixed(2);
-    // Begin Regression Line Integration 
-
-    // Compute the regression line data (returns two points)
+  
+    // Decide regression‑line color: green if |r| ≥ 0.7, otherwise red
+    const rVal     = parseFloat(this.correlationValue1);
+    const lineColor = Math.abs(rVal) >= 0.7 ? 'green' : 'red';
+  
+    // Compute regression line data
     const regressionData = this.computeRegressionLine(xValuesArray, yValuesArray);
-    // Update the scatter dataset (first dataset) with demodata1
+  
+    // Update scatter dataset
     this.chart1.data.datasets[0].data = this.demodata1;
-    // Check if the regression line dataset exists; if not, add it.
+  
+    // Compute residuals & densities for visual cues
+    const residuals = this.computeResiduals(xValuesArray, yValuesArray, regressionData);
+    const densities = this.computeDensities(this.demodata1);
+  
+    // Map residuals → color gradient (red ↑, blue ↓)
+    const maxRes = Math.max(...residuals.map(Math.abs));
+    const backgroundColors = residuals.map(r => {
+      const intensity = Math.abs(r) / maxRes;
+      const red  = Math.round(255 * intensity * (r > 0 ? 1 : 0));
+      const blue = Math.round(255 * intensity * (r < 0 ? 1 : 0));
+      return `rgba(${red},0,${blue},0.7)`;
+    });
+  
+    // Map densities → point radius (3px–10px)
+    const maxDen = Math.max(...densities);
+    const pointRadii = densities.map(d => 3 + (7 * d / maxDen));
+  
+    // Apply scatter styles
+    const ds = this.chart1.data.datasets[0] as any;
+    ds.backgroundColor = backgroundColors;
+    ds.pointRadius     = pointRadii;
+  
+    // Add or update the regression‑line dataset with dynamic color
     if (this.chart1.data.datasets.length < 2) {
       this.chart1.data.datasets.push({
         label: 'Regression Line',
         data: regressionData,
-        type: 'line',           // Render as a line chart
-        borderColor: 'red',
+        type: 'line',
+        borderColor: lineColor,
         borderWidth: 2,
         fill: false,
-        pointRadius: 0,         // Hide individual points on the regression line
-        tension: 0              // Keep the line straight
+        pointRadius: 0,
+        tension: 0
       });
     } else {
-      // Otherwise, update the existing regression dataset.
-      this.chart1.data.datasets[1].data = regressionData;
+      const lineDs = this.chart1.data.datasets[1] as any;
+      lineDs.data        = regressionData;
+      lineDs.borderColor = lineColor;
     }
-    // Refresh the chart to display updates.
+  
+    // Render the updated chart
     this.chart1.update();
-    // End Regression Line Integration 
-    
-    // Clear demodata1 for the next calculation
+  
+    // Clear for next run
     this.demodata1 = [];
-  }
+  }  
   
   updateChart(chart: any, data: any) {
     chart!.data.datasets[0].data = data;
@@ -218,6 +277,9 @@ export class InputComponent implements OnInit {
       xValuesArray,
       yValuesArray
     ).toFixed(2);
+    // Decide line color: green if R-value ≥ 0.7, otherwise red
+    const rValue = parseFloat(this.correlationValue1);
+    const lineColor = Math.abs(rValue) >= 0.7 ? 'green' : 'red';
     this.updateChart(this.chart2, this.demodata2);
     this.demodata2 = [];
   }
