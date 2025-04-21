@@ -36,9 +36,9 @@
         {{ "correlation_both_inputs" | translate }}
       </p>
       <div>
-        <button
+        <button id="buttonStyle"
           (click)="calculate()"
-          class="btn border bg-primary text-white px-4 py-2 text-sm font-medium rounded-lg mb-4"
+          class="btn border text-white px-4 py-2 text-sm font-medium rounded-lg mb-4"
         >
           {{ "correlation_calculate" | translate }}
         </button>
@@ -64,8 +64,8 @@
   <!-- File Input -->
   <form [formGroup]="formGroupValues" class="flex flex-col gap-4">
     <div class="">
-      <button
-        class="btn border bg-primary text-white px-4 py-2 text-sm w-max font-medium rounded-lg mb-4"
+      <button id="buttonStyle"
+        class="btn border text-white px-4 py-2 text-sm w-max font-medium rounded-lg mb-4"
         (click)="fileInput.click()"
       >
         {{ "correlation_input_file" | translate }}

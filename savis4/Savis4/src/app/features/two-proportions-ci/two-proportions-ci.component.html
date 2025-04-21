@@ -72,8 +72,7 @@
       <button class="btn" (click)="loadData()">
         {{ "tpci_load_data" | translate }}
       </button>
-      <hr />
-
+      <p></p>
       <div class="stats">
         <div>
           <span
@@ -173,6 +172,7 @@
       <button class="btn my-2" (click)="runSimulation()">
         {{ "tpci_run_simulations" | translate }}
       </button>
+      <p></p>
       <div class="stats">
         <div>
           <span>{{ "tpci_A_Successes" | translate }} (p<sub>A</sub>):</span>
@@ -232,14 +232,10 @@
     <div class="lhs">
       <div class="flex flex-col items-center justify-center">
         <div>
-<<<<<<< Updated upstream
-            <label for="confidence-level">{{ 'tpci_confidence_level' | translate }} {{confidenceLevel}}%</label>
-=======
           <label for="confidence-level"
             >{{ "tpci_confidence_level" | translate }}
             {{ confidenceLevel }} %</label
           >
->>>>>>> Stashed changes
         </div>
         <input
           type="range"
@@ -259,7 +255,7 @@
           Build
         </button>
       </div>
-
+      <p></p>
       <div class="stats">
         <div>
           <span>{{ "tpci_original_dataset_difference" | translate }}</span>

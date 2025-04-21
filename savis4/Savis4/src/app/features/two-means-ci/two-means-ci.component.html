@@ -10,7 +10,7 @@
   <div class="flex gap-3"  [ngClass]="sections.sectionOne ? '' : 'hidden'">
     <div class="w-3/12">
       <div class="w-full">
-        <div class="border border-gray-300 rounded-md">
+        <div>
           <select id="select" (change)="sampleSelect($event)"
             class="w-full border-t-0 border-l-0 border-r-0 border-b focus:outline-none rounded-lg p-1">
             <option disabled selected>{{ 'Tmci_Select_Sample_Data' | translate }}</option>
@@ -22,12 +22,12 @@
             placeholder="{{ 'Tmci_Enter_or_Drop_CSV' | translate }}"></textarea>
         </div>
         <button id="loadData" (click)="loadData()"
-          class="mt-1 border bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'Tmci_Load_Data' | translate }}</button>
+          class="mt-1 text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'Tmci_Load_Data' | translate }}</button>
         <button id="reset" (click)="onResetChart()"
-          class="mt-1 border bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full"> {{ 'Tmci_Reset' | translate }}</button>
+          class="mt-1 text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full"> {{ 'Tmci_Reset' | translate }}</button>
         <label
           id="uploadFile"
-          class="mt-1 block text-center border bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full"
+          class="mt-1 block text-center text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full"
           for="fileInput">  {{ 'Tmci_Upload_Data_File' | translate }} </label>
         <input type="file" id="fileInput" (change)="onFileSelected($event)" style="display: none;">
       </div>
@@ -37,6 +37,7 @@
           [feature]="'TwoMeansCI'"
         ></app-save-load-buttons>
       </div>
+      <p></p>
       <div class="text-sm font-medium mb-1">
         <div class="flex justify-between">
           <span>{{ 'Tmci_Size_n_Group_1' | translate }}</span>
@@ -102,11 +103,12 @@
         class="w-full border border-gray-300 focus:border-gray-500 focus:outline-none p-2 rounded-lg ng-untouched ng-pristine ng-valid"
         type="number" value="1" min="1" max="100" />
       <button id="runSim" (click)="runSim()" *ngIf="activateSim"
-        class="mt-1 border bg-primary disabled: text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'Tmci_Run_Simulation' | translate }}
+        class="mt-1 disabled: text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'Tmci_Run_Simulation' | translate }}
       </button>
       <button id="runSim" [disabled]="!activateSim" *ngIf="!activateSim"
-        class="mt-1 border bg-gray-400  text-gray-700 px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'Tmci_Run_Simulation' | translate }}
+        class="mt-1 px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'Tmci_Run_Simulation' | translate }}
       </button>
+      <p></p>
       <div class="text-sm font-medium mb-1">
         <div class="flex justify-between">
           <span>{{ 'Tmci_Mean_Of_Randomized_Sample_To_Group_1' | translate }} </span>
@@ -156,14 +158,12 @@
     </div>
     <br>
     <button id="build" (click)="updateLastChart()" *ngIf="activateSim"
-        class="mt-1 border bg-primary disabled: text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'Tmci_Build' | translate }}
+        class="mt-1 disabled: text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'Tmci_Build' | translate }}
     </button>
     <button id="build" [disabled]="!activateSim" *ngIf="!activateSim"
-      class="mt-1 border bg-gray-400  text-gray-700 px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'Tmci_Build' | translate }}
-    </button>
-    <br>  
-      
-      <hr>
+      class="mt-1 px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'Tmci_Build' | translate }}
+    </button> 
+    <p></p>  
       <div class="text-sm font-medium mb-1">
         <div class="flex justify-between">
           <span>{{ 'Tmci_Original_Dataset_Difference_Of_Means' | translate }}</span>

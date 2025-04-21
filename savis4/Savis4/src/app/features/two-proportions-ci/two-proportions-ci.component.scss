@@ -1,5 +1,8 @@
 .two-proportions {
+  background-color: var(--fifth-col);
+  padding-bottom: 100px;
   h2 {
+    color:var(--second-col);
     margin-left: 1em;
   }
   .lhs table {
@@ -7,6 +10,8 @@
   }
 
   .chart-wrap {
+    background-color: var(--eighth-col);
+    border-radius: 10px;
     height: 10em;
     max-width: 40em;
   }
@@ -40,10 +45,14 @@
     align-items: flex-start;
     flex-grow: 1;
     height:50vh;
-
+    background-color: var(--eighth-col);
+    border-radius: 10px;
     .half-height {
       height: 50%;
     }
+  }
+  td,span,h1,h3,label{
+    color:var(--second-col);
   }
   
   .stats div {
@@ -69,13 +78,14 @@
   }
 }
 
-$primary-color: #5ebe5e;
+$primary-color: var(--seventh-col);
 $secondary-color: #93cb52;
-$slider-active-color: #bfbfbf;
-$slider-track-color: #bfbfbf;
+$slider-active-color: var(--ninth-col);
+$slider-track-color: var(--ninth-col);
 
 button {
-  background: linear-gradient(180deg, lighten($secondary-color, 5%), $secondary-color);
+  //background: linear-gradient(180deg, lighten($secondary-color, 5%), $secondary-color);
+  background: var(--third-col);
   color: white;
   padding: 10px;
   border: none;
@@ -84,18 +94,29 @@ button {
   transition: background-color 0.3s;
 
   &:hover {
-    background: linear-gradient(180deg, $secondary-color, darken($secondary-color, 5%));
+    background-color: var(--fourth-col);
+    //background: linear-gradient(180deg, $secondary-color, darken($secondary-color, 5%));
   }
 
   &:disabled {
-    background: #bfbfbf;
+    background: var(--ninth-col);
     cursor: not-allowed;
   }
 }
 
+input{
+  accent-color: var(--seventh-col);
+}
+
+input[type='checkbox']{
+  accent-color: var(--seventh-col);
+}
+
 input[type="number"] {
   margin: 2px;
-  border: 1px solid $slider-active-color;
+  background-color: var(--fifth-col);
+  border: 2px solid var(--ninth-col);
+  color:var(--second-col);
   border-radius: 4px;
   padding: 10px;
   font-size: 1rem;

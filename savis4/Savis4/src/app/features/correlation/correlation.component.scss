@@ -1,4 +1,7 @@
-
+.p-4{
+  background-color: var(--fifth-col);
+  padding-bottom: 100px;
+}
 .static-footer {
     position: fixed;
     bottom: 0;
@@ -7,4 +10,9 @@
     color: #ffffff;
     text-align: center;
     padding: 10px 0; 
+  }
+
+  h1 {
+    font-weight: bold;
+    color:var(--second-col);
   }

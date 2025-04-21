@@ -1,15 +1,28 @@
-$primary-background: #4caf50;
+$primary-background: var(--third-col);
 $text-color: white;
 $chart-height: 10rem;
 $button-margin: 0.5rem;
 $section-spacing: 1rem;
 $stat-block-width: calc(50% - 1rem); 
-
-#two-mean {
+.p-4{
+  background-color:var(--fifth-col);
+  padding-bottom: 100px;
+}
+//#two-mean {
   h1,
   h2,
-  h3 {
+  h3, p, label {
     margin-bottom: $section-spacing;
+    color:var(--second-col);
+  }
+
+  span{
+    color:var(--second-col);
+  }
+
+  .chart-wrap, canvas{
+    background-color: var(--eighth-col);
+    border-radius: 10px;
   }
 
   .section {
@@ -31,7 +44,7 @@ $stat-block-width: calc(50% - 1rem);
 
       button {
         background-color: $primary-background;
-        color: $text-color;
+        color: white;
         margin-top: $button-margin;
         padding: 0.5rem 1rem;
         border: none;
@@ -68,11 +81,23 @@ $stat-block-width: calc(50% - 1rem);
     }
   }
 
+  textarea{
+    background-color: var(--fifth-col);
+    border: 2px solid var(--ninth-col);
+    color:var(--second-col);
+    resize:none;
+    border-radius: 10px;
+  }
+
   input[type="number"],
   input[type="range"],
   select {
     width: 100%;
     margin-bottom: $button-margin;
+    background-color: var(--fifth-col);
+    border: 2px solid var(--ninth-col);
+    color:var(--second-col);
+    accent-color: var(--seventh-col);
   }
 
   // Additional styles for specific elements
@@ -94,7 +119,7 @@ $stat-block-width: calc(50% - 1rem);
     border: none;
     cursor: pointer;
   }
-}
+//}
 
 // Media queries for responsiveness
 @media (max-width: 768px) {
@@ -105,7 +130,7 @@ $stat-block-width: calc(50% - 1rem);
   }
 }
 .custom-button {
-  background-color: green;
+  background-color: var(--seventh-col);
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -118,9 +143,13 @@ $stat-block-width: calc(50% - 1rem);
   cursor: pointer;
 
   &:hover {
-    background-color: lightgreen;
+    background-color: var(--third-col);
     color: black;
   }
+}
+
+input[type="checkbox"]{
+  accent-color: var(--seventh-col);
 }
 
 .static-footer {
@@ -131,4 +160,18 @@ $stat-block-width: calc(50% - 1rem);
   color: #ffffff;
   text-align: center;
   padding: 10px 0; 
+}
+
+.h1{
+  font-weight: bold;
+  color: var(--second-col);
+}
+
+button, #uploadFile{
+  background-color: var(--third-col);
+  color:white;
+}
+
+button:hover, #uploadFile:hover{
+  background-color: var(--fourth-col);
 }
