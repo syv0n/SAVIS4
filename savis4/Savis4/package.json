@@ -22,23 +22,39 @@
     "test:ci": "start-server-and-test start:ci 'http://localhost:4200' 'npm run cypress:run'"
   },
   "build": {
-    "appId": "com.savis4.app",
-    "directories": {
-      "output": "build"
-    },
-    "win": {
-      "target": "portable"
-    },
-    "mac": {
-      "target": "dmg"
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
-    }
+  "appId": "com.savis4.app",
+  "productName": "Savis4",
+  "directories": {
+    "output": "dist/electron",
+    "buildResources": "src/assets"  
   },
+  "files": [
+    "main.js",
+    "package.json",
+    {
+      "from": "dist/Savis4",  
+      "to": "",
+      "filter": ["**/*"]
+    },
+    {
+      "from": "src/assets",  
+      "to": "assets",
+      "filter": ["**/*"]
+    }
+  ],
+  "win": {
+    "target": "nsis",
+    "icon": "src/assets/icons/icon.ico"
+  },
+  "mac": {
+    "target": "dmg",
+    "icon": "src/assets/icons/icon.icns"
+  },
+  "linux": {
+    "target": "AppImage",
+    "icon": "src/assets/icons/icon.png"
+  }
+},
   "private": true,
   "dependencies": {
     "@angular/animations": "~12.2.0",
