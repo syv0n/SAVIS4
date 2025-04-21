@@ -8,6 +8,10 @@
         <span class="regression-formula-label">Regression Formula</span>
         <span class="regression-formula-value">{{ regressionFormula }}</span>
       </div>
+      <div class="reference-formula">
+        <span class="reference-formula-label">Reference Formula</span>
+        <span class="reference-formula-value">y = 0x + {{ referenceLinePosition }}</span>
+      </div>
       <div>
         <canvas baseChart
                 [datasets]="scatterChartData"

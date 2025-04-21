@@ -65,4 +65,26 @@
     color: #0e0f0f;
     font-size: 1.1em;
   }
+
+  .reference-formula {
+    display: inline-flex;
+    align-items: center;
+    background: #f8f9fa;
+    border-radius: 24px;
+    padding: 8px 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 4px;
+  }
+  
+  .reference-formula-label {
+    font-weight: 500;
+    color: #555;
+    margin-right: 8px;
+  }
+  
+  .reference-formula-value {
+    font-weight: 500;
+    color: #0e0f0f;
+    font-size: 1.1em;
+  }
   
