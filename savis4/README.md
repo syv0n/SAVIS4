@@ -87,9 +87,21 @@ Run `ng serve` or `npm run start` for a dev server. Navigate to `http://localhos
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
 ### Build
-Run `npm run build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Run `npm run electron:build` to build the project. The build artifacts will be stored in the `dist/electron` directory.
 
-To package the project for Linux, Windows, and Mac, run `npm run electron:package`. This will create `savis4-darwin-x64`, `savis4-linux-x64`, and `savis4-win32-x64` directories in the `savis4` directory. Zip the contents of the directory and distribute the zip file.
+Currently the downloadable packages are in github releases https://github.com/syv0n/SAVIS4/releases/tag/v1.0.0
+- Savis4-Portable-Linux.zip (linux machines)
+- Savis4-Portable-Windows.zip (windows machines)
+
+Windows 
+1. Unzip the package
+2. Launch Savis4.exe
+
+Linux
+1. Unzip the package
+2. Make binary executable (chmod +x Savis4)
+3. Run ./Savis4
+
 
 ### Further help
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference page](https://angular.io/cli).
