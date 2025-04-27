@@ -38,6 +38,9 @@ Two Means Confidence Interval feature in our Angular application allows users to
 <img width="1721" src="savis4/src/assets/TwoProportionsCI.png">
 A two-proportions confidence interval graph typically displays the difference between two sample proportions along with its confidence interval, often represented as a horizontal line or bar. The graph highlights the point estimate of the difference and the range within which the true difference is expected to lie, based on the specified confidence level.
 
+### User Manual
+<img width="1721" src="https://github.com/syv0n/SAVIS4/blob/master/savis4/Savis4/src/assets/2MCI2.png"](https://github.com/syv0n/SAVIS4/blob/master/savis4/Savis4/src/assets/User-Manual-Screenshot.png">
+The User Manual page provides users with guidance on how to use the site's statistical tools, including hypothesis testing, graph generation, regression analysis, and confidence interval calculations. It explains each tool’s purpose and helps users interpret and apply the results for data analysis.
 
 # Pre-requisites
 * NodeJS
