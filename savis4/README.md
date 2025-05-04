@@ -17,7 +17,7 @@ runs the desired simulation. The third section allows for custom upper and lower
 graphs where it checks if it covers the mean of the actual in the sample collected when the bounds are added into consideration.
 
 ### Correlation Feature
-<img width="1721" alt="savis_correlation" src="https://github.com/syv0n/SAVIS4/blob/master/savis4/Savis4/src/assets/correlation.png">
+<img width="1721" alt="savis_correlation" src="https://github.com/syv0n/SAVIS4/blob/master/savis4/Savis4/src/assets/correlationS4.png">
 The correlation feature allows users to analyze the relationship between two sets of data. It provides both manual and file upload options for inputting data and generates correlation coefficients along with visual cues for analysis. The visual cues includes a regression line, this line turns green for strong correlations (r > 0.7) and red for weak ones, with data points colored based on their distance and position relative to the line. Points far above the line appear red, points far below appear blue, and those closest to the line are shown in a darker shade of either color.
 
 ### Two Proportion Hypothesis Testing
