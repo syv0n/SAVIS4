@@ -42,6 +42,10 @@ A two-proportions confidence interval graph typically displays the difference be
 <img width="1721" src="https://github.com/syv0n/SAVIS4/blob/master/savis4/Savis4/src/assets/User-Manual-Screenshot.png">
 The User Manual page provides users with guidance on how to use the site's statistical tools, including hypothesis testing, graph generation, regression analysis, and confidence interval calculations. It explains each tool’s purpose and helps users interpret and apply the results for data analysis.
 
+### Calculator
+<img width="1721" src="https://github.com/syv0n/SAVIS4/blob/master/savis4/Savis4/src/assets/calculatorReadme.png">
+The Cacluator feature provides a user-friendly interface for performing basic arithmetic operations directly within the SAVIS4 platform. It is accessible by a toggle button on the top left on every page. It supports addition, substraction, multiplication, division, percentage calculations, and positive/negative toggling. The calculator is designed with a clean, responsive layout that adapts to light/dark mode, making it a convenient tool for students performing quick computations while engaging with statisitcal analysis. 
+
 # Pre-requisites
 * NodeJS
 * NPM
