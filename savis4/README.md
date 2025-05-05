@@ -6,7 +6,8 @@ SAVIS4 is a statistical analysis website built at the request of Professor Rafae
 
 # Features
 ### One Proportion Hypothesis Testing
-One Proportion Hypothesis Testing feature first loads data and generates a graphical representation comparing two proportions. In this case, one-proportion tests compare a sample proportion to a specific value. It then runs simulations to assess the significance of the observed difference, and finally, it analyzes the Sampling Distribution of Difference of Proportions to determine the likelihood of the observed results occurring by chance alone.
+<img width="1721" src="https://github.com/syv0n/SAVIS4/blob/master/savis4/Savis4/src/assets/OPHT.png">
+One Proportion Hypothesis Testing feature first loads data and generates a graphical representation looking at one proportion. In this case, one-proportion tests compare a sample proportion to a specific value. It then runs simulations to assess the significance of the observed difference, and finally, it analyzes the Sampling Distribution of Difference of Proportions to determine the likelihood of the observed results occurring by chance alone.
 
 ### Two Proportion Hypothesis Testing
 <img width="1721" src="https://github.com/syv0n/SAVIS4/blob/master/savis4/Savis4/src/assets/Two Prop.png">
