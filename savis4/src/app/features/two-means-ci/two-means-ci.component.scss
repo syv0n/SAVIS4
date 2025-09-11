@@ -1,0 +1,177 @@
+$primary-background: var(--third-col);
+$text-color: white;
+$chart-height: 10rem;
+$button-margin: 0.5rem;
+$section-spacing: 1rem;
+$stat-block-width: calc(50% - 1rem); 
+.p-4{
+  background-color:var(--fifth-col);
+  padding-bottom: 100px;
+}
+//#two-mean {
+  h1,
+  h2,
+  h3, p, label {
+    margin-bottom: $section-spacing;
+    color:var(--second-col);
+  }
+
+  span{
+    color:var(--second-col);
+  }
+
+  .chart-wrap, canvas{
+    background-color: var(--eighth-col);
+    border-radius: 10px;
+  }
+
+  .section {
+    margin-bottom: $section-spacing;
+
+    &.lhs,
+    &.rhs {
+      flex: 1;
+    }
+
+    .lhs {
+      // Customize the data input area
+      textarea#csv-input {
+        width: 100%;
+        min-height: 8rem;
+        resize: vertical;
+        margin-bottom: $section-spacing;
+      }
+
+      button {
+        background-color: $primary-background;
+        color: white;
+        margin-top: $button-margin;
+        padding: 0.5rem 1rem;
+        border: none;
+        cursor: pointer;
+      }
+    }
+
+    .rhs {
+      // Chart area styles
+      .chart-wrap {
+        height: $chart-height;
+        margin-bottom: $section-spacing;
+      }
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-top: $section-spacing;
+
+      > div {
+        width: $stat-block-width;
+        margin-right: $section-spacing;
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        .stat {
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  textarea{
+    background-color: var(--fifth-col);
+    border: 2px solid var(--ninth-col);
+    color:var(--second-col);
+    resize:none;
+    border-radius: 10px;
+  }
+
+  input[type="number"],
+  input[type="range"],
+  select {
+    width: 100%;
+    margin-bottom: $button-margin;
+    background-color: var(--fifth-col);
+    border: 2px solid var(--ninth-col);
+    color:var(--second-col);
+    accent-color: var(--seventh-col);
+  }
+
+  // Additional styles for specific elements
+  #how-many-stddev {
+    font-weight: bold;
+  }
+
+  // Styles for the sliders and buttons in the Sampling Distribution section
+  #confidence-level {
+    width: 50%;
+    margin-bottom: $section-spacing;
+  }
+
+  button#buildci {
+    width: 50%;
+    background-color: $primary-background;
+    color: $text-color;
+    padding: 0.5rem 1rem;
+    border: none;
+    cursor: pointer;
+  }
+//}
+
+// Media queries for responsiveness
+@media (max-width: 768px) {
+  #two-mean .stats > div {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: $button-margin;
+  }
+}
+.custom-button {
+  background-color: var(--seventh-col);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  color: white;
+  text-align: center;
+  display: inline-block;
+  font-size: 20px;
+  margin-left: 10px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--third-col);
+    color: black;
+  }
+}
+
+input[type="checkbox"]{
+  accent-color: var(--seventh-col);
+}
+
+.static-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #000000; 
+  color: #ffffff;
+  text-align: center;
+  padding: 10px 0; 
+}
+
+.h1{
+  font-weight: bold;
+  color: var(--second-col);
+}
+
+button, #uploadFile{
+  background-color: var(--third-col);
+  color:white;
+}
+
+button:hover, #uploadFile:hover{
+  background-color: var(--fourth-col);
+}

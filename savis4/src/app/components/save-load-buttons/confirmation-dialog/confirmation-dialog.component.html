@@ -1,0 +1,5 @@
+<h1 mat-dialog-title>{{ 'confirmation_question' | translate }}</h1>
+<div mat-dialog-actions>
+    <button mat-button class="yes" (click)="onYesClick()" cdkFocusInitial>{{ 'confirmation_yes' | translate }}</button>
+    <button mat-button class="no" (click)="onNoClick()">{{ 'confirmation_no' | translate }}</button>
+</div>

@@ -1,0 +1,378 @@
+// #one-mean {
+//     #title {
+//       text-align: center;
+//       margin-top: 50px;
+//       margin-bottom: 25px;
+//     }
+  
+//     #button-div {
+//       display: flex;
+//       flex-direction: column;
+//       width: 179px;
+//     }
+  
+//     .btn {
+//       color: #fff;
+//       background-color: #93cb52;
+//       padding: 0.5rem 2rem;
+//       border: none;
+//       border-radius: 5px;
+//       margin-bottom: 2px;
+//       cursor: pointer;
+//     }
+  
+//     #data-div {
+//       display: flex;
+//       flex-direction: column;
+//       width: 179px;
+//       justify-content: center;
+//       margin-left: 10px;
+//     }
+  
+//     .data-display {
+//       height: 130px;
+//       width: 175px;
+//       border: 1px solid #ccc;
+//       overflow-y: auto;
+//     }
+  
+//     #form-container {
+//       display: flex;
+//     }
+  
+//     #mean-display {
+//       margin: 0px;
+//     }
+    
+//     #std-display {
+//       margin: 0px;
+//     }
+  
+//     #size-display {
+//       margin: 0px;
+//     }
+  
+//     #p-display {
+//       margin-top: 5px;
+//     }
+  
+//     #chart-input-form {
+//       display: flex;
+//       flex-direction: column;
+//       width: 150px;
+//       margin-right: 10px;
+//     }
+  
+//     #display-container {
+//       display: flex;
+//       flex-direction: column;
+//     }
+  
+//     #hypothetical-output {
+//       display: flex;
+//     }
+  
+//     // #hypothetical-display {
+//     //   height: 130px;
+//     //   width: 175px;
+//     //   border: 1px solid #ccc;
+//     //   overflow-y: auto;
+//     //   padding: 5px;
+//     //   text-align: left;
+//     // }
+  
+//     #chart-wrap {
+//       flex: 1;
+//     }
+  
+//     #sample-container {
+//       display: flex;
+//     }
+  
+//     // #sample-display {
+//     //   height: 150px;
+//     //   width: 175px;
+//     //   overflow-y: auto;
+//     //   overflow-x: hidden;
+//     //   border: 1px solid #ccc;
+//     //   // white-space: pre-wrap;
+//     //   // border: 2px solid black;
+//     // }
+  
+//     #p-display-3 {
+//       display: flex;
+//     }
+  
+//     #sampling-container {
+//       display: flex;
+//     }
+  
+//     .line-break {
+//       border: none;
+//       height: 3px;
+//       color: green;
+//       background-color: green;
+//     }
+  
+//     #section-4-div {
+//       width: 150px;
+//     }
+  
+//     #sample-mean-p {
+//       margin-bottom: 0px;
+//     }
+//   }
+  
+//   // #one-mean {
+//   //     h3 {
+//   //       margin-top: 1ch;
+//   //       width: 100%;
+//   //       .toggle-box {
+//   //         float: right;
+//   //       }
+//   //     }
+//   //     .chart-input-form {
+//   //       display: flex;
+//   //       // border-bottom: 3px green solid;
+//   //       .data-form {
+//   //         display: flex;
+//   //         flex-direction: column;
+//   //         flex: 1;
+//   //         width: 38ch;
+//   //         padding: 5px;
+//   //         margin-bottom: 10px;
+//   //         text-align: justify;
+//   //         p {
+//   //           margin-top: 1px;
+//   //           margin-bottom: 1px;
+//   //         }
+//   //         .center-num {
+//   //           text-align: center;
+//   //           float: right;
+//   //         }
+//   //       }
+//   //       #run-sim-error-msg {
+//   //         color: red;
+//   //         text-align: center;
+//   //       }
+//   //       .chart-wrap {
+//   //         flex: 8;
+//   //       }
+//   //       label,
+//   //       input[type="number"] {
+//   //         padding: 0.4rem;
+//   //         border-radius: 5px;
+//   //         display: inline-block;
+//   //       }
+//   //       input[type="range"] {
+//   //         cursor: pointer;
+//   //       }
+//   //     }
+//   //     .btn {
+//   //       margin-top: 1px;
+//   //       margin-bottom: 1px;
+//   //     }
+//   //     textarea {
+//   //       margin: 2px;
+//   //       border-radius: 5px;
+//   //     }
+//   //     select {
+//   //       padding: 0.4rem;
+//   //       margin: 2px;
+//   //       border-radius: 5px;
+//   //     }
+//   //   }
+  
+//   //   #page-title {
+//   //     text-align: center;
+//   //     margin-top: 1ch;
+//   //     margin-bottom: 1ch;
+//   //   }
+#dot-chart-tutorial{
+  padding: 20px;
+  background-color:var(--fifth-col);
+
+    h3 {
+      color:var(--second-col);
+      font-weight: bold;
+      margin-top: 1ch;
+      width: 100%;
+      .toggle-box {
+        float: right;
+      }
+    }
+    h1 {
+      color:var(--second-col);
+      font-weight: bold;
+    }
+    .chart-input-form {
+      color:var(--second-col);
+      display: flex;
+      // border-bottom: 3px green solid;
+      .data-form {
+        color:var(--second-col);
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        width: 38ch;
+        padding: 5px;
+        margin-bottom: 10px;
+        //text-align: justify;
+        p {
+          color:var(--second-col);
+          margin-top: 1px;
+          margin-bottom: 1px;
+          text-align: center;
+        }
+        .center-num {
+          text-align: center;
+          float: right;
+        }
+      }
+      .chart-wrap {
+        background-color: var(--eighth-col);
+        border-radius: 10px;
+        flex: 8;
+        padding: 5px;
+      }
+      label,
+      input[type="number"] {
+        background-color: var(--fifth-col);
+        color:var(--second-col);
+        height: 25px;
+        border-radius: 5px;
+        display: inline-block;
+      }
+    }
+    .btn {
+      margin-top: 1px;
+      margin-bottom: 1px;
+    }
+    textarea{
+      background-color: var(--fifth-col);
+      border: 2px solid var(--ninth-col);
+      color:var(--second-col);
+      margin: 2px;
+      width: 100%;
+      border-radius: 5px;
+      resize: none;
+    }
+    select{
+      background-color: var(--fifth-col);
+      border: 2px solid var(--ninth-col);
+      color:var(--second-col);
+      width: 100%;
+      height: 30px;
+      border-radius: 5px;
+    }
+}
+
+.btn2 {
+  //background: linear-gradient(180deg, lighten($secondary-color, 5%), $secondary-color);
+  background: var(--third-col);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+   // background: linear-gradient(180deg, $secondary-color, darken($secondary-color, 5%));
+   background-color: var(--fourth-col);
+  }
+  #data-div {
+    display: flex;
+    flex-direction: column;
+    width: 179px;
+    justify-content: center;
+    margin-left: 10px;
+  }
+  .data-display {
+    height: 130px;
+    width: 175px;
+    border: 1px solid #ccc;
+    overflow-y: auto;
+  }
+  &:disabled {
+    background: #bfbfbf;
+    cursor: not-allowed;
+  }
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+.green-line {
+  margin: 10px;
+  width: 100%;
+  height:4px;
+  background-color: green;
+}
+
+$primary-color: var(--seventh-col);
+$secondary-color: #93cb52;
+$slider-active-color: var(--ninth-col);
+$slider-track-color: var(--ninth-col);
+
+button {
+  //background: linear-gradient(180deg, lighten($secondary-color, 5%), $secondary-color);
+  background: var(--third-col);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    //background: linear-gradient(180deg, $secondary-color, darken($secondary-color, 5%));
+    background: var(--fourth-col);
+  }
+
+  &:disabled {
+    background: var(--ninth-col);
+    cursor: not-allowed;
+  }
+}
+
+input[type="number"] {
+  color:var(--second-col);
+  margin: 2px;
+  border: 1px solid $slider-active-color;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 1rem;
+  width: 100%;
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: rgb(185, 180, 180);
+    color: rgb(185, 180, 180);
+  }
+}
+
+input[type="checkbox"] {
+  accent-color: var(--seventh-col);
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.readonly {
+  background-color: var(--fifth-col);
+  color:var(--second-col);
+  //background-color: rgb(185, 180, 180);
+  border: 2px solid var(--ninth-col);
+  font-size: 1rem;
+  width: 100%;
+  cursor: default;
+}
+
+.static-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #000000; 
+  color: #ffffff;
+  text-align: center;
+  padding: 10px 0; 
+}

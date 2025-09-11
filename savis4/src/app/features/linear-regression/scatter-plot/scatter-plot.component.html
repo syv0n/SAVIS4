@@ -1,0 +1,19 @@
+<div class="graphBox">
+    <div>
+      <div class="least-squares-badge">
+        <span class="least-squares-label">{{ 'lr_least_squares' | translate }}</span>
+        <span class="least-squares-value">{{ leastSquares | number:'1.2-2' }}</span>
+      </div>
+      <div class="regression-formula">
+        <span class="regression-formula-label">Regression Formula</span>
+        <span class="regression-formula-value">{{ regressionFormula }}</span>
+      </div>
+      <div>
+        <canvas baseChart
+                [datasets]="scatterChartData"
+                [options]="scatterChartOptions"
+                [chartType]="scatterChartType">
+        </canvas>
+      </div>
+    </div>
+  </div>

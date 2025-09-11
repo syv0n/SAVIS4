@@ -1,0 +1,35 @@
+.load {
+    border: 1px black solid;
+    background-color: rgba(0, 128, 0, 0.5);
+}
+
+.load:hover {
+    background-color: rgba(0, 128, 0, 0.8);
+
+}
+
+.close {
+    border: 1px black solid;
+    background-color: rgba(255, 0, 0, 0.5);
+}
+
+.close:hover {
+    background-color: rgba(255, 0, 0, 0.8);
+}
+
+.button {
+    border: 1px black solid;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.button:hover {
+    background-color: rgba(189, 189, 189, 0.8);
+}
+
+.input-field {
+    border-left: 1px black solid;
+    border-right: 1px black solid;
+    border-top: 1px black solid;
+    height: 300px;
+    width: 100%;
+}

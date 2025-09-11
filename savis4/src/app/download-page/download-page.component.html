@@ -1,0 +1,28 @@
+<app-navbar></app-navbar>
+
+<body>
+  <div class="flex w-full gap-12">
+    <div class="w-full pl-12 pr-12">
+      <div class="bg-lightMintGreen p-10 mt-12 h-100">
+        <p class="text-center text-4xl font-medium">Download SAVIS</p>
+        <p class="text-center text-xl">Graph and learn statistical concepts while being offline</p>
+      <div class="flex flex-col items-center justify-center space-y-6">
+        <button (click)="downloadWindows()" class="h-12 px-6 bg-forestGreen hover:bg-darkForestGreen text-white text-lg">
+        Download for Windows
+        </button>
+        <button class="h-12 px-11 bg-forestGreen hover:bg-darkForestGreen text-white text-lg">Download for Mac</button>
+        <button (click)="downloadLinux()" class="h-12 px-10 bg-forestGreen hover:bg-darkForestGreen text-white text-lg">
+        Download for Linux
+        </button>
+        <p class="text-center text-2xl">Download on Mobile Device</p>
+      <div class="flex flex-row item-center justify-center space-x-7">
+        <button class="h-12 px-8 bg-forestGreen hover:bg-darkForestGreen text-white text-lg">Download on Apple</button>
+        <button class="h-12 px-6 bg-forestGreen hover:bg-darkForestGreen text-white text-lg">Download on Andriod</button>
+      </div>
+      </div>
+    </div>
+  </div> 
+
+<footer class="static-footer">
+  {{ "nav_copyright" | translate }}
+</footer>

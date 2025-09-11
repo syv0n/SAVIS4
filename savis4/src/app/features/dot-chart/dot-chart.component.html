@@ -1,0 +1,149 @@
+<app-navbar></app-navbar>
+<body class="flex flex-col min-h-screen">
+<div id="dot-chart-tutorial">
+    <h1 class="text-center">{{ 'dotPlot_title' | translate }}</h1>
+    <h3 class="subtitle">1. {{ 'dotPlot_enter_data' | translate }}
+        <input type="checkbox" class="toggle-box" [(ngModel)]="showInputForm" checked="checked">
+    </h3>
+    <div class="chart-input-form" *ngIf="showInputForm">
+        <div class="data-form">
+            <select id="sample-data-options" (change)="sampleSelect($event)">
+                <option disabled selected>{{ 'dotPlot_select_sample_data' | translate }}</option>
+                <option value="sample1">{{ 'dotPlot_sample1' | translate }}</option>
+                <option value="sample2">{{ 'dotPlot_sample2' | translate }}</option>
+            </select>
+            <textarea
+                [(ngModel)]="csvTextArea"
+                rows="8"
+                id="csv-input"
+                placeholder="{{ 'dotPlot_placeholder' | translate }}"
+            ></textarea>
+            <button class="btn" id="load-data-btn" (click)="loadDataButton()">{{ 'dotPlot_load_data' | translate }}</button>
+            <button class="btn" id="reset-btn" (click)="totalReset()">{{ 'dotPlot_reset' | translate }}</button>
+            <button class="btn" id="upload-btn" (click)="triggerFileInput()">{{ 'dotPlot_upload_data' | translate }}</button>
+            <input type="file" id="fileInput" #fileInput style="display: none;" (change)="onFileSelect($event)">
+            <br>
+            <form>
+                <input type="radio" id="population-data-ratio" value="population" name="setData" [(ngModel)]="sampleRadio" (click)="radioChange('population')" checked>
+                <label for="population" class="m-1">{{ 'dotPlot_population' | translate }}</label>
+                <br>
+                <input type="radio" id="sample-data-ratio" value="sample" name="setData" [(ngModel)]="sampleRadio" (click)="radioChange('sample')">
+                <label id="sampleButton" for="sample" class="m-1">{{ 'dotPlot_sample' | translate }}</label>
+            </form>
+            <div>
+                <app-save-load-buttons
+                    [data]="csvTextArea"
+                    [feature]="'dotPlot'"
+                ></app-save-load-buttons>
+            </div>
+            
+        </div>
+
+        <div class="data-form">
+            <textarea
+                rows="10"
+                id="input-data-display"
+                readonly
+                class="readonly"
+            >{{ inputDataDisplay }}</textarea>
+            <p>{{ 'dotPlot_Mean' | translate }} <i>{{ meanSymbol }}</i> :</p>
+            <p>{{ inputDataMean }}</p>
+            <p>{{ 'dotPlot_Standard_Deviation' | translate }} {{ stdSymbol }}:</p>
+            <p>{{ inputDataStd }}</p>
+            <p>{{ 'dotPlot_Size' | translate }} <i>{{ sizeSymbol }}</i> :</p>
+            <p>{{ inputDataSize }}</p>
+        </div>
+        <div class="chart-wrap">
+            <canvas #inputChart></canvas>
+        </div>
+    </div>
+
+    <div class="green-line"></div>
+
+    <h3>2. {{ 'dotPlot_get_sample' | translate }}
+        <input type="checkbox" class="toggle-box" [(ngModel)]="showSampleForm" checked="checked">
+    </h3>
+    <div class="chart-input-form" *ngIf="showSampleForm">
+        <div class="data-form">
+            <label for="sample-data-size">{{ 'dotPlot_sample_size' | translate }}:</label>
+            <input type="number" min="1" step="1" id="sample-data-size" [(ngModel)]="sampleSize" [disabled]="disabledInput">
+            <label for="no-of-sample">{{ 'dotPlot_num_sim' | translate }}</label>
+            <br>
+            <input type="number" min="1" step="1" id="no-of-sample" [(ngModel)]="noOfSim" [disabled]="disabledInput">
+            <br>
+            <button class="btn" id="get-sample-btn" (click)="runSimulationButton()" [disabled]="disabledInput">{{ 'dotPlot_run_sim' | translate }}</button>
+            <p id="run-sim-error-msg"></p>
+        </div>
+
+        <div class="data-form">
+            <textarea
+                rows="10"
+                readonly
+                class="readonly"
+                id="sample-data-display"
+            >{{ sampleDataDisplay }}</textarea>
+            <p>{{ 'dotPlot_Mean' | translate }} <i>x̄</i> :</p>
+            <p>{{ sampleDataMean }}</p>
+            <p>{{ 'dotPlot_Standard_Deviation' | translate }} s:</p>
+            <p>{{ sampleDataStd }}</p>
+        </div>
+
+        <div class="chart-wrap">
+            <canvas #sampleChart></canvas>
+        </div>
+    </div>
+
+    <div class="green-line"></div>
+
+    <h3>3. {{ 'dotPlot_distribution' | translate }}
+        <input type="checkbox" class="toggle-box" [(ngModel)]="showMeansForm" checked="checked">
+    </h3>
+    <div class="chart-input-form" *ngIf="showMeansForm">
+        <div class="data-form">
+            <p>{{ 'dotPlot_means_interval' | translate }}</p>
+
+            <label for="min-tailValue">{{ 'dotPlot_min' | translate }}</label>
+            <input type="number" id="min-interValue" step="0.1" [(ngModel)]="minInterValInput" (ngModelChange)="sampleMeanChange()" [disabled]="sampleMeanDisabled">
+            <label for="min-tailValue">{{ 'dotPlot_include_min' | translate }}
+                <input type="checkbox" id="includeMin" [(ngModel)]="includeValMin" [disabled]="sampleMeanDisabled">
+            </label>
+
+            <br>
+
+            <label for="max-tailValue">{{ 'dotPlot_max' | translate }}</label>
+            <input type="number" id="max-interValue" step="0.1" [(ngModel)]="maxInterValInput" (ngModelChange)="sampleMeanChange()" [disabled]="sampleMeanDisabled">
+            <label for="max-tailValue">{{ 'dotPlot_include_max' | translate }}
+                <input type="checkbox" id="includeMax" [(ngModel)]="includeValMax" [disabled]="sampleMeanDisabled">
+            </label>
+
+            <br>
+
+            <p>{{ 'dotPlot_proportions_of_samples' | translate }}:</p>
+            <p>{{ sampleMeansChosen }}</p>
+            <p>{{ 'dotPlot_proportions_of_samples_unchosen' | translate }}:</p>
+            <p>{{ sampleMeansUnchosen }}</p>
+        </div>
+
+        <div class="data-form">
+            <textarea
+                rows="10"
+                readonly
+                class="readonly"
+                id="sample-means-display"
+            >{{ sampleMeansDisplay }}</textarea>
+            <p>{{ 'dotPlot_means_of_samples' | translate }}: </p>
+            <p>{{ sampleMeansMean }}</p>
+            <p>{{ 'dotPlot_std_of_samples' | translate }}: </p>
+            <p>{{ sampleMeansStd }}</p>
+            <p>{{ 'dotPlot_total_samples' |translate }}:</p>
+            <p>{{ sampleMeansSize }}</p>
+        </div>
+
+        <div class="chart-wrap">
+            <canvas #sampleMeansChart></canvas>
+        </div>
+    </div>
+</div>
+<footer class="static-footer">
+    {{ "nav_copyright" | translate }}
+  </footer>

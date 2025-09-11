@@ -1,0 +1,44 @@
+.ng-invalid {
+  border: 1px solid red;
+}
+
+form.ng-invalid {
+  border: 1px solid transparent;
+}
+
+.green-line {
+  margin: 10px;
+  width: 100%;
+  height:4px;
+  background-color: green;
+}
+
+h2{
+  color:var(--second-col);
+}
+
+.italic{
+  color:var(--second-col);
+}
+
+#columnY, #columnX{
+  background-color: var(--fifth-col);
+  border: 2px solid var(--ninth-col);
+  color:var(--second-col);
+}
+
+b,p{
+  color:var(--second-col);
+}
+
+#buttonStyle{
+  background-color: var(--third-col);
+}
+#buttonStyle:hover{
+  background-color: var(--fourth-col);
+}
+
+#chart-wrap{
+  background-color:var(--eighth-col);
+  border-radius: 10px;
+}
