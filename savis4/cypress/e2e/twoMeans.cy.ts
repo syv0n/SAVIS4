@@ -22,11 +22,12 @@ describe('template spec', () => {
 
     })
     it ('should reset the chart', () => {
-        cy.window().then((win) => {
-            cy.stub(win.console, 'log').as('consoleLog');
-        });
-        cy.get('div.w-full > :nth-child(3)').first().click() // Click the first match
-        cy.get('@consoleLog').should('have.been.calledWith', 'chart reset');
+        cy.get('.border-t-0').select("Sample 1")
+        cy.get('#loadData').click()
+        
+        cy.get('div.w-full > :nth-child(3)').first().click()
+        
+        cy.get('.border-t-0').should('have.value', '')
     })
     it ('should check if run simulation button is disabled on an empty chart', () => {
         cy.get('.w-3\\/12 > .mt-1').should('be.disabled')
