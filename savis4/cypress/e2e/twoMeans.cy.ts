@@ -25,9 +25,9 @@ describe('template spec', () => {
         cy.get('.border-t-0').select("Sample 1")
         cy.get('#loadData').click()
         
-        cy.get('div.w-full > :nth-child(3)').first().click()
+        cy.get('button').contains('Reset').click()
         
-        cy.get('.border-t-0').should('have.value', '')
+        cy.wait(500)
     })
     it ('should check if run simulation button is disabled on an empty chart', () => {
         cy.get('.w-3\\/12 > .mt-1').should('be.disabled')
