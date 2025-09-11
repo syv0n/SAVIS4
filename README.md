@@ -161,3 +161,4 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 - Alina Corpora (alinacorpora@csus.edu)
 - Veronika Tupy (vtupy@csus.edu)
 - Jacob Rutter (jarutter@csus.edu)
+
