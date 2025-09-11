@@ -26,12 +26,12 @@ jobs:
         env:
           NODE_OPTIONS: --openssl-legacy-provider
         run: npm run test:ci
-        working-directory: ./Savis3
+        working-directory: ./Savis4
       - name: Build
         env:
           NODE_OPTIONS: --openssl-legacy-provider
         run: npm run build
-        working-directory: ./Savis3
+        working-directory: ./Savis4
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'

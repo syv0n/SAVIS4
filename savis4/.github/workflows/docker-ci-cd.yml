@@ -28,7 +28,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: ${{ github.event_name != 'pull_request' }}
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/savis3-app:${{ github.sha }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/savis4-app:${{ github.sha }}
         platforms: linux/amd64,linux/arm64
 
    
