@@ -1,0 +1,133 @@
+{
+  "name": "savis4",
+  "version": "0.0.0",
+  "main": "main.js",
+  "scripts": {
+    "ng": "ng",
+    "start": "set NODE_OPTIONS=--openssl-legacy-provider && ng serve",
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider && ng build",
+    "build:prod": "set NODE_OPTIONS=--openssl-legacy-provider && ng build --prod",
+    "watch": "ng build --watch --configuration development",
+    "lint": "eslint --fix \"src/**/*.ts\"",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "electron": "electron .",
+    "electron:package": "electron-packager . --platform=win32,darwin,linux --arch=x64",
+    "electron:build": "electron-builder build --win --linux",
+    "electron:build-mac": "electron-builder build --mac",
+    "start:ci": "npm start & wait-on http://localhost:4200",
+    "test:ci": "start-server-and-test start:ci 'http://localhost:4200' 'npm run cypress:run'"
+  },
+  "build": {
+    "appId": "com.savis4.app",
+    "productName": "Savis4",
+    "directories": {
+      "output": "dist/electron",
+      "buildResources": "src/assets"
+    },
+    "files": [
+      "main.js",
+      "package.json",
+      {
+        "from": "dist/Savis4",
+        "to": "",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "src/assets",
+        "to": "assets",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "src/assets/icons/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "src/assets/icons/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "src/assets/icons/icon.png"
+    }
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "~12.2.0",
+    "@angular/cdk": "^12.2.13",
+    "@angular/common": "~12.2.0",
+    "@angular/compiler": "~12.2.0",
+    "@angular/core": "~12.2.0",
+    "@angular/fire": "^6.1.5",
+    "@angular/forms": "^12.2.0",
+    "@angular/material": "^12.2.13",
+    "@angular/platform-browser": "^12.2.0",
+    "@angular/platform-browser-dynamic": "^12.2.0",
+    "@angular/router": "^12.2.0",
+    "@angular/service-worker": "~12.2.0",
+    "@ngx-translate/core": "^13.0.0",
+    "@ngx-translate/http-loader": "^6.0.0",
+    "@types/chart.js": "^2.9.4",
+    "dependencies": "0.0.1",
+    "express": "^4.19.2",
+    "firebase": "^7.0 || ^8.0",
+    "jstat": "^1.9.6",
+    "mathjs": "^14.4.0",
+    "ng2-charts": "^2.4.3",
+    "papaparse": "^5.4.1",
+    "rxjs": "~6.6.0",
+    "simple-statistics": "^7.8.3",
+    "tslib": "^2.3.0",
+    "xlsx": "^0.18.5",
+    "zone.js": "~0.11.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/architect": "0.1202.18",
+    "@angular-devkit/build-angular": "^12.2.18",
+    "@angular-eslint/builder": "12.7.0",
+    "@angular-eslint/eslint-plugin": "12.7.0",
+    "@angular-eslint/eslint-plugin-template": "12.7.0",
+    "@angular-eslint/schematics": "12.7.0",
+    "@angular-eslint/template-parser": "12.7.0",
+    "@angular/cli": "~12.2.18",
+    "@angular/compiler-cli": "~12.2.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^12.11.1",
+    "@types/papaparse": "^5.3.14",
+    "@types/xlsx": "^0.0.36",
+    "@typescript-eslint/eslint-plugin": "4.28.2",
+    "@typescript-eslint/parser": "4.28.2",
+    "autoprefixer": "^10.4.17",
+    "chart.js": "^2.9.4",
+    "concurrently": "^8.2.2",
+    "cypress": "^13.6.6",
+    "electron": "^30.0.1",
+    "electron-builder": "^24.13.3",
+    "electron-packager": "^17.1.2",
+    "eslint": "^7.26.0",
+    "firebase-tools": "10.3.0",
+    "fuzzy": "^0.1.3",
+    "inquirer": "^6.2.2",
+    "inquirer-autocomplete-prompt": "^1.0.1",
+    "isbinaryfile": "4.0.10",
+    "jest": "^27.5.1",
+    "jest-canvas-mock": "^2.5.2",
+    "jest-fetch": "^1.1.1",
+    "jest-junit": "^16.0.0",
+    "jest-preset-angular": "^9.0.7",
+    "jsonc-parser": "^3.0.0",
+    "open": "^7.0.3",
+    "postcss": "^8.4.33",
+    "start-server-and-test": "^2.0.3",
+    "tailwindcss": "^2.2.19",
+    "typescript": "~4.3.5"
+  }
+}
