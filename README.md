@@ -18,13 +18,13 @@ Two Proportion Hypothesis Testing feature first loads data and generates a graph
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/OMHT1.png">
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/OMHT2.png">
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/OMHT3.png">
-One Mean Hypothesis Testing determines the size, mean, formula, standard deviation, minimum & maximums, and proportions of the sample based on input from the user either manually or through a .csv file. This feature gives users the graphing of their data, a simulation of the sample proportion, and distribution of the sample means.
+One Mean Hypothesis Testing determines the size, mean, formula, standard deviation, minimum & maximums, and proportions of the sample based on input from the user either manually or through a .csv file. This feature gives users the graphing of their data, a simulation of the sample poportion, and distribution of the sample means.
 
 ### Two Mean Hypothesis Testing
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/TMHT1.png">
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/TMHT2.png">
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/TMHT3.png">
-Two Mean Hypothesis testing feature determines the sizes, means, formula, standard deviation, minimum & maximums, and proportions of the sample based on input from the user either manually or through a .csv file. This feature gives users the graphing of their data, a simulation of the sample proportion, and distribution of the sample means.
+Two Mean Hypothesis testing feature determines the sizes, means, formula, standard deviation, minimum & maximums, and proportions of the sample based on input from the user either manually or through a .csv file. This feature gives users the graphing of their data, a simulation of the sample poportion, and distribution of the sample means.
 
 ### Bar Chart
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/BAR1.png">
@@ -43,11 +43,11 @@ Linear regression is a statistical method used to model the relationship between
 
 ### Correlation Visualization (WIP)
 <img width="1721" alt="savis_correlation" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/correlationS4.png">
-The correlation feature allows users to analyze the relationship between two sets of data. It provides both manual and file upload options for inputting data and generates correlation coefficients along with visual cues for analysis. The visual cues include a regression line; this line turns green for strong correlations (r > 0.7) and red for weak ones, with data points colored based on their distance and position relative to the line. Points far above the line appear red, points far below appear blue, and those closest to the line are shown in a darker shade of either color. This feature is currently a <b>Work in Progress (WIP)</b>, and is still being developed to properly display the line and will include more small features in the future.
+The correlation feature allows users to analyze the relationship between two sets of data. It provides both manual and file upload options for inputting data and generates correlation coefficients along with visual cues for analysis. The visual cues includes a regression line, this line turns green for strong correlations (r > 0.7) and red for weak ones, with data points colored based on their distance and position relative to the line. Points far above the line appear red, points far below appear blue, and those closest to the line are shown in a darker shade of either color. This feature is currently a <b>Work in Progress (WIP)</b>, and is still being developed to properly display the line and will include more small features in the future.
 
 ### One Proportion Confidence Interval
 <img width="1721" alt="savis_regression" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/OPCI.png">
-This feature helps in estimating a range where the true population proportion lies based on a sample proportion. Here, we take in success and failure and show the proportion of success and the calculation involves the sample size with a chosen level of confidence (e.g., 95%). We are able to see mean, standard deviation, lower and upper bounds of the intervals.
+This feature helps in estimating a range where the true population proportion lies based on a sample proportion. Here, we take in success and failure and show the proportion of success and the calculation involves the sample size with a chosen level of confidence (eg. 95%). We are able to see mean, standard deviation, lower and upper bounds of the intervals.
 
 ### Two Proportions Confidence Interval 
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/TwoProportionsCI.png"> 
@@ -55,7 +55,10 @@ A two-proportions confidence interval graph typically displays the difference be
 
 ### One Mean Confidence Interval
 <img width="1721" alt="savis_omci" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/OMCISS4.png">
-One Mean Confidence Interval calculates the confidence interval for the entered data. The first component allows for the data to be entered. It also displays the count for each point as a scatter plot. The second part takes a sample and runs the desired simulation. The third section allows for custom upper and lower bounds to be added. The fourth section displays graphs where it checks if it covers the mean of the actual in the sample collected when the bounds are added into consideration.
+One Mean Confidence Interval calculates the confidence interval for the entered data. The first component allows for the data
+to be entered into the data. It also displays the count for each point as a scatter plot. The second part takes a sample and
+runs the desired simulation. The third section allows for custom upper and lower bound to be added. The fourth section displays
+graphs where it checks if it covers the mean of the actual in the sample collected when the bounds are added into consideration.
 
 ### Two Mean Confidence Interval 
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/2MCI.png">
@@ -68,7 +71,7 @@ The User Manual page provides users with guidance on how to use the site's stati
 
 ### Calculator
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/calculatorReadme.png">
-The Calculator feature provides a user-friendly interface for performing basic arithmetic operations directly within the SAVIS4 platform. It is accessible by a toggle button on the top left on every page. It supports addition, subtraction, multiplication, division, percentage calculations, and positive/negative toggling. The calculator is designed with a clean, responsive layout that adapts to light/dark mode, making it a convenient tool for students performing quick computations while engaging with statistical analysis. This feature is currently a <b>Work in Progress (WIP)</b>, and its "Advanced Mode" feature is still being developed to include several other calculation functions and symbols. Additionally, the calculator's ability to move its window dynamically and resize it is still being worked on.
+The Cacluator feature provides a user-friendly interface for performing basic arithmetic operations directly within the SAVIS4 platform. It is accessible by a toggle button on the top left on every page. It supports addition, substraction, multiplication, division, percentage calculations, and positive/negative toggling. The calculator is designed with a clean, responsive layout that adapts to light/dark mode, making it a convenient tool for students performing quick computations while engaging with statisitcal analysis. This feature is currently a <b>Work in Progress (WIP)</b>, and its "Advanced Mode" feature is still being developed to include several other calculation functions and symbols. Additionally, the calculator's ability to move its window dynamically and resize it is still being worked on.
 
 # Pre-requisites
 * NodeJS
@@ -76,36 +79,37 @@ The Calculator feature provides a user-friendly interface for performing basic a
 * Angular CLI
 
 # Installation
-1. Clone the repository to your local machine.
-2. `cd` into the `savis4` directory.
+1. Clone to repository to your local machine.
+2. `Cd` into the `savis4` directory.
 3. Run `npm install` to install all the dependencies.
 
 # Testing 
 ## Unit Testing 
 
 ### Running unit tests
-Run `ng test` to execute the unit tests via [Jest](https://github.com/jestjs/jest).
+Run `ng test` to execute the unit tests via [Jest] https://github.com/jestjs/jest.
 
-### Running all tests 
-Run `npm run test:coverage` to execute a test for all the features with a unit test. Once all the tests have run the results will show up in the terminal as well as in the file `savis4/coverage/index.html`.
+### Running all test 
+Run `npm run test:coverage` to execute a test for all the features with a unit test. Once all the test has ran the results will show up in the terminal as well as in the file savis4 -> coverage -> index.html.
 
 ## Functional Testing
 
-### Running end-to-end functional tests
-Before running tests, the Angular project needs to be deployed into a local server using `ng serve`. This command compiles the application and starts a development server.
+### Running end-to-end functional test
+Before running tests, the Angular project needs to be deployed into a local server using `ng serve`. This command compiles the application and starts a development server
 
-Run `npm run cypress:open` to execute the automated tests via [Cypress](https://github.com/cypress-io/cypress).
+Run `npm run cypress:open` to execute the automated tests via [Cypress] https://github.com/cypress-io/cypress
 
 Once Cypress is open select "E2E testing" then select the preferred browser then Start. 
 
-Every feature/component has its own spec; clicking on them will start the automated tests for that specific feature or component.
+Every feature/component has its own spec, clicking on them will start the automated tests for that specific feature or component.
+
 
 # Deployment 
-The project was originally setup with GitHub Actions to automatically deploy the project to GitHub Pages. Normally when deploying the project, one would simply push their changes to the `main` branch and the deployment will be triggered automatically. However, because development is currently underway, the GitHub Actions is currently disabled for SAVIS4. The deployed project from about a year ago is still running from the previous SAVIS3 GitHub Actions page.
+The project was originally setup with Github Actions to automatically deploy the project to Github Pages. Normally when deploying the project, one would simply push their changes to the `main` branch and the deployment will be triggered automatically. However, because development is currently underway, the Github Actions is currently disabled for SAVIS4. However, the deployed project from about a year ago is still running from the previous SAVIS3 Github Actions Page.
 
 You can visit the old deployed project at [savis3](https://savias-c1f4d.web.app/login).
 
-If you forked the repository, you can deploy the project by changing the Firebase API keys in the `environment` directory and running `firebase init` and `firebase deploy` commands. A more detailed instruction video can be found here: [Firebase Deployment](https://www.youtube.com/watch?v=UNCggEPZQ0c)
+If you forked the repository, you can deploy the project by changing the Firebase API keys in `environment` directory and running `firebase init` and `firebase deploy` commands. A more detailed instruction video can be found here: [Firebase Deployment](https://www.youtube.com/watch?v=UNCggEPZQ0c)
 
 # Developer Instructions 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.18.
@@ -119,21 +123,22 @@ Run `ng generate component component-name` to generate a new component. You can 
 ### Build
 Run `npm run electron:build` to build the project. The build artifacts will be stored in the `dist/electron` directory.
 
-Currently the downloadable packages are in GitHub releases: https://github.com/syv0n/SAVIS4/releases/tag/v1.0.0
-- Savis4-Portable-Linux.zip (Linux)
-- Savis4-Portable-Windows.zip (Windows)
+Currently the downloadable packages are in github releases https://github.com/syv0n/SAVIS4/releases/tag/v1.0.0
+- Savis4-Portable-Linux.zip (linux machines)
+- Savis4-Portable-Windows.zip (windows machines)
 
-**Windows**
-1. Unzip the package  
-2. Launch `Savis4.exe`
+Windows 
+1. Unzip the package
+2. Launch Savis4.exe
 
-**Linux**
-1. Unzip the package  
-2. Make binary executable (`chmod +x Savis4`)  
-3. Run `./Savis4`
+Linux
+1. Unzip the package
+2. Make binary executable (chmod +x Savis4)
+3. Run ./Savis4
+
 
 ### Further help
-To get more help on the Angular CLI use `ng help` or check out the [Angular CLI Overview and Command Reference page](https://angular.io/cli).
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference page](https://angular.io/cli).
 
 # Contributors
 ### SAVIS3 Team
@@ -150,7 +155,7 @@ To get more help on the Angular CLI use `ng help` or check out the [Angular CLI 
 ### SAVIS4 Team
 - Shayn Voon (shaynvoon@csus.edu)
 - Steven Masters (stevenmasters@csus.edu)
-- Kenny Yang (kyang14@csus.edu)
+- Kenny Yang (Kyang14@csus.edu)
 - Xai Yang (xaiyang2@csus.edu)
 - Danny Le (dannyle@csus.edu)
 - Alina Corpora (alinacorpora@csus.edu)
