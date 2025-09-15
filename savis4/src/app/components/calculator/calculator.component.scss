@@ -1,0 +1,18 @@
+/* keep calculator floating above content */
+.calculator-container {
+  position: absolute;   /* allows dragging to work properly */
+  top: 80px;            /* starting offset (adjust as needed) */
+  left: 80px;
+  z-index: 1000;        /* make sure it’s above other elements */
+
+  /* optional extras */
+  border-radius: 0.75rem; /* matches Tailwind rounded-xl */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25); /* matches shadow-xl */
+  background-color: transparent; /* let Tailwind bg-gradient show */
+}
+
+/* make sure the display text can't be selected while dragging */
+.display {
+  user-select: none;
+  -webkit-user-select: none;
+}

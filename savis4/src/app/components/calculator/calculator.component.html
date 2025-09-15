@@ -3,8 +3,10 @@
     rounded-xl
     shadow-xl
     text-gray-800
-    relative
-    overflow-hidden" id="draggable" draggable="true" style="max-width: 700px">
+    relative" 
+    style="max-width: 700px"
+    #calculatorContainer
+    class="calculator-container">
 
     <h1 class="text-center text-white py-2 text-3xl font-bold invisible">Calculator For Savis4</h1>
 
@@ -35,7 +37,10 @@
                 px-6
                 text-5xl
                 text-white
-                font-thin">
+                font-thin
+                display"
+                (mousedown)="onMouseDown($event)"
+                (touchstart)="onTouchStart($event)"> <!--hopefully adds mouse for drag-->
                 {{display}}
             </div>
         </div>
