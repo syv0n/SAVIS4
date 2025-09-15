@@ -4,20 +4,20 @@
   <div class="flex w-full gap-12">
     <div class="w-full pl-12 pr-12">
       <div class="bg-lightMintGreen p-10 mt-12 h-100">
-        <p class="text-center text-4xl font-medium">Download SAVIS</p>
-        <p class="text-center text-xl">Graph and learn statistical concepts while being offline</p>
+        <p class="text-center text-4xl font-medium">{{ 'download_title' | translate }}</p>
+        <p class="text-center text-xl">{{'download_bio'|translate}}</p>
       <div class="flex flex-col items-center justify-center space-y-6">
         <button (click)="downloadWindows()" class="h-12 px-6 bg-forestGreen hover:bg-darkForestGreen text-white text-lg">
-        Download for Windows
+        {{'download_windows' | translate}}
         </button>
-        <button class="h-12 px-11 bg-forestGreen hover:bg-darkForestGreen text-white text-lg">Download for Mac</button>
+        <button class="h-12 px-11 bg-forestGreen hover:bg-darkForestGreen text-white text-lg">{{'download_mac' | translate}}</button>
         <button (click)="downloadLinux()" class="h-12 px-10 bg-forestGreen hover:bg-darkForestGreen text-white text-lg">
-        Download for Linux
+        {{'download_linux' | translate}}
         </button>
-        <p class="text-center text-2xl">Download on Mobile Device</p>
+        <p class="text-center text-2xl">{{'download_mobileTitle' | translate}}</p>
       <div class="flex flex-row item-center justify-center space-x-7">
-        <button class="h-12 px-8 bg-forestGreen hover:bg-darkForestGreen text-white text-lg">Download on Apple</button>
-        <button class="h-12 px-6 bg-forestGreen hover:bg-darkForestGreen text-white text-lg">Download on Andriod</button>
+        <button class="h-12 px-8 bg-forestGreen hover:bg-darkForestGreen text-white text-lg">{{'download_apple' | translate}}</button>
+        <button class="h-12 px-6 bg-forestGreen hover:bg-darkForestGreen text-white text-lg">{{'download_android' | translate}}</button>
       </div>
       </div>
     </div>

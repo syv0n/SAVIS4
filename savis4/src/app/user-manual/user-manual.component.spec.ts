@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UserManualComponent } from './user-manual.component';
 
 describe('UserManualComponent', () => {
@@ -8,7 +8,9 @@ describe('UserManualComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UserManualComponent ]
+      declarations: [ UserManualComponent ],
+      imports: [ TranslateModule.forRoot() ],
+      providers: [ TranslateService ],
     })
     .compileComponents();
   });

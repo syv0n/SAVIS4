@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DownloadPageComponent } from './download-page.component';
 
 describe('DownloadPageComponent', () => {
@@ -8,7 +8,9 @@ describe('DownloadPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DownloadPageComponent ]
+      declarations: [ DownloadPageComponent ],
+      imports: [ TranslateModule.forRoot() ],
+      providers: [ TranslateService ]
     })
     .compileComponents();
   });
