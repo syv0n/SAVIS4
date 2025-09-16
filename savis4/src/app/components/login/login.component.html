@@ -1,19 +1,13 @@
-<div class="content">
-    
+<div class="outer">
     <div class ="header">
-            <h3 class="title pt-6">SAVIS</h3>
+        <h3 class="title pt-6">SAVIS</h3>
     </div>
-    
-    <div class="outer">
         <div class="container">
             <div class="row">
                 <div class="offset-md-12 col-lg-15 col-md-4 offset-lg-4 offset-md-3">
                     <div class="panel border bg-white">
-                        <p class="text-center">Select language</p>
-                        <p class="text-center">Seleccione el idioma</p>
-                        <app-language-switcher class="language"></app-language-switcher>
                         <h3 class="panel-heading pt-3">{{'Login' | translate}}</h3>
-               
+                        <app-language-switcher class="language"></app-language-switcher>
                         <div class="panel-body p-3">
                             <form [formGroup]="loginForm">
                                 
@@ -48,10 +42,9 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class ="footer inset-x-0 bottom-0">
-        <div class="copyright">
-            <p class="py-4">{{ 'nav_copyright' | translate }}</p>
-        </div>
-    </div>
-    </div>
+        <!--Toggle Dark Mode Switch Button-->
+        <img [src]="modeIcon" id="modeSwitch" class="modeSwitcher" title="Dark Mode" (click)="checkMode()"/>
+        <footer class="static-footer">
+            {{ "nav_copyright" | translate }}
+        </footer>
+</div>

@@ -18,6 +18,11 @@
     "electron:package": "electron-packager . --platform=win32,darwin,linux --arch=x64",
     "electron:build": "electron-builder build --win --linux",
     "electron:build-mac": "electron-builder build --mac",
+    "build:electron": "npm run build:prod && electron-builder",
+    "build:win": "npm run build:prod && electron-builder --win",
+    "build:mac": "npm run build:prod && electron-builder --mac",
+    "build:linux": "npm run build:prod && electron-builder --linux",
+    "dist": "npm run build:prod && electron-builder --publish=never",
     "start:ci": "npm start & wait-on http://localhost:4200",
     "test:ci": "start-server-and-test start:ci 'http://localhost:4200' 'npm run cypress:run'"
   },
