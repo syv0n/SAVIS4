@@ -1,229 +1,305 @@
-import { HtmlParser } from '@angular/compiler';
-import {Component, ElementRef, ViewChild, Renderer2, NgZone,OnDestroy,} from '@angular/core';
+import {Component,OnInit, OnDestroy, ElementRef, Renderer2, NgZone, ViewChild
+} from '@angular/core';
 
 @Component({
   selector: 'app-calculator',
   templateUrl: './calculator.component.html',
   styleUrls: ['./calculator.component.scss']
 })
-export class CalculatorComponent implements OnDestroy {
+export class CalculatorComponent implements OnInit, OnDestroy {
+  // Variables for calculator logic
+  display: string = '0';
+  expression: string = '';
+  firstOperand: number | null = null;
+  operator: string | null = null;
+  waitingForSecondOperand: boolean = false;
+  hasDecimal: boolean = false;
+  advancedMode: boolean = false;
+
+  // Resizing variables
+  isResizing = false;
+  resizeStartX = 0;
+  resizeStartY = 0;
+  width = 340;
+  height = 480;
 
   // Reference to calculator container for dragging
   @ViewChild('calculatorContainer', { static: true })
   calculatorContainer!: ElementRef<HTMLElement>;
-
-  advancedMode: boolean = false; // track if advanced mode is on or not
   private isDragging = false;
-  private offsetX = 0; // pointer-to-top-left offset while dragging
+  private offsetX = 0;
   private offsetY = 0;
-
-  //setting up for advanced mode
-  toggleAdvancedMode(): string {
-    this.advancedMode = !this.advancedMode;
-    if (this.advancedMode == true) {
-      return "Advanced\nMode: On";
-    } else {
-      return "Advanced\nMode: Off"
-    }
-  }
-
   private removeMouseMove?: () => void;
   private removeMouseUp?: () => void;
   private removeTouchMove?: () => void;
   private removeTouchEnd?: () => void;
+  // Calculator buttons configuration (advanced mode)
+  advancedButtons = [
+    [
+      { label: 'Del', action: 'del' }, { label: 'π', action: 'pi' }, { label: 'e', action: 'e' }, { label: 'C', action: 'clear' }
+    ],
+    [
+      { label: 'x²', action: 'square' }, { label: '⅟ₓ', action: 'inv' }, { label: '|x|', action: 'abs' }, { label: 'exp', action: 'exp' }, { label: 'mod', action: 'mod' }
+    ],
+    [
+      { label: '²√x', action: 'sqrt' }, { label: '(', action: 'parenL' }, { label: ')', action: 'parenR' }, { label: 'n!', action: 'fact' }, { label: '÷', action: '/' }
+    ],
+    [
+      { label: 'xʸ', action: 'pow' }, { label: '7', action: '7' }, { label: '8', action: '8' }, { label: '9', action: '9' }, { label: '×', action: '*' }
+    ],
+    [
+      { label: '10ˣ', action: 'tenpow' }, { label: '4', action: '4' }, { label: '5', action: '5' }, { label: '6', action: '6' }, { label: '−', action: '-' }
+    ],
+    [
+      { label: 'log', action: 'log' }, { label: '1', action: '1' }, { label: '2', action: '2' }, { label: '3', action: '3' }, { label: '+', action: '+' }
+    ],
+    [
+      { label: 'ln', action: 'ln' }, { label: '+/−', action: 'neg' }, { label: '0', action: '0' }, { label: '.', action: '.' }, { label: '=', action: '=' }
+    ]
+  ];
+  // Calculator buttons configuration (basic mode)
+  basicButtons = [
+    [
+      { label: 'C', action: 'clear' }, { label: '-/+', action: 'neg' }, { label: '%', action: 'percent' }, { label: '/', action: '/' }
+    ],
+    [
+      { label: '7', action: '7' }, { label: '8', action: '8' }, { label: '9', action: '9' }, { label: '*', action: '*' }
+    ],
+    [
+      { label: '4', action: '4' }, { label: '5', action: '5' }, { label: '6', action: '6' }, { label: '-', action: '-' }
+    ],
+    [
+      { label: '1', action: '1' }, { label: '2', action: '2' }, { label: '3', action: '3' }, { label: '+', action: '+' }
+    ],
+    [
+      { label: '0', action: '0' }, { label: '.', action: '.' }, { label: '=', action: '=' }
+    ]
+  ];
 
   constructor(private renderer: Renderer2, private zone: NgZone) {}
 
-  // Handle mouse down on the calculator display to start dragging
-  onMouseDown(ev: MouseEvent): void {
-    ev.preventDefault();
-    this.beginDrag(ev.clientX, ev.clientY);
-    // Attach listeners to document so drag continues even if cursor leaves the element
-    this.zone.runOutsideAngular(() => {
-      this.removeMouseMove = this.renderer.listen(document,'mousemove',
-        (e: MouseEvent) => this.onPointerMove(e.clientX, e.clientY));
-      this.removeMouseUp = this.renderer.listen(document, 'mouseup', () => this.endDrag());
-    });
-  }
-
-  // Handle touch start on mobile devices to start dragging
-  onTouchStart(ev: TouchEvent): void {
-    if (ev.touches.length !== 1) return;
-    const t = ev.touches[0];
-    this.beginDrag(t.clientX, t.clientY);
-    // Attach listeners for touch move and touch end
-    this.zone.runOutsideAngular(() => {
-      this.removeTouchMove = this.renderer.listen(
-        document,
-        'touchmove',
-        (e: TouchEvent) => {
-          if (e.touches.length !== 1) return;
-          const tt = e.touches[0];
-          this.onPointerMove(tt.clientX, tt.clientY);
-        }
-      );
-      this.removeTouchEnd = this.renderer.listen(document, 'touchend', () =>
-        this.endDrag()
-      );
-    });
-  }
-
-   // Initialize drag state and compute pointer offset relative to element
-  private beginDrag(clientX: number, clientY: number): void {
-    const el = this.calculatorContainer.nativeElement;
-    el.style.position = 'absolute'; // allow for free positioning
-    // compute offsets so the pointer stays at the same relative spot
-    const rect = el.getBoundingClientRect();
-    this.offsetX = clientX - rect.left;
-    this.offsetY = clientY - rect.top;
-    this.isDragging = true;
-    // nice UX: disable text selection while dragging
-    document.body.style.userSelect = 'none'; // prevent text selection while dragging
-    // set cursor on the handle (you can also do this in SCSS)
-    el.style.cursor = 'move';
-  }
-
-  // Update calculator position as mouse/touch moves
-  private onPointerMove(clientX: number, clientY: number): void {
-    if (!this.isDragging) return;
-    const el = this.calculatorContainer.nativeElement;
-    // new absolute position
-    const left = clientX - this.offsetX;
-    const top = clientY - this.offsetY;
-    el.style.left = `${left}px`;
-    el.style.top = `${top}px`;
-  }
-
-   // End dragging and clean up listeners
-  private endDrag(): void {
-    if (!this.isDragging) return;
-    this.isDragging = false;
-    document.body.style.userSelect = '';
-    if (this.removeMouseMove) this.removeMouseMove();
-    if (this.removeMouseUp) this.removeMouseUp();
-    if (this.removeTouchMove) this.removeTouchMove();
-    if (this.removeTouchEnd) this.removeTouchEnd();
-    this.removeMouseMove = this.removeMouseUp = undefined;
-    this.removeTouchMove = this.removeTouchEnd = undefined;
-  }
-
-   // Ensure listeners are removed if component is destroyed
+  ngOnInit(): void {}
   ngOnDestroy(): void {
     this.endDrag();
   }
-
-  //diplay values to represent calculator Logic (simple, non-scientific) 
-  display = '0';
-  private currentInput = '0';
-  private storedValue: number | null = null;
-  private pendingOp: string | null = null;
-  private justEvaluated = false;
-
-   // Update the display string from current input
-  private setDisplayFromInput() {
-    this.display = this.currentInput;
+  // setting up for advanced mode
+  toggleAdvancedMode(): string {
+    this.advancedMode = !this.advancedMode;
+    return this.advancedMode ? 'Advanced\nMode: On' : 'Advanced\nMode: Off';
   }
-
-   // Clear all state and reset display
-  onClearClick(): void {
-    this.currentInput = '0';
-    this.storedValue = null;
-    this.pendingOp = null;
-    this.justEvaluated = false;
-    this.setDisplayFromInput();
-  }
-
-  // Toggle sign (+/-) of current input
-  onNegateClick(): void {
-    if (this.currentInput === '0') return;
-    this.currentInput =
-      this.currentInput[0] === '-' ? this.currentInput.slice(1) : '-' + this.currentInput;
-    this.setDisplayFromInput();
-  }
-
-   // Convert current input into a percentage
-  onPercentageClick(): void {
-    const v = parseFloat(this.currentInput || '0') / 100;
-    this.currentInput = this.trimNumber(v);
-    this.setDisplayFromInput();
-  }
-
-   // Append a decimal point if not already present
-  onDecimalClick(): void {
-    if (this.justEvaluated) {
-      this.currentInput = '0';
-      this.justEvaluated = false;
-    }
-    if (!this.currentInput.includes('.')) {
-      this.currentInput += '.';
-      this.setDisplayFromInput();
-    }
-  }
-
-   // Append a number digit to the current input
-  onNumberClick(d: string): void {
-    if (this.justEvaluated) {
-      this.currentInput = '0';
-      this.justEvaluated = false;
-    }
-    if (this.currentInput === '0') this.currentInput = d;
-    else this.currentInput += d;
-    this.setDisplayFromInput();
-  }
-
-  // Store operator and prepare for next input
-  onOperatorClick(op: string): void {
-    const current = parseFloat(this.currentInput || '0');
-    if (this.storedValue === null) {
-      this.storedValue = current;
-    } else if (this.pendingOp) {
-      this.storedValue = this.applyOp(this.storedValue, current, this.pendingOp);
-      this.display = this.trimNumber(this.storedValue);
-    }
-    this.pendingOp = op;
-    this.currentInput = '0';
-    this.justEvaluated = false;
-  }
-
-  // Execute pending operation and show result
-  onEqualsClick(): void {
-    if (this.pendingOp === null || this.storedValue === null) {
-      // nothing to do
-      this.display = this.trimNumber(parseFloat(this.currentInput || '0'));
+  // Handle mouse down on the calculator display to start dragging
+  onMouseDown(event: MouseEvent) {
+    if ((event.target as HTMLElement).classList.contains('resize-handle')) {
       return;
     }
-    const result = this.applyOp(
-      this.storedValue,
-      parseFloat(this.currentInput || '0'),
-      this.pendingOp
+    event.preventDefault();
+    this.beginDrag(event.clientX+10, event.clientY+80);
+  }
+  // Handle touch start on mobile devices to start dragging
+  onTouchStart(event: TouchEvent) {
+    if ((event.target as HTMLElement).classList.contains('resize-handle')) {
+      return;
+    }
+    event.preventDefault();
+    const touch = event.touches[0];
+    this.beginDrag(touch.clientX, touch.clientY);
+  }
+  // Initialize drag state and compute pointer offset relative to element
+  private beginDrag(clientX: number, clientY: number) {
+    this.isDragging = true;
+    // compute offsets so the pointer stays at the same relative spot
+    const rect = this.calculatorContainer.nativeElement.getBoundingClientRect();
+    this.offsetX = clientX - rect.left;
+    this.offsetY = clientY - rect.top;
+    // Use NgZone to run event listeners outside Angular to avoid triggering change detection
+    this.zone.runOutsideAngular(() => {
+      const moveHandler = (event: MouseEvent) =>
+        this.onPointerMove(event.clientX, event.clientY);
+      const touchMoveHandler = (event: TouchEvent) => {
+        if (event.touches.length > 0) {
+          this.onPointerMove(event.touches[0].clientX, event.touches[0].clientY);
+        }
+      };
+      const upHandler = () => this.endDrag();
+      const touchEndHandler = () => this.endDrag();
+      // Listen to document events to track dragging outside the element
+      this.removeMouseMove = this.renderer.listen('document', 'mousemove', moveHandler);
+      this.removeTouchMove = this.renderer.listen('document', 'touchmove', touchMoveHandler);
+      this.removeMouseUp = this.renderer.listen('document', 'mouseup', upHandler);
+      this.removeTouchEnd = this.renderer.listen('document', 'touchend', touchEndHandler);
+    });
+  }
+  // Update calculator position as mouse/touch moves
+  private onPointerMove(clientX: number, clientY: number) {
+    if (!this.isDragging) return;
+    this.renderer.setStyle(
+      this.calculatorContainer.nativeElement,
+      'left',
+      `${clientX - this.offsetX}px`
     );
-    this.display = this.trimNumber(result);
-    this.currentInput = this.display;
-    this.storedValue = null;
-    this.pendingOp = null;
-    this.justEvaluated = true;
+    this.renderer.setStyle(
+      this.calculatorContainer.nativeElement,
+      'top',
+      `${clientY - this.offsetY}px`
+    );
+  }
+  // End dragging and clean up listeners
+  private endDrag() {
+    this.isDragging = false;
+    this.removeMouseMove?.();
+    this.removeTouchMove?.();
+    this.removeMouseUp?.();
+    this.removeTouchEnd?.();
   }
 
-  // Perform the chosen operation
-  private applyOp(a: number, b: number, op: string): number {
-    switch (op) {
-      case '+':
-        return a + b;
-      case '-':
-        return a - b;
-      case '*':
-        return a * b;
-      case '/':
-        return b === 0 ? NaN : a / b;
-      default:
-        return b;
+  // Begin resize logic, declare listeners
+  onResizeStart(event: MouseEvent): void {
+    event.stopPropagation();
+    this.isResizing = true;
+    this.resizeStartX = event.clientX;
+    this.resizeStartY = event.clientY;
+    document.addEventListener('mousemove', this.onResizeMoveBound);
+    document.addEventListener('mouseup', this.onResizeEndBound);
+  }
+  // Update width/height as mouse moves
+  onResizeMove(event: MouseEvent): void {
+    if (this.isResizing) {
+      this.width += event.clientX - this.resizeStartX;
+      this.height += event.clientY - this.resizeStartY;
+      this.resizeStartX = event.clientX;
+      this.resizeStartY = event.clientY;
+      this.width = Math.max(340, Math.min(480, this.width));
+      this.height = Math.max(480, Math.min(700, this.height));
     }
   }
+  // End resize and clean up listeners
+  onResizeEnd(): void {
+    this.isResizing = false;
+    document.removeEventListener('mousemove', this.onResizeMoveBound);
+    document.removeEventListener('mouseup', this.onResizeEndBound);
+  }
+  // Bound versions of resize handlers for adding/removing event listeners
+  onResizeMoveBound = this.onResizeMove.bind(this);
+  onResizeEndBound = this.onResizeEnd.bind(this);
 
-  // Format numbers: avoid long floats and strip trailing zeros
-  private trimNumber(n: number): string {
-    // avoid long floats; remove trailing zeros
-    const s = n.toFixed(12);
-    return s.replace(/\.?0+$/, '');
+  // Compute the value to display (either current expression or last result)
+  get displayValue(): string {
+    return this.expression || this.display;
+  }
+  // Handle button clicks and update expression/display accordingly
+  onButtonClick(action: string): void {
+    switch (action) {
+      case 'clear':
+        this.onClearClick();
+        this.expression = '';
+        break;
+      case 'del':
+        if (this.expression.length > 0) {
+          this.expression = this.expression.slice(0, -1);
+        } else if (this.display.length > 1) {
+          this.display = this.display.slice(0, -1);
+        } else {
+          this.display = '0';
+        }
+        break;
+      case 'neg':
+        if (this.expression) {
+          if (this.expression.startsWith('-')) {
+            this.expression = this.expression.slice(1);
+          } else {
+            this.expression = '-' + this.expression;
+          }
+        } else {
+          this.onNegateClick();
+        }
+        break;
+      case 'percent':
+        this.expression += '/100';
+        break;
+      case '=':
+        this.evaluateExpression();
+        break;
+      case '.':
+        this.expression += '.';
+        break;
+      case '+': case '-': case '*': case '/':
+        this.expression += action;
+        break;
+      // Advanced actions
+      case 'pi': this.expression += 'π'; break;
+      case 'e': this.expression += 'e'; break;
+      case 'square': this.expression += '^2'; break;
+      case 'inv': this.expression += '^-1'; break;
+      case 'abs': this.expression += 'abs('; break;
+      case 'exp': this.expression += 'exp('; break;
+      case 'mod': this.expression += '%'; break;
+      case 'sqrt': this.expression += '√('; break;
+      case 'fact': this.expression += '!'; break;
+      case 'pow': this.expression += '^'; break;
+      case 'tenpow': this.expression += '10^'; break;
+      case 'log': this.expression += 'log('; break;
+      case 'ln': this.expression += 'ln('; break;
+      case 'parenL': this.expression += '('; break;
+      case 'parenR': this.expression += ')'; break;
+      default:
+        if (!isNaN(Number(action))) {
+          this.expression += action;
+        }
+        break;
+    }
+  }
+  // Evaluate the current expression and update the display
+  evaluateExpression(): void {
+    let expr = this.expression
+      .replace(/π/g, Math.PI.toString())
+      .replace(/e/g, Math.E.toString())
+      .replace(/√\(/g, 'Math.sqrt(')
+      .replace(/log\(/g, 'Math.log10(')
+      .replace(/ln\(/g, 'Math.log(')
+      .replace(/abs\(/g, 'Math.abs(')
+      .replace(/exp\(/g, 'Math.exp(')
+      .replace(/\^/g, '**')
+      .replace(/÷/g, '/')
+      .replace(/×/g, '*');
+      // Handle factorial separately since it's not a standard operator
+    if (expr.endsWith('!')) {
+      const num = parseFloat(expr.slice(0, -1));
+      expr = this.factorial(num).toString();
+    }
+    // Eval is used here for simplicity
+    try {
+      // eslint-disable-next-line no-eval
+      const result = eval(expr);
+      this.display = String(result);
+    } catch {
+      this.display = 'Error';
+    }
+    this.expression = '';
+  }
+
+  factorial(n: number): number {
+    if (n < 0) return NaN;
+    if (n === 0) return 1;
+    return n <= 1 ? 1 : n * this.factorial(n - 1);
+  }
+  // Clear all state and reset display
+  onClearClick(): void {
+    this.display = '0';
+    this.firstOperand = null;
+    this.operator = null;
+    this.waitingForSecondOperand = false;
+    this.hasDecimal = false;
+  }
+  // Toggle sign (+/-) of current input
+  onNegateClick(): void {
+    if (this.display !== '0') {
+      this.display = this.display.startsWith('-')
+        ? this.display.slice(1)
+        : '-' + this.display;
+    }
+  }
+  // Return the appropriate set of buttons based on mode
+  get buttons() {
+    return this.advancedMode ? this.advancedButtons : this.basicButtons;
   }
 }
