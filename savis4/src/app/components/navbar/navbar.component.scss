@@ -14,6 +14,18 @@
     top: 80px;
 }
 
+/* Calculator container */
+.calculator-container {
+    position: fixed;
+    top: 80px;
+    left: 20px;
+    z-index: 1000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    /* Optional: prevent click-through */
+    pointer-events: auto;
+}
 
 /* Switch styles */
 .switch {
@@ -85,4 +97,10 @@ span {
     box-shadow: none;
     margin-left: 2px;
     font-size: 12px;
+}
+
+.resize-handle {
+  border-bottom-right-radius: 12px;
+  /* Optional: add a visible corner */
+  background: linear-gradient(135deg, transparent 60%, #888 100%);
 }

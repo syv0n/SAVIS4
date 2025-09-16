@@ -1,18 +1,81 @@
-/* keep calculator floating above content */
+// SCSS Styles for Calculator Component
 .calculator-container {
-  position: absolute;   /* allows dragging to work properly */
-  top: 80px;            /* starting offset (adjust as needed) */
-  left: 80px;
-  z-index: 1000;        /* make sure it’s above other elements */
-
-  /* optional extras */
-  border-radius: 0.75rem; /* matches Tailwind rounded-xl */
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25); /* matches shadow-xl */
-  background-color: transparent; /* let Tailwind bg-gradient show */
-}
-
-/* make sure the display text can't be selected while dragging */
-.display {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  background: #222;
+  border-radius: 8px;
   user-select: none;
-  -webkit-user-select: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+// Styles for display, buttons, and layout
+.display {
+  background: #111;
+  padding: 15px;
+  font-size: 1.5rem;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  text-align: right;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+// Toggle button for advanced mode
+.advanced-toggle {
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  background: #444;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+}
+// Button grid layout
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+// Individual button styles
+.button-row {
+  display: flex;
+  gap: 5px;
+}
+// Button styles
+button {
+  flex: 1;
+  padding: 10px;
+  font-size: 1.2rem;
+  background: #75ee878a;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+// Button hover effect
+button:hover {
+  background: #555;
+}
+// Header and drag handle
+.calculator-header {
+  width: 100%;
+  height: 30px;
+  cursor: move;
+  background: #222;
+}
+// Resize handle styles
+.resize-handle {
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  cursor: se-resize;
+  background: #666;
 }

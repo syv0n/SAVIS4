@@ -23,9 +23,9 @@
           <li>
             <a class="block py-2 px-3 text-gray-100 rounded  md:border-0 md:hover:text-newGreen md:p-0 bg-navbar cursor-pointer" (click)="isAuth ? signOut() : continueAsGuest()">{{ isAuth ? ('nav_sign_out' | translate) : ('nav_sign_in' | translate) }}</a>
           </li>
-          <!--<li>
+          <li>
             <span class="ml-2 text-gray-100">{{ showCalculator ? ('calc_switch' | translate) : ('calc_switch' | translate) }}</span>            
-          </li>-->
+          </li>
         </ul>
       </div>
       <!---Toggle Calculator Mode Button-->
@@ -33,9 +33,9 @@
       <!--Toggle Dark Mode Switch Button-->
       <img [src]="modeIcon" id="modeSwitch" class="modeSwitcher" title="Dark Mode" (click)="checkMode()"/>
     </div>
-    <!---Caclulator Container-->
+    <!---Calculator Container--->
     <div class="calculator-container" *ngIf="showCalculator">
       <app-calculator></app-calculator>
     </div>
   </nav>
-  
+
