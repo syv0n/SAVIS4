@@ -1,17 +1,13 @@
-.content{
-    background-color: var(--fifth-col);
-}
-
 .outer {
-    margin-left: 0px;
-    min-height: 90vh;
-    padding: 0px;
+    min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: auto;
-    background-color: #fff2eb;
+    background-color: var(--fifth-col);;
     overflow: hidden;
+}
+.container{
+    margin-top: 10%;
 }
 
 .panel-heading {
@@ -25,21 +21,25 @@
     text-align: center;
     color: #54c242;
 }
-.copyright{
-    color: #54c242;
-}
 
-.header,
-.footer {
+.header{
     margin: 0;
-    padding: 0;
     background-color: #333;
     height: 80px;
     width: 100%;
-    color: #fff;
     text-align: center;
 }
 
+.static-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #000000; 
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 0; 
+  }
+  
 .font-weight-bold{
     display: flex;
     justify-content: center;
@@ -51,7 +51,6 @@
     padding-top: 10px;
     margin-top: 20px;
     min-width: 100px;
-    
     margin-left: auto;
     text-decoration: none;
     cursor: pointer;
@@ -147,12 +146,9 @@ input[type='text'] {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 5px;
-    margin-bottom: 5px;
-    margin-top: 15px;
+    margin-top:30px;
     width: 100%;
     text-align: center;
-    background-color: #fff;
 
     ::ng-deep span {
         color: #54c242 !important;
@@ -161,4 +157,13 @@ input[type='text'] {
 
 p {
     color: #54c242;
+}
+
+.modeSwitcher{
+    height: 10%;
+    width:10%;
+    right:-25px;
+    bottom: 25px;
+    position: fixed;
+    cursor:pointer;
 }
