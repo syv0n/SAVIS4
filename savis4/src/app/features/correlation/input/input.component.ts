@@ -5,6 +5,7 @@ import { read } from 'xlsx';
 import * as XLSX from 'xlsx';
 import { TranslateService } from '@ngx-translate/core';
 import { Chart } from 'chart.js';
+import { correlationReference } from 'src/app/Utils/chartjs-plugin';
 
 @Component({
   selector: 'app-input',
@@ -87,7 +88,10 @@ export class InputComponent implements OnInit {
         backgroundColor: 'rgba(0,0,0,1.0)',
         bodyFontStyle: 'normal',
       },
+      referenceLinePosition: 0,
+      referenceLineAxis: 'y-axis-1',
     },
+    plugins: [correlationReference],
   };
 
   correlationValue1: string | null = null;
