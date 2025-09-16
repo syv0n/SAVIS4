@@ -1,18 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { sampleCorrelation } from 'simple-statistics';
 import { read } from 'xlsx';
 import * as XLSX from 'xlsx';
 import { TranslateService } from '@ngx-translate/core';
 import { Chart } from 'chart.js';
-import { correlationReference } from 'src/app/Utils/chartjs-plugin';
 
 @Component({
   selector: 'app-input',
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss', '../../scss/base.scss'],
 })
-export class InputComponent implements OnInit {
+export class InputComponent implements OnInit, OnDestroy {
   constructor(private translate: TranslateService) {}
 
   isFileData: boolean = false;
@@ -33,6 +32,18 @@ export class InputComponent implements OnInit {
     // { x: 10, y: 10 },
     // { x: 11, y: 11 },
   ];
+
+  // ------- draggable reference-line support -------
+  canvasEl: HTMLCanvasElement | null = null;
+  dragging = { active: false, pointIndex: -1 };
+  regressionText: string = '';
+  controlDatasetIndex: number = 2; // 0=scatter, 1=line, 2=controls
+  // internal stored bound handlers for add/remove listener correctness
+  private _boundOnPointerDown: any;
+  private _boundOnPointerMove: any;
+  private _boundOnPointerUp: any;
+  // -------------------------------------------------
+
   datasets = {
     label: 'Correlation Values',
     legend: true,
@@ -88,10 +99,7 @@ export class InputComponent implements OnInit {
         backgroundColor: 'rgba(0,0,0,1.0)',
         bodyFontStyle: 'normal',
       },
-      referenceLinePosition: 0,
-      referenceLineAxis: 'y-axis-1',
     },
-    plugins: [correlationReference],
   };
 
   correlationValue1: string | null = null;
@@ -179,6 +187,134 @@ export class InputComponent implements OnInit {
     );
   }
 
+  // --- pointer & conversion helpers (support Chart.js v2 & v3) ---
+  private getScale(nameHint: 'x' | 'y') {
+    if (!this.chart1 || !this.chart1.scales) return null;
+    const scales = this.chart1.scales;
+    if (scales[nameHint]) return scales[nameHint];
+    const keys = Object.keys(scales);
+    for (const k of keys) if (k.toLowerCase().includes(nameHint)) return scales[k];
+    return null;
+  }
+
+  private clientToData(evt: PointerEvent) {
+    if (!this.canvasEl || !this.chart1) return null;
+    const rect = this.canvasEl.getBoundingClientRect();
+    const px = evt.clientX - rect.left;
+    const py = evt.clientY - rect.top;
+
+    const xScale: any = this.getScale('x');
+    const yScale: any = this.getScale('y');
+    if (!xScale || !yScale) return null;
+
+    let xVal: number | null = null;
+    let yVal: number | null = null;
+
+    if (typeof xScale.getValueForPixel === 'function') {
+      xVal = xScale.getValueForPixel(px);
+    } else {
+      const left = xScale.left ?? this.chart1.chartArea.left;
+      const right = xScale.right ?? this.chart1.chartArea.right;
+      const min = xScale.min ?? xScale.ticks[0];
+      const max = xScale.max ?? xScale.ticks[xScale.ticks.length - 1];
+      xVal = min + ((px - left) / (right - left)) * (max - min);
+    }
+
+    if (typeof yScale.getValueForPixel === 'function') {
+      yVal = yScale.getValueForPixel(py);
+    } else {
+      const top = yScale.top ?? this.chart1.chartArea.top;
+      const bottom = yScale.bottom ?? this.chart1.chartArea.bottom;
+      const min = yScale.min ?? yScale.ticks[0];
+      const max = yScale.max ?? yScale.ticks[yScale.ticks.length - 1];
+      yVal = max - ((py - top) / (bottom - top)) * (max - min);
+    }
+
+    return { x: xVal, y: yVal, px, py };
+  }
+
+  private findNearestControlPoint(px: number, py: number, threshold = 12) {
+    if (!this.chart1) return -1;
+    const controlDs = this.chart1.data.datasets[this.controlDatasetIndex];
+    if (!controlDs || !controlDs.data) return -1;
+    let nearest = -1;
+    let bestDist = threshold;
+    for (let i = 0; i < controlDs.data.length; i++) {
+      const pt = controlDs.data[i];
+      const xScale: any = this.getScale('x');
+      const yScale: any = this.getScale('y');
+      let xPixel = px, yPixel = py;
+      if (xScale && typeof xScale.getPixelForValue === 'function') {
+        xPixel = xScale.getPixelForValue(pt.x);
+        yPixel = yScale.getPixelForValue(pt.y);
+      } else {
+        const left = xScale.left ?? this.chart1.chartArea.left;
+        const right = xScale.right ?? this.chart1.chartArea.right;
+        const top = yScale.top ?? this.chart1.chartArea.top;
+        const bottom = yScale.bottom ?? this.chart1.chartArea.bottom;
+        const xMin = xScale.min ?? xScale.ticks[0];
+        const xMax = xScale.max ?? xScale.ticks[xScale.ticks.length - 1];
+        const yMin = yScale.min ?? yScale.ticks[0];
+        const yMax = yScale.max ?? yScale.ticks[yScale.ticks.length - 1];
+        xPixel = left + ((pt.x - xMin) / (xMax - xMin)) * (right - left);
+        yPixel = top + ((yMax - pt.y) / (yMax - yMin)) * (bottom - top);
+      }
+
+      const dist = Math.hypot(px - xPixel, py - yPixel);
+      if (dist <= bestDist) {
+        bestDist = dist;
+        nearest = i;
+      }
+    }
+    return nearest;
+  }
+
+  onPointerDown(evt: PointerEvent) {
+    if (!this.canvasEl) return;
+    const d = this.clientToData(evt);
+    if (!d) return;
+    const nearest = this.findNearestControlPoint(d.px, d.py);
+    if (nearest >= 0) {
+      this.dragging.active = true;
+      this.dragging.pointIndex = nearest;
+      try { (evt.target as Element).setPointerCapture(evt.pointerId); } catch (_) {}
+    }
+  }
+
+  onPointerMove(evt: PointerEvent) {
+    if (!this.dragging.active || this.dragging.pointIndex < 0) return;
+    const d = this.clientToData(evt);
+    if (!d) return;
+    const controlDs = this.chart1.data.datasets[this.controlDatasetIndex] as any;
+    controlDs.data[this.dragging.pointIndex] = { x: d.x, y: d.y };
+    const p1 = controlDs.data[0];
+    const p2 = controlDs.data[1];
+    const lineDs = this.chart1.data.datasets[1] as any;
+    lineDs.data = [{ x: p1.x, y: p1.y }, { x: p2.x, y: p2.y }];
+    this.updateRegressionTextFromEndpoints(p1, p2);
+    try { this.chart1.update('none'); } catch { this.chart1.update(); }
+  }
+
+  onPointerUp(evt: PointerEvent) {
+    if (this.dragging.active) {
+      this.dragging.active = false;
+      this.dragging.pointIndex = -1;
+      try { (evt.target as Element).releasePointerCapture(evt.pointerId); } catch (_) {}
+      this.chart1.update();
+    }
+  }
+
+  private updateRegressionTextFromEndpoints(p1: {x:number,y:number}, p2: {x:number,y:number}) {
+    const dx = p2.x - p1.x;
+    if (Math.abs(dx) < 1e-12) {
+      this.regressionText = `x = ${p1.x.toFixed(3)}`;
+      return;
+    }
+    const slope = (p2.y - p1.y) / dx;
+    const intercept = p1.y - slope * p1.x;
+    this.regressionText = `y = ${slope.toFixed(3)}x ${intercept >= 0 ? '+' : '-'} ${Math.abs(intercept).toFixed(3)}`;
+  }
+  // ---------------------------------------------------------
 
   calculate(): void {
     let [xValuesArray, yValuesArray] = this.getFormValues();
@@ -197,10 +333,10 @@ export class InputComponent implements OnInit {
       return;
     }
   
-    // Calculate correlation coefficient (r‑value)
+    // Calculate correlation coefficient (r-value)
     this.correlationValue1 = sampleCorrelation(xValuesArray, yValuesArray).toFixed(2);
   
-    // Decide regression‑line color: green if |r| ≥ 0.7, otherwise red
+    // Decide regression-line color: green if |r| ≥ 0.7, otherwise red
     const rVal     = parseFloat(this.correlationValue1);
     const lineColor = Math.abs(rVal) >= 0.7 ? 'green' : 'red';
   
@@ -232,7 +368,7 @@ export class InputComponent implements OnInit {
     ds.backgroundColor = backgroundColors;
     ds.pointRadius     = pointRadii;
   
-    // Add or update the regression‑line dataset with dynamic color
+    // Add or update the regression-line dataset with dynamic color
     if (this.chart1.data.datasets.length < 2) {
       this.chart1.data.datasets.push({
         label: 'Regression Line',
@@ -248,6 +384,29 @@ export class InputComponent implements OnInit {
       const lineDs = this.chart1.data.datasets[1] as any;
       lineDs.data        = regressionData;
       lineDs.borderColor = lineColor;
+    }
+  
+    // create/update control points dataset for dragging endpoints
+    const controlPoints = regressionData.map(p => ({ x: p.x, y: p.y }));
+    if (this.chart1.data.datasets.length <= this.controlDatasetIndex) {
+      this.chart1.data.datasets.push({
+        label: 'Line Controls',
+        type: 'scatter',
+        data: controlPoints,
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        pointRadius: 6,
+        showLine: false,
+        order: 3
+      });
+    } else {
+      const controlDs = this.chart1.data.datasets[this.controlDatasetIndex] as any;
+      controlDs.data = controlPoints;
+    }
+  
+    // update regressionText from current endpoints
+    const cp = controlPoints;
+    if (cp && cp.length >= 2) {
+      this.updateRegressionTextFromEndpoints(cp[0], cp[1]);
     }
   
     // Render the updated chart
@@ -367,6 +526,43 @@ export class InputComponent implements OnInit {
     this.chart1 = new Chart('data-chart-1', this.chartOptions);
     this.chart2 = new Chart('data-chart-2', this.chartOptions);
 
+    // Format scatter/control point tooltips to two decimals
+    if (this.chart1) {
+      // Chart.js v2 style
+      if ((this.chart1.options as any).tooltips !== undefined) {
+        (this.chart1.options as any).tooltips.callbacks = {
+          label: function (tooltipItem: any, data: any) {
+            // v2 uses xLabel/yLabel sometimes; fall back to parsed/raw for v3 shape
+            const x = tooltipItem.xLabel ?? tooltipItem.x ?? (tooltipItem.parsed && tooltipItem.parsed.x) ?? (tooltipItem.raw && tooltipItem.raw.x);
+            const y = tooltipItem.yLabel ?? tooltipItem.y ?? (tooltipItem.parsed && tooltipItem.parsed.y) ?? (tooltipItem.raw && tooltipItem.raw.y);
+            return `(${Number(x).toFixed(2)}, ${Number(y).toFixed(2)})`;
+          },
+        };
+      } else if ((this.chart1.options as any).plugins && (this.chart1.options as any).plugins.tooltip) {
+        // Chart.js v3+ style
+        (this.chart1.options as any).plugins.tooltip.callbacks = {
+          label: function (context: any) {
+            const x = context.parsed?.x ?? context.raw?.x;
+            const y = context.parsed?.y ?? context.raw?.y;
+            return `(${Number(x).toFixed(2)}, ${Number(y).toFixed(2)})`;
+          },
+        };
+      }
+      try { this.chart1.update(); } catch { /* no-op */ }
+    }
+
+    // save canvas element and attach pointer listeners (bound handlers stored for clean removal)
+    this.canvasEl = document.getElementById('data-chart-1') as HTMLCanvasElement;
+    if (this.canvasEl) {
+      this._boundOnPointerDown = this.onPointerDown.bind(this);
+      this._boundOnPointerMove = this.onPointerMove.bind(this);
+      this._boundOnPointerUp = this.onPointerUp.bind(this);
+      this.canvasEl.addEventListener('pointerdown', this._boundOnPointerDown);
+      this.canvasEl.addEventListener('pointermove', this._boundOnPointerMove);
+      this.canvasEl.addEventListener('pointerup', this._boundOnPointerUp);
+      this.canvasEl.addEventListener('pointercancel', this._boundOnPointerUp);
+    }
+
     this.xValues?.valueChanges.subscribe({
       next: (e) => {
         this.xValues?.clearValidators();
@@ -378,6 +574,16 @@ export class InputComponent implements OnInit {
       },
     });
     
+  }
+
+  ngOnDestroy(): void {
+    // Remove listeners if we attached them
+    if (this.canvasEl) {
+      if (this._boundOnPointerDown) this.canvasEl.removeEventListener('pointerdown', this._boundOnPointerDown);
+      if (this._boundOnPointerMove) this.canvasEl.removeEventListener('pointermove', this._boundOnPointerMove);
+      if (this._boundOnPointerUp) this.canvasEl.removeEventListener('pointerup', this._boundOnPointerUp);
+      if (this._boundOnPointerUp) this.canvasEl.removeEventListener('pointercancel', this._boundOnPointerUp);
+    }
   }
  
 }
