@@ -188,10 +188,20 @@ export class CalculatorComponent implements OnInit, OnDestroy {
   }
   // Handle button clicks and update expression/display accordingly
   onButtonClick(action: string): void {
+
+    if (this.operator && (/^\d$/.test(action) || action === '.')) {
+      this.operator = null;
+    }
+
+    if (this.isOperator(action)) {
+      this.operator = action;
+    }
+
     switch (action) {
       case 'clear':
         this.onClearClick();
         this.expression = '';
+        this.operator = null;
         break;
       case 'del':
         if (this.expression.length > 0) {
@@ -218,12 +228,14 @@ export class CalculatorComponent implements OnInit, OnDestroy {
         break;
       case '=':
         this.evaluateExpression();
+        this.operator = null;
         break;
       case '.':
         this.expression += '.';
         break;
       case '+': case '-': case '*': case '/':
         this.expression += action;
+        this.operator = action;
         break;
       // Advanced actions
       case 'pi': this.expression += 'π'; break;
@@ -275,6 +287,7 @@ export class CalculatorComponent implements OnInit, OnDestroy {
       this.display = 'Error';
     }
     this.expression = '';
+    this.operator = null;
   }
 
   factorial(n: number): number {
@@ -302,4 +315,12 @@ export class CalculatorComponent implements OnInit, OnDestroy {
   get buttons() {
     return this.advancedMode ? this.advancedButtons : this.basicButtons;
   }
+
+  //checks if operator is in use
+   isOperator(action: string): boolean{
+    if (/^\d$/.test(action)) return false;
+    const nonSticky = new Set(['.', 'del', '=']);
+    return !nonSticky.has(action);
+  }
+
 }

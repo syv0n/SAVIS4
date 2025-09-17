@@ -2,7 +2,10 @@
 <div
   #calculatorContainer
   class="calculator-container"
-  [ngStyle]="{ width: width + 'px', height: height + 'px' }"
+  [style.width.px]="width"
+  [style.height]="'auto'"
+  [style.minHeight.px]="height"
+  
 >
     <!-- calculator header container 
      used to allow dragging-->
@@ -28,9 +31,10 @@
       <button
         *ngFor="let btn of row"
         (click)="onButtonClick(btn.action)"
+        [class.is-active-operator]="isOperator(btn.action) && operator === btn.action"
       >
         {{ btn.label }}
-      </button>
+      </button>  
     </div>
   </div>
 <!-- bottom right hand corner resize button -->
