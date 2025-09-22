@@ -60,6 +60,7 @@
                                 <small *ngIf="errorMessage" class="signUpErrorMessage">{{errorMessage}}</small>
                                 <small *ngIf="successMessage" class="signUpSuccessMessage">{{successMessage}}</small>
                             </div>
+                            <button (click)="guestOnSubmit()" type="submit" class="btn-guest" >{{"ContinueAsGuest" | translate}}</button>
                             <div class="loginButton text-gray-500">{{"AlreadyHaveAccount" | translate}}? <a id="forget" routerLink="/login">{{"Login" | translate}}</a></div>
                         </form>
                     </div>
