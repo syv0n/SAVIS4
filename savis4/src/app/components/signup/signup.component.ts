@@ -44,6 +44,9 @@ export class SignupComponent implements OnInit {
     { validators: PasswordValidator.matchPassword } // Validates that the password and confirmPassword fields match
     );
   }
+  guestOnSubmit(){
+    this.router.navigate(['/homepage']);
+  }
 
   /**
    * Create the new user if all the fields are valid
