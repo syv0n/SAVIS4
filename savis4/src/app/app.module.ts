@@ -47,6 +47,18 @@ import { environment } from '../environments/environment';
 import { UserManualComponent } from './user-manual/user-manual.component';
 import { DownloadPageComponent } from './download-page/download-page.component';
 import { CalculatorComponent } from './components/calculator/calculator.component';
+import { OPHTManualComponent } from './user-manual/user-manual-components/opht/opht.component';
+import { OPCIManualComponent } from './user-manual/user-manual-components/opci/opci.component';
+import { OMHTManualComponent } from './user-manual/user-manual-components/omht/omht.component';
+import { OMCIManualComponent } from './user-manual/user-manual-components/omci/omci.component';
+import { DotPlotManualComponent } from './user-manual/user-manual-components/dot-plot/dot-plot.component';
+import { CorrelationUMManualComponent } from './user-manual/user-manual-components/correlation/correlation_um.component';
+import { BarChartManualComponent } from './user-manual/user-manual-components/bar-chart/bar-chart.component';
+import { RegressionManualComponent } from './user-manual/user-manual-components/regression/regression.component';
+import { TMCIManualComponent } from './user-manual/user-manual-components/tmci/tmci.component';
+import { TMHTManualComponent } from './user-manual/user-manual-components/tmht/tmht.component';
+import { TPCIManualComponent } from './user-manual/user-manual-components/tpci/tpci.component';
+import { TPHTManualComponent } from './user-manual/user-manual-components/tpht/tpht.component';
 
 export function HttpLoaderFactory(http: HttpClient){
   return new TranslateHttpLoader(http)
@@ -95,7 +107,19 @@ export function setupTranslateFactory(service : TranslateService): Function {
     DotChartComponent,
     UserManualComponent,
     DownloadPageComponent,
-    CalculatorComponent
+    CalculatorComponent,
+    OPHTManualComponent,
+    OPCIManualComponent,
+    OMHTManualComponent,
+    OMCIManualComponent,
+    DotPlotManualComponent,
+    CorrelationUMManualComponent,
+    BarChartManualComponent,
+    RegressionManualComponent,
+    TMCIManualComponent,
+    TMHTManualComponent,
+    TPCIManualComponent,
+    TPHTManualComponent
 
   ],
   imports: [

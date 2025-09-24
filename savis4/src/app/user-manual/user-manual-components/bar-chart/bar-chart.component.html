@@ -1,0 +1,24 @@
+<app-navbar></app-navbar>
+
+<div class="bar-chart-container">
+  <h1 class="title">{{'uman_bar-chart_title' | translate}}</h1>
+  <div button="back" routerLink="/user-manual" class="back-button">
+      &larr; {{ 'uman_back' | translate }}
+    </div>
+  <div class="content">
+    <div class="text-section">
+      <div class="green-box">
+        <p [innerHTML]="'uman_bar-chart_description' | translate"></p>
+      </div>
+    </div>
+
+    <div class="image-section">
+      <img src="assets/User-Manual-OPHT1.png" alt="Chart 1" class="screenshot" style="width: 900px;" />
+    </div>  
+
+  <p></p>
+</div>
+
+<footer class="static-footer">
+  {{ "nav_copyright" | translate }}
+</footer>

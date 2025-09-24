@@ -20,6 +20,18 @@ import { BarChartComponent } from './features/bar-chart/bar-chart.component';
 import { DotChartComponent } from './features/dot-chart/dot-chart.component';
 import { UserManualComponent } from './user-manual/user-manual.component';
 import { DownloadPageComponent } from './download-page/download-page.component';
+import { OPHTManualComponent } from './user-manual/user-manual-components/opht/opht.component';
+import { OPCIManualComponent } from './user-manual/user-manual-components/opci/opci.component';
+import { OMHTManualComponent } from './user-manual/user-manual-components/omht/omht.component';
+import { OMCIManualComponent } from './user-manual/user-manual-components/omci/omci.component';
+import { DotPlotManualComponent } from './user-manual/user-manual-components/dot-plot/dot-plot.component';
+import { CorrelationUMManualComponent } from './user-manual/user-manual-components/correlation/correlation_um.component';
+import { BarChartManualComponent } from './user-manual/user-manual-components/bar-chart/bar-chart.component';
+import { RegressionManualComponent } from './user-manual/user-manual-components/regression/regression.component';
+import { TMCIManualComponent } from './user-manual/user-manual-components/tmci/tmci.component';
+import { TMHTManualComponent } from './user-manual/user-manual-components/tmht/tmht.component';
+import { TPCIManualComponent } from './user-manual/user-manual-components/tpci/tpci.component';
+import { TPHTManualComponent } from './user-manual/user-manual-components/tpht/tpht.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -42,7 +54,19 @@ export const routes: Routes = [
   { path: 'barchart', component: BarChartComponent },
   { path: 'dotplot', component: DotChartComponent },
   { path: 'user-manual', component: UserManualComponent },
-  { path: 'download-page', component: DownloadPageComponent }
+  { path: 'download-page', component: DownloadPageComponent },
+  { path: 'opht', component: OPHTManualComponent },
+  { path: 'opci', component: OPCIManualComponent },
+  { path: 'omht', component: OMHTManualComponent },
+  { path: 'omci', component: OMCIManualComponent },
+  { path: 'dot-plot', component: DotPlotManualComponent },
+  { path: 'correlation-manual', component: CorrelationUMManualComponent },
+  { path: 'bar-chart', component: BarChartManualComponent },
+  { path: 'regression', component: RegressionManualComponent },
+  { path: 'tmci', component: TMCIManualComponent },
+  { path: 'tmht', component: TMHTManualComponent },
+  { path: 'tpci', component: TPCIManualComponent },
+  { path: 'tpht', component: TPHTManualComponent }
 ];
 
 @NgModule({
