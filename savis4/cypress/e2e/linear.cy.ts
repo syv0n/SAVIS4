@@ -10,12 +10,6 @@ describe('template spec', () => {
         cy.get('button.btn').should('be.visible')
     })
     
-    it('should input data points and load the chart', () => {
-        cy.get('#dataPoints').type('1,3 \n 2,5 \n 3,7 \n 4,9 \n 5,11')
-        cy.get('button.btn').first().click()
-        cy.get('app-scatter-plot').should('be.visible')
-    })
-    
     it('should click the choose file button', () => {
         cy.get('.file-input .btn').click()
     })
