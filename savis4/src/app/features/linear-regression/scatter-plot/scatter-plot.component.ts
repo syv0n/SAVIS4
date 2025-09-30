@@ -1,8 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
-import { ChartDataSets, ChartOptions, ChartType, Chart } from 'chart.js'; // Change this line
-import { errorBarsPlugin } from '../../../Utils/chartjs-plugin';
+import { ChartDataSets, ChartOptions, ChartType, Chart, ChartData } from 'chart.js'; // Change this line
+import { errorBarsPlugin, movableReferenceLinePlugin } from '../../../Utils/chartjs-plugin';
 import { errorSquaresPlugin } from '../../../Utils/chartjs-plugin';
-import { movableReferenceLinePlugin } from '../../../Utils/chartjs-plugin';
 import { BaseChartDirective } from 'ng2-charts';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -13,7 +12,8 @@ declare module 'chart.js' {
   }
 
   interface ChartOptions {
-    referenceLinePosition?: number;
+    referenceLineSlope?: number;
+    referenceLineIntercept?: number;
     _draggingRefLine?: boolean;
   }
 }
@@ -29,42 +29,67 @@ export class ScatterPlotComponent implements OnChanges {
   @Input() scatterChartOptions: ChartOptions = {};
   @Input() scatterChartLegend: boolean = true;
   @Input() scatterChartType: ChartType = 'scatter'; // Change this line
-  @Input() referenceLinePosition: number = .5;
   @ViewChild(BaseChartDirective) chart!: BaseChartDirective;
+
   leastSquares: number = 0;
   private slope: number = 0;
   private intercept: number = 0;
   public regressionFormula: string = '';
+  public activeLine: 'regression' | 'reference' = 'regression';
+
+  private refLineDrag = {
+    dragging: false,
+    initialY: 0
+  };
   
   constructor(private translate: TranslateService) {
     Chart.plugins.register(errorBarsPlugin);
     Chart.plugins.register(errorSquaresPlugin);
-    Chart.plugins.register(movableReferenceLinePlugin);
 
     this.scatterChartOptions = {
-      referenceLinePosition: .5,
       scales: {
-        yAxes: [{
-          id: 'y-axis-0',
-        }],
-        xAxes: [{
-          id: 'x-axis-0',
-        }]
-      },
-    };
+        xAxes: [{ type: 'linear', position: 'bottom', id: 'x-axis-0' }],
+        yAxes: [{ type: 'linear', position: 'left', id: 'y-axis-0' }]
+    },
+    referenceLineSlop: 0,
+    referenceLineIntercept: 0
+  } as ChartOptions & any;   // 👈 allow scales without TS error
+
+
+    /*this.scatterChartOptions = {
+      referenceLinePosition: 0,
+      scales: {
+        yAxes: [
+          { id: 'y-axis-0', type: 'linear', position: 'left' }
+        ],
+        xAxes: [
+          { id: 'x-axis-0', type: 'linear', position: 'bottom' }
+        ]
+      }
+    } as any;*/
+  }
+
+  ngAfterViewInit(): void {
+    if (!this.chart) return;
+    this.chart.update();
+
+    const canvas = this.chart.chart.canvas;
+
+    canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
+    canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
+    canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataPoints']) {
       this.updateRegressionParameters();
+
+      this.scatterChartOptions.referenceLineSlope = this.slope;
+      this.scatterChartOptions.referenceLineIntercept = this.intercept;
+
       this.updateChartData();
       this.leastSquares = this.calculateLeastSquares();
-      
       //this.scatterChartData.push(this.calculateErrorBars());
-    }
-
-    if(this.chart && this.chart.chart) {
-      this.chart.chart.update()
     }
   }
 
@@ -72,12 +97,35 @@ export class ScatterPlotComponent implements OnChanges {
   ngOnDestroy(): void {
     Chart.plugins.unregister(errorBarsPlugin);
     Chart.plugins.unregister(errorSquaresPlugin);
-    Chart.plugins.unregister(movableReferenceLinePlugin);
+  }
+
+  private initializeReferenceLine() {
+    if (!this.chart || !this.dataPoints.length) return;
+    //const yValues = this.dataPoints.map(p => p.y);
+    this.scatterChartOptions.referenceLineSlope = this.slope;
+    this.scatterChartOptions.referenceLineIntercept = this.intercept;
+
+    //this.scatterChartOptions.referenceLineIntercept = (Math.min(...yValues) + Math.max(...yValues)) / 2;
   }
 
   private updateChartData(): void {
     const regressionPoints = this.calculateRegressionPoints();
     const confidenceInterval = this.calculateConfidenceInterval();
+
+    const m = this.scatterChartOptions.referenceLineSlope!;
+    const b = this.scatterChartOptions.referenceLineIntercept!;
+
+    // Create dataset for the reference line
+    const referenceLineDataset: ChartDataSets = {        
+      type: 'line',
+      label: 'Reference Line',
+      data: this.dataPoints.map(p => ({ x: p.x, y: m * p.x + b})),
+      borderColor: 'rgb(99, 255,120)',
+      borderWidth: 2,
+      borderDash: [5, 5],
+      fill: false,
+      pointRadius: 0
+    };
   
     this.scatterChartData = [
       {
@@ -113,12 +161,77 @@ export class ScatterPlotComponent implements OnChanges {
       },
       this.calculateErrorBars(),
       this.calculateErrorSquares(),
-    ] as ChartDataSets[];
+      referenceLineDataset
+    ];
+  }
+
+  private onMouseDown(event: MouseEvent) {
+    if (!this.chart) return;
+    const chartAny = this.chart.chart as any;
+    const yAxis = chartAny.scales['y-axis-0'];
+    const xAxis = chartAny.scales['x-axis-0'];
+//    const yAxis = (this.chart.chart.scales as any)['y-axis-0'];
+    const canvasRect = this.chart.chart.canvas.getBoundingClientRect();
+
+    const mouseY = event.clientY - canvasRect.top;
+    const mouseX = event.clientX - canvasRect.left;
+
+    const dataX = xAxis.getValueForPixel(mouseX);
+
+    const m = this.scatterChartOptions.referenceLineSlope!;
+    const b = this.scatterChartOptions.referenceLineIntercept!;
+    const lineYValue = m * dataX + b;
+
+    const lineYPixel = yAxis.getPixelForValue(lineYValue);
+    
+    if (Math.abs(mouseY - lineYPixel) < 10) {
+      this.refLineDrag.dragging = true;
+      this.refLineDrag.initialY = mouseY;
+    }
+  }
+
+  private onMouseMove(event: MouseEvent) {
+    if (!this.refLineDrag.dragging || !this.chart) return;
+    const chartAny = this.chart.chart as any;
+    const yAxis = chartAny.scales['y-axis-0'];
+//    const yAxis = (this.chart.chart.scales as any)['y-axis-0'];
+    const canvasRect = this.chart.chart.canvas.getBoundingClientRect();
+    const mouseY = event.clientY - canvasRect.top;
+    const initialY  = this.refLineDrag.initialY;
+
+    const deltaYValue = yAxis.getValueForPixel(mouseY) - yAxis.getValueForPixel(initialY);
+    //const newValue = yAxis.getValueForPixel(mouseY);
+    this.scatterChartOptions.referenceLineIntercept += deltaYValue;
+
+    this.refLineDrag.initialY = mouseY;
+
+    const m = this.scatterChartOptions.referenceLineSlope!;
+    const b = this.scatterChartOptions.referenceLineIntercept!;
+
+    const refLineDataset = this.scatterChartData.find(ds => ds.label === 'Reference Line');
+    if (refLineDataset) {
+      refLineDataset.data = this.dataPoints.map(p => ({
+        x: p.x,
+        y: m * p.x + b
+      }));
+    }
+
+    this.chart.update();
+
+    this.leastSquares = this.calculateLeastSquaresForReferenceLine(m, b);
+  }
+
+  private onMouseUp() {
+    this.refLineDrag.dragging = false;
+  }
+
+  private calculateLeastSquaresForReferenceLine(m: number, b: number): number {
+    return this.dataPoints.reduce((sum, p) => sum + Math.pow(p.y - (m * p.x +b), 2), 0);
   }
 
   private calculateRegressionPoints(): { x: number, y: number }[] {
     const n = this.dataPoints.length;
-  
+
     if (n < 2) {
       // Linear regression requires at least two points
       return [];
