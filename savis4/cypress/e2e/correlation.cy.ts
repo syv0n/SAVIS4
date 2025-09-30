@@ -81,4 +81,8 @@ describe('template spec', () => {
       cy.get(':nth-child(6) > .btn').click()
       cy.wait(500)
       })
+    it('should click file input', () => {
+      cy.get('label.file-input span.btn').click()
+      })      
+
 })
