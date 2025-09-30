@@ -56,6 +56,7 @@ min-height: 100vh;
   justify-content: center;
   margin-top: 25px;
   transform: translateX(25px);
+  padding-top: 72px;
 }
 
 .right-container{
@@ -197,4 +198,6 @@ padding: 10px 0;
 h1 {
 font-weight: bold;
 color: var(--second-col);
+padding-top: 8px;
+padding-bottom: 20px;
 }

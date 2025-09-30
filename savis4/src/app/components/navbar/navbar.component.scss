@@ -8,10 +8,11 @@
 }
 
 .calcSwitcher {
-    position: fixed;
+    position: absolute;
     cursor:pointer;
     width: 3%;
     top: 80px;
+    margin-bottom: 100px;
 }
 
 /* Calculator container */

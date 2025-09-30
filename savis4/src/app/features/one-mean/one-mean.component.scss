@@ -2,9 +2,9 @@
   background-color: var(--fifth-col);
   padding: 20px;
 
-    h3 {
+    h2 {
+      padding-top: 16px;
       color:var(--second-col);
-      font-weight: bold;
       margin-top: 1ch;
       width: 100%;
       .toggle-box {
@@ -12,6 +12,7 @@
       }
     }
     h1 {
+      padding-top: 8px;
       font-weight: bold;
       color:var(--second-col);
     }
