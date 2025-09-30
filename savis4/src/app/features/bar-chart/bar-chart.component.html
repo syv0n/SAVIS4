@@ -1,4 +1,14 @@
 <app-navbar></app-navbar>
+<!--link to user manual -->
+<div class="manual-link">
+  <button
+    class="btn manual-btn"
+    type="button"
+    [routerLink]="['/bar-chart']">
+       Bar Chart Guide
+  </button>
+</div>
+
 <div id="bar-chart-tutorial">
     <h1 class="text-center">{{ 'barChart_title' | translate }}</h1>
     <div class="chart-area">

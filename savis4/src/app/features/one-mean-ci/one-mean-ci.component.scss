@@ -376,3 +376,18 @@ input[type="checkbox"] {
   text-align: center;
   padding: 10px 0; 
 }
+
+.manual-link {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0.5rem 1rem 0;  
+  margin-top: 16px;
+  margin-bottom: 0.5rem;  
+}
+
+.manual-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}

@@ -2,6 +2,16 @@
 <!-- header -->
 <app-navbar></app-navbar>
 
+<!--link to user manual -->
+<div class="manual-link">
+  <button
+    class="btn manual-btn"
+    type="button"
+    [routerLink]="['/regression']">
+       Linear Regression Guide
+  </button>
+</div>
+
 <!-- contents -->
 <h1 class="text-center py-4">{{ 'lr_title' | translate }}</h1>
 <div class="container">
