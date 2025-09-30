@@ -2,9 +2,9 @@
 <body class="flex flex-col min-h-screen">
 <div id="dot-chart-tutorial">
     <h1 class="text-center">{{ '//omci_One_Mean_Confidence_Interval' | translate }}</h1>
-    <h3 class="subtitle">1. {{ 'omci_enter_data' | translate }}
+    <h2 class="subtitle">1. {{ 'omci_enter_data' | translate }}
         <input type="checkbox" class="toggle-box" [(ngModel)]="showInputForm" checked="checked">
-    </h3>
+    </h2>
     <div class="chart-input-form" *ngIf="showInputForm">
         <div class="data-form">
             <select id="sample-data-options" (change)="sampleSelect($event)">
@@ -59,9 +59,9 @@
 
     <div class="green-line"></div>
 
-    <h3>2. {{ 'omci_get_sample' | translate }}
+    <h2>2. {{ 'omci_get_sample' | translate }}
         <input type="checkbox" class="toggle-box" [(ngModel)]="showSampleForm" checked="checked">
-    </h3>
+    </h2>
     <div class="chart-input-form" *ngIf="showSampleForm">
         <div class="data-form">
             <label for="sample-data-size">{{ 'omci_sample_size' | translate }}:</label>
@@ -94,9 +94,9 @@
 
     <div class="green-line"></div>
 
-    <h3>3. {{ 'omci_distribution' | translate }}
+    <h2>3. {{ 'omci_distribution' | translate }}
         <input type="checkbox" class="toggle-box" [(ngModel)]="showMeansForm" checked="checked">
-    </h3>
+    </h2>
     <div class="chart-input-form" *ngIf="showMeansForm">
         <div class="data-form">
             <p>{{ 'omci_means_interval' | translate }}</p>
@@ -143,9 +143,9 @@
         </div>
     </div>
     <div class="green-line"></div>
-    <h3>4. {{ 'omci_confidence_interval' | translate }}
+    <h2>4. {{ 'omci_confidence_interval' | translate }}
         <input type="checkbox" class="toggle-box" [(ngModel)]="showConfidenceIntervalForm" checked="checked">
-    </h3>
+    </h2>
     <div class="chart-input-form" *ngIf="showConfidenceIntervalForm">
         <div class="data-form">
             <p>{{'omci_inputNumbers' | translate}}</p>
