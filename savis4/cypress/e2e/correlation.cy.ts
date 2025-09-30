@@ -28,6 +28,6 @@ describe('template spec', () => {
       cy.wait(500)
       })
     it('should click file input', () => {
-      cy.get('.flex > div > .btn').click()
+      cy.get('label.file-input span.btn').click()
       })      
 })
