@@ -23,12 +23,7 @@ export class InputComponent implements OnInit, OnDestroy {
   select2 = new FormControl();
 
   chart1: any;
-  chart2: any;
   demodata1: any[] = [
-    // { x: 10, y: 10 },
-    // { x: 11, y: 11 },
-  ];
-  demodata2: any[] = [
     // { x: 10, y: 10 },
     // { x: 11, y: 11 },
   ];
@@ -103,7 +98,6 @@ export class InputComponent implements OnInit, OnDestroy {
   };
 
   correlationValue1: string | null = null;
-  correlationValue2: string | null = null;
 
   formGroupValues: FormGroup = new FormGroup({
     xValues: new FormControl(),
@@ -285,8 +279,18 @@ export class InputComponent implements OnInit, OnDestroy {
     if (!this.dragging.active || this.dragging.pointIndex < 0) return;
     const d = this.clientToData(evt);
     if (!d) return;
+    
+    // Get current control point position
     const controlDs = this.chart1.data.datasets[this.controlDatasetIndex] as any;
-    controlDs.data[this.dragging.pointIndex] = { x: d.x, y: d.y };
+    const currentPoint = controlDs.data[this.dragging.pointIndex];
+    
+    // Apply damping factor to reduce sensitivity (0.3 = 30% of mouse movement)
+    const dampingFactor = 0.3;
+    const dampedX = currentPoint.x + (d.x - currentPoint.x) * dampingFactor;
+    const dampedY = currentPoint.y + (d.y - currentPoint.y) * dampingFactor;
+    
+    // Update control point with damped position
+    controlDs.data[this.dragging.pointIndex] = { x: dampedX, y: dampedY };
     const p1 = controlDs.data[0];
     const p2 = controlDs.data[1];
     const lineDs = this.chart1.data.datasets[1] as any;
@@ -307,12 +311,12 @@ export class InputComponent implements OnInit, OnDestroy {
   private updateRegressionTextFromEndpoints(p1: {x:number,y:number}, p2: {x:number,y:number}) {
     const dx = p2.x - p1.x;
     if (Math.abs(dx) < 1e-12) {
-      this.regressionText = `x = ${p1.x.toFixed(3)}`;
+      this.regressionText = `x = ${p1.x.toFixed(2)}`;
       return;
     }
     const slope = (p2.y - p1.y) / dx;
     const intercept = p1.y - slope * p1.x;
-    this.regressionText = `y = ${slope.toFixed(3)}x ${intercept >= 0 ? '+' : '-'} ${Math.abs(intercept).toFixed(3)}`;
+    this.regressionText = `y = ${slope.toFixed(2)}x ${intercept >= 0 ? '+' : '-'} ${Math.abs(intercept).toFixed(2)}`;
   }
   // ---------------------------------------------------------
 
@@ -432,19 +436,100 @@ export class InputComponent implements OnInit, OnDestroy {
       xValuesArray.push(data[selected1]);
       yValuesArray.push(data[selected2]);
     }
+    
+    // Populate demodata1 with scatter points from file
+    this.demodata1 = [];
     xValuesArray.forEach((val: number, idx: number) => {
-      this.demodata2.push({ x: val, y: yValuesArray[idx] });
+      this.demodata1.push({ x: val, y: yValuesArray[idx] });
     });
-    // console.log(xValuesArray, yValuesArray);
-    this.correlationValue2 = sampleCorrelation(
-      xValuesArray,
-      yValuesArray
-    ).toFixed(2);
-    // Decide line color: green if R-value ≥ 0.7, otherwise red
-    const rValue = parseFloat(this.correlationValue1);
-    const lineColor = Math.abs(rValue) >= 0.7 ? 'green' : 'red';
-    this.updateChart(this.chart2, this.demodata2);
-    this.demodata2 = [];
+    
+    // Validate inputs
+    if (xValuesArray.length !== yValuesArray.length || xValuesArray.length < 2) {
+      alert('Incorrect Inputs');
+      return;
+    }
+    
+    // Calculate correlation coefficient (r-value)
+    this.correlationValue1 = sampleCorrelation(xValuesArray, yValuesArray).toFixed(2);
+    
+    // Decide regression-line color: green if |r| ≥ 0.7, otherwise red
+    const rVal = parseFloat(this.correlationValue1);
+    const lineColor = Math.abs(rVal) >= 0.7 ? 'green' : 'red';
+    
+    // Compute regression line data
+    const regressionData = this.computeRegressionLine(xValuesArray, yValuesArray);
+    
+    // Update scatter dataset
+    this.chart1.data.datasets[0].data = this.demodata1;
+    
+    // Compute residuals & densities for visual cues
+    const residuals = this.computeResiduals(xValuesArray, yValuesArray, regressionData);
+    const densities = this.computeDensities(this.demodata1);
+    
+    // Map residuals → color gradient (red ↑, blue ↓)
+    const maxRes = Math.max(...residuals.map(Math.abs));
+    const backgroundColors = residuals.map(r => {
+      const intensity = Math.abs(r) / maxRes;
+      const red  = Math.round(255 * intensity * (r > 0 ? 1 : 0));
+      const blue = Math.round(255 * intensity * (r < 0 ? 1 : 0));
+      return `rgba(${red},0,${blue},0.7)`;
+    });
+    
+    // Map densities → point radius (3px–10px)
+    const maxDen = Math.max(...densities);
+    const pointRadii = densities.map(d => 3 + (7 * d / maxDen));
+    
+    // Apply scatter styles
+    const ds = this.chart1.data.datasets[0] as any;
+    ds.backgroundColor = backgroundColors;
+    ds.pointRadius     = pointRadii;
+    
+    // Add or update the regression-line dataset with dynamic color
+    if (this.chart1.data.datasets.length < 2) {
+      this.chart1.data.datasets.push({
+        label: 'Regression Line',
+        data: regressionData,
+        type: 'line',
+        borderColor: lineColor,
+        borderWidth: 2,
+        fill: false,
+        pointRadius: 0,
+        tension: 0
+      });
+    } else {
+      const lineDs = this.chart1.data.datasets[1] as any;
+      lineDs.data        = regressionData;
+      lineDs.borderColor = lineColor;
+    }
+    
+    // create/update control points dataset for dragging endpoints
+    const controlPoints = regressionData.map(p => ({ x: p.x, y: p.y }));
+    if (this.chart1.data.datasets.length <= this.controlDatasetIndex) {
+      this.chart1.data.datasets.push({
+        label: 'Line Controls',
+        type: 'scatter',
+        data: controlPoints,
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        pointRadius: 6,
+        showLine: false,
+        order: 3
+      });
+    } else {
+      const controlDs = this.chart1.data.datasets[this.controlDatasetIndex] as any;
+      controlDs.data = controlPoints;
+    }
+    
+    // update regressionText from current endpoints
+    const cp = controlPoints;
+    if (cp && cp.length >= 2) {
+      this.updateRegressionTextFromEndpoints(cp[0], cp[1]);
+    }
+    
+    // Render the updated chart
+    this.chart1.update();
+    
+    // Clear for next run
+    this.demodata1 = [];
   }
 
   readFileMethod(file: File): Promise<string> {
@@ -524,7 +609,6 @@ export class InputComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // this.chart1 = new chatClass('data-chart-1', this.datasets[0]);
     this.chart1 = new Chart('data-chart-1', this.chartOptions);
-    this.chart2 = new Chart('data-chart-2', this.chartOptions);
 
     // Format scatter/control point tooltips to two decimals
     if (this.chart1) {

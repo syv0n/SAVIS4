@@ -31,11 +31,18 @@ b,p{
   color:var(--second-col);
 }
 
-#buttonStyle{
-  background-color: var(--third-col);
+.btn{
+  background: var(--third-col);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
-#buttonStyle:hover{
-  background-color: var(--fourth-col);
+
+.btn:hover{
+  background: var(--fourth-col);
 }
 
 #chart-wrap{
