@@ -352,19 +352,11 @@ export class TwoMeansCIComponent
       data: [[], []],
       backgroundColor: 'rebeccapurple',
     };
-
-    // this.chart5.setDataFromRaw(rData2);
-    // this.chart5.setLengend(leg,color)
-
-    // this.chart5.chart.update(0)
   }
   loadData(): void {
     this.csv = this.parseData(this.csvraw.trim());
     // console.log(this.csv);
     this.updateData(this.csv);
-
-    // this.updateChart(data);
-    // this.updateSummaryChart(data);
   }
 
   updateChart(data: string): void {

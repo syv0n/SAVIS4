@@ -24,7 +24,6 @@
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    /* Optional: prevent click-through */
     pointer-events: auto;
 }
 
@@ -102,6 +101,5 @@ span {
 
 .resize-handle {
   border-bottom-right-radius: 12px;
-  /* Optional: add a visible corner */
   background: linear-gradient(135deg, transparent 60%, #888 100%);
 }

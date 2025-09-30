@@ -34,13 +34,6 @@
             <button class="btn" id="upload-btn" (click)="triggerFileInput()">{{ 'dotPlot_upload_data' | translate }}</button>
             <input type="file" id="fileInput" #fileInput style="display: none;" (change)="onFileSelect($event)">
             <br>
-            <!-- <form>
-                <input type="radio" id="population-data-ratio" value="population" name="setData" [(ngModel)]="sampleRadio" (click)="radioChange('population')" checked>
-                <label for="population" class="m-1">{{ 'dotPlot_population' | translate }}</label>
-                <br>
-                <input type="radio" id="sample-data-ratio" value="sample" name="setData" [(ngModel)]="sampleRadio" (click)="radioChange('sample')">
-                <label id="sampleButton" for="sample" class="m-1">{{ 'dotPlot_sample' | translate }}</label>
-            </form> -->
             <div>
                 <app-save-load-buttons
                     [data]="csvTextArea"

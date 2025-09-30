@@ -1,9 +1,6 @@
 import { Chart } from 'chart.js';
 import { minmax } from '../Dto/twomean';
 
-// @Injectable({
-//   providedIn: 'root'
-// })
 export class chatClass {
     private domElement: any;
     private datasets: any[] = [];
@@ -87,8 +84,6 @@ export class chatClass {
             if (this.options?.autoBuckets) {
                 let inScaleWidth = this.minmax?.max - this.minmax?.min
                 let chartWidth = this.chart.width;
-                // let pointRadius = this.chart.data.datasets[0].pointRadius;
-                // bucketSize = 2 * pointRadius * (inScaleWidth / chartWidth);
                 bucketSize = 2 * 8 * (inScaleWidth / chartWidth);
             }
             else if (this.options.bucketWidth) {

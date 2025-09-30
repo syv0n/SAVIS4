@@ -125,11 +125,11 @@ input[type='text'] {
         border-radius: 15px;
         background-color: #54c242;
         color: #fff;
-        padding: 15px 40px; /* Increased padding for a bigger button */
+        padding: 15px 40px;
         cursor: pointer;
         transition: background-color 0.3s;
-        display: block; /* Make it a block-level element */
-        margin-left: auto; /* Center the button horizontally */
+        display: block;
+        margin-left: auto; 
         margin-right: auto;
         &:hover {
             background-color: #388e3c;
@@ -195,11 +195,11 @@ input[type='text'] {
     border-radius: 15px;
     background-color: #54c242;
     color: #fff;
-    padding: 15px 40px; /* Increased padding for a bigger button */
+    padding: 15px 40px; 
     cursor: pointer;
     transition: background-color 0.3s;
-    display: block; /* Make it a block-level element */
-    margin-left: auto; /* Center the button horizontally */
+    display: block; 
+    margin-left: auto;
     margin-right: auto;
     &:hover {
         background-color: #388e3c;

@@ -80,9 +80,6 @@
     margin-top: -5rem;
     margin-left: 40rem;
     margin-bottom: 3rem;
-    // justify-content: center;
-    // text-align: center;
-    // user-select: none;
   }
 
   .chart-wrap2 {
@@ -108,7 +105,6 @@
     padding: 0.4rem;
     border-radius: 10px;
     border: 1px black solid;
-    //display: block;
     background-color: var(--fifth-col);
     border: 2px solid var(--ninth-col);
     color:var(--second-col);
@@ -136,7 +132,6 @@
   .load-button,
   .reset-button{
     display: block;
-    //margin-bottom: 10px;
     margin-left: 2px;
   }
   
@@ -208,7 +203,6 @@ label {
   padding: 5px;
   margin-bottom: 10px;
   font-size: 12px;
-  //text-align: justify;
   p {
     margin-top: 1px;
     margin-bottom: 1px;
@@ -247,7 +241,6 @@ $slider-track-color: #bfbfbf;
     cursor: pointer;
     height: 20px;
     width: 20px;
-    //border: 1px solid darken($primary-color, 15%)
     border: 1px solid var(--seventh-col);
   }
 
@@ -258,10 +251,8 @@ $slider-track-color: #bfbfbf;
   &::-webkit-slider-runnable-track {
     width: 50%;
     height: 22px;
-    //background: $slider-track-color;
     background-color: var(--ninth-col);
     border-radius: 5px;
-    //border: 1px  solid darken($slider-active-color, $amount: 15%)
     border: 1px solid var(--seventh-col);
   }
 
@@ -273,7 +264,6 @@ $slider-track-color: #bfbfbf;
     cursor: pointer;
     height: 20px;
     width: 20px;
-    //border: 1px solid darken($primary-color, 15%)
     border: 1px solid var(--seventh-col);
   }
 

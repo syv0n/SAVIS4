@@ -313,24 +313,7 @@ describe('TwoMeansCIComponent', () => {
       expect(component.summaryData).toEqual(expectedSummaryData);
     });
   });
-  // describe('runSimulations', () => {
-  //   it('should log the correct number of simulations', () => {
-  //     // Spy on console.log
-  //     const consoleSpy = jest.spyOn(console, 'log');
 
-  //     // Set a sample number of simulations
-  //     component.numberOfSimulations = 10;
-
-  //     // Call the runSimulations method
-  //     component.runSimulations();
-
-  //     // Check if console.log was called with the correct message
-  //     expect(consoleSpy).toHaveBeenCalledWith('Running', 10, 'simulations');
-
-  //     // Clean up
-  //     consoleSpy.mockRestore();
-  //   });
-  // });
   describe('sampleSelect', () => {
     let mockEvent: any;
 
@@ -536,17 +519,7 @@ describe('TwoMeansCIComponent', () => {
       mockFileReaderInstance.onload();
     });
   });
-  //   describe('selectedTest', () => {
-  //     beforeEach(() => {
-  //       component.mean_diff = 10;
-  //     });
-  //     it('should call tail.setTailDirection with the correct value', () => {
-  //       component.selectedTest({ target: { value: 'oneTailRight' } });
-  //       expect(component.tail.setTailDirection).toHaveBeenCalledWith(
-  //         'oneTailRight'
-  //       );
-  //     });
-  //   });
+
   describe('addSimulationSample', () => {
     it('correctly processes and organizes sample data into faceted arrays', () => {
       // Setup
@@ -593,39 +566,8 @@ describe('TwoMeansCIComponent', () => {
         setDataFromRaw: jest.fn(),
         chart: { update: jest.fn() },
       };
-
-      //   component.smp = {
-      //     randomSubset: jest.fn().mockReturnValue({
-      //       chosen: [{ datasetId: 0, value: 5 }],
-      //       unchosen: [{ datasetId: 1, value: 5 }],
-      //     }),
-      //     randomInt: jest.fn().mockReturnValue(3),
-      //     shuffle: jest.fn(),
-      //     splitUsing: jest.fn(),
-      //     splitByPredicate: jest.fn(),
-      //   };
-
-      //   // Mock CSV data
-      //   component.csv = [
-      //     [1, 2, 3], // Sample data for group 1
-      //     [4, 5, 6], // Sample data for group 2
-      //   ];
-
-      //   // Mock chart objects
-      //   component.chart3 = {
-      //     setDataFromRaw: jest.fn(),
-      //     chart: { update: jest.fn() },
-      //   };
-      //   component.chart4 = {
-      //     setDataFromRaw: jest.fn(),
-      //     chart: { update: jest.fn() },
-      //   };
     });
-    // it('should perform simulation, update chart, update summary statistics, and set samDisActive flag', () => {
-    //   // Call the method
-    //   component.runSim();
-
-    // });
+ 
 
     it('should show an alert if increment is not performed before simulation', () => {
       component.incrementPerformed = false;

@@ -110,75 +110,6 @@ export class OneMeanCIComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   createConfidenceIntervalChart(): void {
     const ctx = this.confidenceIntervalChartRef.nativeElement.getContext('2d')
-    // if(ctx) {
-    //   this.confidenceIntervalChart = new Chart(ctx, {
-    //     type: 'scatter',
-    //     data: {
-    //       datasets: [
-    //         {
-    //           label: this.translate.instant('dotPlot_confidence_interval'),
-    //           backgroundColor: 'blue',
-    //           data: []
-    //         },
-    //         {
-    //           label: this.translate.instant('dotPlot_lower_bound'),
-    //           backgroundColor: 'green',
-    //           data: []
-    //         },
-    //         {
-    //           label: this.translate.instant('dotPlot_upper_bound'),
-    //           backgroundColor: 'red',
-    //           data: []
-    //         }
-    //       ]
-    //     },
-    //     options: {
-    //       scales: {
-    //         xAxes: [
-    //           {
-    //             ticks: {
-    //               fontColor: 'black',
-    //               fontSize: 16,
-    //               padding: 0,
-    //               min: 0,
-    //               max: 1,
-    //             },
-    //             scaleLabel: {
-    //               display: true,
-    //               labelString: this.translate.instant('dotPlot_sample_means'),
-    //               fontStyle: 'bold',
-    //               fontColor: 'black'
-    //             }
-    //           }
-    //         ],
-    //         yAxes: [
-    //           {
-    //             ticks: {
-    //               fontColor: 'black',
-    //               fontSize: 16,
-    //               padding: 0,
-    //               min: 0,
-    //               stepSize: 1
-    //             },
-    //             scaleLabel: {
-    //               display: true,
-    //               labelString: this.translate.instant('dotPlot_frequencies'),
-    //               fontStyle: 'bold',
-    //               fontColor: 'black'
-    //             }
-    //           }
-    //         ]
-    //       },
-    //       responsive: true,
-    //       maintainAspectRatio: false,
-    //       tooltips: {
-    //         backgroundColor: 'rgba(0, 0, 0, 1.0)',
-    //         bodyFontSize: 16,
-    //       }
-    //     }
-    //   })
-    // }
-
     let dataset: ChartDataSets[] = [
       {
         label: this.translate.instant('omci_InInterval'),
@@ -1013,84 +944,6 @@ export class OneMeanCIComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.createSampleMeansChart();
   }
-//   confidenceInterval() {
-//     let chosenMeans: number[] = [];
-//     let processedStd: number[] = [];
-//     let idxArr: number[] = []; // This array is not used in the provided code
-//     this.samplemean2 = [];
-//     this.upperBound = [];
-//     this.lowerBound = [];
-//     const noOfCoverage: number = Number(this.noOfIntervals);
-//     if(noOfCoverage < 1 || noOfCoverage > this.sampleMeans.length) {
-//       alert('Number of coverage intervals must be between 1 and the number of sample means')
-//       return
-//     }
-//     for (let it = 0; it < noOfCoverage; it++) {
-//       chosenMeans.push(this.sampleMeans[it]);
-//       processedStd.push(2 * this.sampleStds[it]/ Math.sqrt(this.sampleSize));
-//     }
-//     console.log(processedStd)
-//   let it: number;
-// let sampleMean: number;
-// let procStd: number;
-// let lower: number;
-// let upper: number;
-// let minNum: number;
-// let maxNum: number;
-// let assignedDataset: any[];
-// let tmp: number;
-
-// let inInterval: number[] = [];
-// let notInInterval: number[] = [];
-// let lowers: number[] = [];
-// let uppers: number[] = [];
-
-// let wMean: number = 0;
-//   const centMean = Number(this.inputDataMean);
-//   console.log(centMean + "CENTMEAN")
-//   for (it = 0; it < chosenMeans.length; it++) {
-//     sampleMean = chosenMeans[it];
-//     procStd = processedStd[it];
-//     lower = sampleMean - procStd;
-//     upper = sampleMean + procStd;
-//     if (lower < minNum || !minNum) minNum = lower;
-//     if (upper > maxNum || !maxNum) maxNum = upper;
-
-//     if (lower <= centMean && centMean <= upper) wMean += 1; // wMean should increment if the centMean is within the the upper and lower bound of the sample
-//     console.log(wMean + "WMEAN");
-//     if ((it < noOfCoverage) && (it < 100)){
-//       assignedDataset = (lower <= centMean && centMean <= upper) ? inInterval : notInInterval
-
-//       assignedDataset.push(
-//         { x: it + 1, y: MathService.roundToPlaces(lower, 2) },
-//         { x: it + 1, y: sampleMean },
-//         { x: it + 1, y: MathService.roundToPlaces(upper, 2) },
-//         { x: undefined, y: undefined }
-//       )
-//     }
-    
-//     lowers.push(MathService.roundToPlaces(lower, 2))
-//     uppers.push(MathService.roundToPlaces(upper, 2))
-// }
-// it++
-//     tmp = inInterval.pop()
-//     tmp = notInInterval.pop()
-//     this.confidenceIntervalChart.options.scales.xAxes[0].ticks.max = (it < 100) ? it : 100
-//     this.confidenceIntervalChart.options.scales.yAxes[0].ticks.max = Math.ceil(maxNum)
-//     this.confidenceIntervalChart.options.scales.yAxes[0].ticks.min = Math.floor(maxNum)
-//     this.confidenceIntervalChart.data.datasets[0].data = inInterval
-//     this.confidenceIntervalChart.data.datasets[1].data = notInInterval
-//     this.confidenceIntervalChart.data.datasets[2].data = [{x: 0, y: centMean}, {x: (it < 100) ? it : 100, y: centMean}]
-//     this.confidenceIntervalChart.data.datasets[2].label = '${this.meanSymbol} = ${centMean}'
-//     this.confidenceIntervalChart.update()
-//     this.confidenceIntervalCount = wMean
-//     this.confidenceIntervalCountNot = noOfCoverage - wMean
-//     this.samplemean2 = chosenMeans
-//     this.upperBound = uppers
-//     this.lowerBound = lowers
-
-
-// }
 
   confidenceInterval() {
     if(this.noOfIntervals < 1 || this.noOfIntervals > this.sampleMeans.length) {
@@ -1160,7 +1013,6 @@ export class OneMeanCIComponent implements OnInit, AfterViewInit, OnDestroy {
     this.confidenceIntervalChart.chart.update()
     this.confidenceIntervalCount = wMean
     this.confidenceIntervalCountNot = noOfCoverage - wMean
-    // TODO: SampleMeanCoverageDisplay ????
   }
 
   triggerFileInput(): void {

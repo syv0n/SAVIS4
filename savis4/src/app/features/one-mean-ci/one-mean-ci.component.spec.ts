@@ -142,18 +142,4 @@ describe('OneMeanCIComponent', () => {
         let sampleMeansStd = component.sampleStddev(component.sampleMeans);
         expect(sampleMeansStd).toBe(3.0276503540974917);
     } );
-//     it('should return the correct confidence interval', () =>
-//     {
-//         component.sampleMeans = [1,2,3,4,5,6,7,8,9,10];
-//         component.sampleMeansSize = 10;
-//         component.sampleMeansMean = 5.5;
-//         component.sampleMeansStd = 2.8722813232690143;
-//         component.confidenceIntervalCount = 0;
-//         component.confidenceIntervalCountNot = 0;
-//         component.confidenceInterval();
-//         expect(component.lowerBound[0]).toBe(3.325);
-//         expect(component.upperBound[0]).toBe(7.675);
-//     }
-// );  
-
 });
