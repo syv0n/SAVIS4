@@ -12,7 +12,7 @@ describe('template spec', () => {
     
     it('should input data points and load the chart', () => {
         cy.get('#dataPoints').type('1,3 \n 2,5 \n 3,7 \n 4,9 \n 5,11')
-        cy.get('button.btn').click()
+        cy.get('button.btn').first().click()
         cy.get('app-scatter-plot').should('be.visible')
     })
     
