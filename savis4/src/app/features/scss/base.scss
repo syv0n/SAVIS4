@@ -91,10 +91,12 @@ textarea[disabled], input[disabled], select[disabled] {
 .btn {
   display: inline-block;
   color: #fff;
-  background: #93cb52;
-  padding: 0.5rem 2rem;
+  background: var(--third-col);
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 5px;
+  line-height: 1;
+  white-space: nowrap;
 }
 button.btn {
   transition-property: background-color color;
@@ -102,7 +104,7 @@ button.btn {
 }
 
 .btn:hover {
-  background: #7ab436;
+  background: var(--fourth-col);
 }
 
 .btn[disabled] {
