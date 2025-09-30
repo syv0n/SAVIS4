@@ -1,4 +1,15 @@
 <app-navbar></app-navbar>
+
+<!--link to user manual -->
+<div class="manual-link">
+  <button
+    class="btn manual-btn"
+    type="button"
+    [routerLink]="['/omht']">
+        One Mean Hypothesis Testing Guide
+  </button>
+</div>
+
 <body class="flex flex-col min-h-screen">
 <div id="dot-chart-tutorial">
     <h1 class="text-center">{{ 'one_mean_hypothesis_testing' | translate }}</h1>
