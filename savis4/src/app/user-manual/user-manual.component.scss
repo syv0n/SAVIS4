@@ -1,6 +1,7 @@
 .user-manual-container {
   padding: 40px;
   background-color: var(--fifth-col);
+  min-height: 100vh;
 
   .title {
     text-align: center;
@@ -61,7 +62,7 @@ h1{
     font-size: 1.6rem;
     font-weight: bold;
     margin-bottom: 2vh;
-    color: var(--second-col);
+    color: black;
     text-align: center;
     font-family: 'Poppins', sans-serif;
     text-decoration: underline;
@@ -72,7 +73,7 @@ h1{
     width: 410px;
     padding: 2vh;
     margin: 1vh auto;
-    background-color: #257e27;
+    background-color: var(--third-col);
     border-radius: 2px;
     font-family: 'Poppins', sans-serif;
     color: beige;

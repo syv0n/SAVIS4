@@ -173,7 +173,7 @@ describe('TwoMeansComponent', () => {
         component.onFileSelected(event);
         // check that the csvraw property is set correctly
         expect(component.csvraw).toBe("group,value\nGroup 1,1\nGroup 2,2\nGroup 1,3\nGroup 2,4\nGroup 1,5\nGroup 2,6\nGroup 1,7\nGroup 2,8\nGroup 1,9\nGroup 2,10");
-        // cjeck that the csv property is set correctly
+        // check that the csv property is set correctly
         expect(component.csv).toEqual([[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]);
     });
 

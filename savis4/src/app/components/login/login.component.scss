@@ -85,11 +85,11 @@ A:hover {
     border-radius: 15px;
     background-color: #54c242;
     color: #fff;
-    padding: 15px 40px; /* Increased padding for a bigger button */
+    padding: 15px 40px;
     cursor: pointer;
     transition: background-color 0.3s;
-    display: block; /* Make it a block-level element */
-    margin-left: auto; /* Center the button horizontally */
+    display: block;
+    margin-left: auto;
     margin-right: auto;
 }
 
@@ -133,8 +133,8 @@ input[type='text'] {
     border: none;
     outline: none;
     box-shadow: none;
-    width: calc(100% - 40px); /* Adjusted width */
-    padding: 8px; /* Adjusted padding */
+    width: calc(100% - 40px); 
+    padding: 8px;
     margin-bottom: 10px;
 }
 .text-danger {

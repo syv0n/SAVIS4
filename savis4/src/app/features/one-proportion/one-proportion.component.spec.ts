@@ -74,20 +74,6 @@ describe('OneProportionComponent', () => {
         expect(component.probability).toBe(0.5)
     })
 
-    // it('should add new samples and update the chart on sampleDraw', () => {
-    //     const drawSamplesResult = [[1, 0, 1, 0, 1]];
-    //     jest.spyOn(component, 'drawSamples').mockReturnValue(drawSamplesResult)
-
-    //     const initalTotalSamples = component.totalSamples
-    //     component.sampleDraw()
-
-    //     console.log('drawSamples result:', drawSamplesResult);
-    //     console.log('chart data:', component.chart.data.datasets[0].data);
-
-    //     expect(component.totalSamples).toBeGreaterThan(initalTotalSamples)
-    //     expect(component.chart.data.datasets[0].data.some(Array.isArray)).toBe(true)
-    // })
-
     afterEach(() => {
         fixture.destroy()
     })

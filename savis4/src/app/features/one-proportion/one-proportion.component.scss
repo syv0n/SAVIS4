@@ -34,7 +34,6 @@
   
   .right-num {
     text-align: right;
-    // float: right;
   }
   
   .btn{
@@ -104,7 +103,6 @@ input[type="range"] {
     cursor: pointer;
     height: 20px;
     width: 20px;
-    //border: 1px solid darken($primary-color, 15%)
     border: 1px solid var(--seventh-col);
   }
 
@@ -118,7 +116,6 @@ input[type="range"] {
     background-color: var(--ninth-col);
     border: 1px solid var(--seventh-col);
     border-radius: 5px;
-    //border: 1px  solid darken($slider-active-color, $amount: 15%)
   }
 
   &::-moz-range-thumb {
@@ -129,7 +126,6 @@ input[type="range"] {
     cursor: pointer;
     height: 20px;
     width: 20px;
-    //border: 1px solid darken($primary-color, 15%)
     border: 1px solid var(--seventh-col);
   }
 
@@ -143,7 +139,6 @@ input[type="range"] {
 }
 
 button {
-  //background: linear-gradient(180deg, lighten($secondary-color, 5%), $secondary-color);
   background: var(--third-col);
   color: white;
   padding: 10px;
@@ -153,7 +148,6 @@ button {
   transition: background-color 0.3s;
 
   &:hover {
-    //background: linear-gradient(180deg, $secondary-color, darken($secondary-color, 5%));
     background: var(--fourth-col);
   }
 }
@@ -162,7 +156,6 @@ input[type="number"] {
   margin: 2px;
   background-color: var(--fifth-col);
   border: 2px solid var(--ninth-col);
-  //border: 1px solid $slider-active-color;
   border-radius: 4px;
   padding: 10px;
   font-size: 1rem;

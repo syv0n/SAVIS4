@@ -607,7 +607,6 @@ export class InputComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // this.chart1 = new chatClass('data-chart-1', this.datasets[0]);
     this.chart1 = new Chart('data-chart-1', this.chartOptions);
 
     // Format scatter/control point tooltips to two decimals
