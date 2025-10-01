@@ -94,7 +94,6 @@ $slider-active-color: var(--ninth-col);
 $slider-track-color: var(--ninth-col);
 
 button {
-  //background: linear-gradient(180deg, lighten($secondary-color, 5%), $secondary-color);
   background: var(--third-col);
   color: white;
   padding: 10px;
@@ -105,7 +104,6 @@ button {
 
   &:hover {
     background-color: var(--fourth-col);
-    //background: linear-gradient(180deg, $secondary-color, darken($secondary-color, 5%));
   }
 
   &:disabled {

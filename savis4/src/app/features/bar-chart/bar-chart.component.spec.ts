@@ -96,15 +96,12 @@ describe('BarChartComponent', () => {
       // Spy on the update method
       const updateSpy = jest.spyOn(chartMock, 'update');
 
-      // Call clearChart on the chart instance
       component.clearChart(chartMock);
 
-      // Expect chart data to be cleared
       expect(chartMock.data.labels).toEqual([]);
       expect(chartMock.data.datasets[0].data).toEqual([]);
       expect(chartMock.options.scales.yAxes[0].ticks.max).toEqual(1);
 
-      // Expect update method to be called
       expect(updateSpy).toHaveBeenCalled();
     });
   });
@@ -121,7 +118,6 @@ describe('BarChartComponent', () => {
     });
 
     it('should reset all relevant properties and clear charts', () => {
-      // Call totalReset method
       component.totalReset();
 
       // Expect properties to be reset
@@ -156,7 +152,6 @@ describe('BarChartComponent', () => {
       component.sampleDataArray = [{ id: 1, value: 'sampleData' }];
       component.datasets[1].data = [4, 5, 6];
 
-      // Call resetSampleChart method
       component.resetSampleChart();
 
       // Expect properties to be reset
@@ -188,10 +183,8 @@ describe('BarChartComponent', () => {
         ],
       });
 
-      // Mock updateData function
       component.updateData = jest.fn();
 
-      // Call updateSampleData method
       component.updateSampleData();
 
       // Expect sampleDataArray to be updated with the chosen subset
@@ -205,10 +198,8 @@ describe('BarChartComponent', () => {
     });
 
     it('should set sampleErrorMsg when there is no input data', () => {
-      // Set inputDataArray to empty array
       component.inputDataArray = [];
 
-      // Call updateSampleData method
       component.updateSampleData();
 
       // Expect sampleErrorMsg to be set
@@ -231,7 +222,6 @@ describe('BarChartComponent', () => {
       component.resetSampleChart = jest.fn();
       component.updateData = jest.fn();
 
-      // Call loadInputData method
       component.loadInputData();
 
       // Expect sample chart to be reset
@@ -259,7 +249,6 @@ describe('BarChartComponent', () => {
       component.resetSampleChart = jest.fn();
       component.updateData = jest.fn();
 
-      // Call loadInputData method
       component.loadInputData();
 
       // Expect inputErrorMsg to be set

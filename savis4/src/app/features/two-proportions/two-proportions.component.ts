@@ -398,18 +398,6 @@ runSim() {
   }
 
   buildDiffOfProp(){
-    // if (this.tp_minTailValInput === 0 && this.tp_maxTailValInput === 0) {
-    //   const confidenceLevel = 95
-
-    //   const [lower, upper] = MathService.getCutOffInterval(confidenceLevel, this.simulations.length)
-    //   const temp = this.simulations.map(val => val)
-
-    //   temp.sort((a, b) => a - b)
-
-    //   this.tp_minTailValInput = temp[lower]
-    //   this.tp_maxTailValInput = temp[upper >= temp.length ? upper - 1: upper]
-    // }
-
     const tmpChecked = {min: this.includeValMin, max: this.includeValMax}
 
     const dataCustomChart = this.splitByPredicate(
@@ -518,9 +506,6 @@ runSim() {
     // Update extreme difference and proportion of extreme difference
     this.extremediff_chart3 = (String)(this.simulations.length - totalChosen)
     this.propextremediff_chart3 = `${totalChosen} / ${this.simulations.length} = ${proportionChosen}`
-
-    // this.extremediff_chart3 = `${totalChosen} / ${this.simulations.length} = ${proportionChosen}`
-    // this.propextremediff_chart3 = `${totalUnchosen} / ${this.simulations.length} = ${proportionUnchosen}`
 }
 
   

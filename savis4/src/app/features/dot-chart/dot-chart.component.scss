@@ -19,7 +19,6 @@
     .chart-input-form {
       color:var(--sixth-col);
       display: flex;
-      // border-bottom: 3px green solid;
       .data-form {
         color:var(--sixth-col);
         display: flex;
@@ -28,7 +27,6 @@
         width: 38ch;
         padding: 5px;
         margin-bottom: 10px;
-        //text-align: justify;
         p {
           margin-top: 1px;
           margin-bottom: 1px;
@@ -91,7 +89,6 @@ $slider-active-color: var(--ninth-col);
 $slider-track-color: var(--ninth-col);
 
 button {
-  //background: linear-gradient(180deg, lighten($secondary-color, 5%), $secondary-color);
   background: var(--third-col);
   color: white;
   padding: 10px;
@@ -101,7 +98,6 @@ button {
   transition: background-color 0.3s;
 
   &:hover {
-    //background: linear-gradient(180deg, $secondary-color, darken($secondary-color, 5%));
     background: var(--fourth-col);
   }
 
@@ -115,7 +111,6 @@ input[type="number"] {
   color:var(--second-col);
   background: var(--ninth-col);
   margin: 2px;
-  //border: 1px solid $slider-active-color;
   border-radius: 4px;
   padding: 10px;
   font-size: 1rem;

@@ -29,61 +29,29 @@ export class BarChartService {
               ticks: {
                 min: 0,
                 max: 1,
-                // step: 0.1,
                 beginAtZero: true,
-                //fontColor: "black",
-                //fontSize: "16"
               },
               scaleLabel: {
                 display: true,
                 labelString: translation.yAxisTitle,
-                //fontColor: "black",
-                //fontSize: "14"
               }
             }
           ],
           xAxes: [
             {
-              // barPercentage: 1.0,
               ticks: {
                 minRotation: 45,
                 maxRotation: 45,
-                //fontColor: "black",
-                //fontSize: "14"
               },
               scaleLabel: {
                 display: true,
                 labelString: translation.xAxisTitle,
-                //fontColor: "black",
-                //fontSize: "14"
               }
             }  
           ]
         },
         responsive: true,
-        maintainAspectRatio: true/*,
-        tooltips: {
-          mode: "index",
-          backgroundColor: "rgba(0,0,0,1.0)",
-          callbacks: {
-            title: function(tooltipItem, data) {
-              let title = tooltipItem[0].xLabel || "";
-              title += " heads";
-              return title;
-            },
-            label: (tooltipItem, data) => {
-              if (tooltipItem.datasetIndex !== 2) {
-                return `${data.datasets[tooltipItem.datasetIndex].label} : ${
-                  tooltipItem.yLabel
-                }`;
-              } else {
-                return `${data.datasets[tooltipItem.datasetIndex].label} : ${
-                  this.dataFromCalculation.noOfSelected
-                }`;
-              }
-            }
-          }
-        }*/
+        maintainAspectRatio: true
       }
     });
   }

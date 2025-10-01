@@ -106,7 +106,7 @@ it('successfully logs in the user', async () => {
 it('should navigate to the homepage for a guest', () => {
   const navigateSpy = jest.spyOn(router, 'navigate'); // Spy on router.navigate
 
-  component.guestOnSubmit(); // Call the function
+  component.guestOnSubmit();
 
   expect(navigateSpy).toHaveBeenCalledWith(['/homepage']); // Assert navigation with correct path
 });

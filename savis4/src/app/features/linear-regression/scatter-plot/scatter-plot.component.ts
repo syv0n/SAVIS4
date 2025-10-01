@@ -59,8 +59,6 @@ export class ScatterPlotComponent implements OnChanges {
       this.updateRegressionParameters();
       this.updateChartData();
       this.leastSquares = this.calculateLeastSquares();
-      
-      //this.scatterChartData.push(this.calculateErrorBars());
     }
 
     if(this.chart && this.chart.chart) {
@@ -68,7 +66,6 @@ export class ScatterPlotComponent implements OnChanges {
     }
   }
 
-  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnDestroy(): void {
     Chart.plugins.unregister(errorBarsPlugin);
     Chart.plugins.unregister(errorSquaresPlugin);

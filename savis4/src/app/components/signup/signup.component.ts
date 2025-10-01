@@ -10,19 +10,9 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./signup.component.scss']
 })
 export class SignupComponent implements OnInit {
-
-  /**
-   * Form Group for controling the form
-   */
   signUpForm!: FormGroup;
-
-  /**
-   * Error message string holder
-   */
   errorMessage!: string;
-
   successMessage!: string;
-
   constructor(
     private fb: FormBuilder,
     private afAuth: AngularFireAuth,
@@ -30,9 +20,6 @@ export class SignupComponent implements OnInit {
     private translate: TranslateService
   ) {}
 
-  /**
-   * Creating the form groups for all the required fields
-   */
   ngOnInit(): void {
     this.signUpForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -48,9 +35,6 @@ export class SignupComponent implements OnInit {
     this.router.navigate(['/homepage']);
   }
 
-  /**
-   * Create the new user if all the fields are valid
-   */
   onSignUp() {
     this.errorMessage = ''
     
@@ -74,9 +58,6 @@ export class SignupComponent implements OnInit {
     }
   }
 
-  /**
-   * Validate all the fields
-   */
   validateAllFormFields(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach(field => {
       const control = formGroup.get(field)
@@ -107,16 +88,10 @@ export class SignupComponent implements OnInit {
   }
 }
 
-/**
- * Custom Validation interface
- */
 export interface ValidationResult{
   [key: string]: boolean;
 }
 
-/**
- * Custom password validator
- */
 export class PasswordValidator {
 
   /**
@@ -156,8 +131,6 @@ export class PasswordValidator {
     const password = group.get('password')?.value;
     const confirmPassword = group.get('confirmPassword')?.value;
 
-    // Return null if passwords match or if the confirmPassword field is empty
-    // Otherwise, return the validation error
     if (password === confirmPassword || !confirmPassword) {
       return null;
     }
@@ -165,16 +138,12 @@ export class PasswordValidator {
     return password === confirmPassword ? null : { matchPassword: true };
   }
 }
-/**
- * Custom email validator interface
- */
+
 export interface emailValidator {
   [key: string]: boolean;
 }
 
-/**
- * Custom email validator
- */
+
 export class EmailValidator {
   /**
    * Validates an email address (checks for @ and .)

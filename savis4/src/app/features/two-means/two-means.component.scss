@@ -1,5 +1,4 @@
 .if-disabled[disabled]{
-  //background-color: var(--ninth-col);
   cursor: not-allowed;
 }
 .p-4{
@@ -22,7 +21,6 @@ padding-top: 40px;
   width: 38ch;
   padding: 5px;
   margin-bottom: 10px;
-  //text-align: justify;
   p {
     color:var(--second-col);
     margin-top: 1px;
@@ -58,7 +56,6 @@ input:not([type="range"]){
   border: 1px black solid;
   background-color: var(--ninth-col);
   color: var(--second-col);
-  //display: block;
 
   &:disabled{
     background-color: var(--ninth-col);

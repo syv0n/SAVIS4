@@ -38,15 +38,7 @@
                 [data]="csvTextArea"
                 [feature]="'OneMeanCI'"
             ></app-save-load-buttons>
-            <br>
-            <!-- <form>
-                <input type="radio" id="population-data-ratio" value="population" name="setData" [(ngModel)]="sampleRadio" (click)="radioChange('population')" checked>
-                <label for="population" class="m-1">{{ 'dotPlot_population' | translate }}</label>
-                <br>
-                <input type="radio" id="sample-data-ratio" value="sample" name="setData" [(ngModel)]="sampleRadio" (click)="radioChange('sample')">
-                <label for="sample" class="m-1">{{ 'dotPlot_sample' | translate }}</label>
-            </form> -->
-            
+            <br>     
         </div>
 
         <div class="data-form">
@@ -167,10 +159,6 @@
             <p style="text-align: left;">{{'omci_NotInInterval'| translate}}</p>
             <p style="text-align: center;">{{ confidenceIntervalCountNot }}</p>
         </div>
-        <!-- <div class="data-display" read style="  height: 200px;
-        width: 175px;
-        border: 1px solid #ccc;
-        overflow-y: auto;"> -->
         <div class="readonly" readonly
         style="width: 150px; height: 300px; border-radius: 10px; display: flex; overflow-x: auto;">
             <table id="sample-table" >

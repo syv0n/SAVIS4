@@ -430,7 +430,6 @@ export class DotChartComponent implements AfterViewInit, OnInit, OnDestroy {
 
       this.updateData(2)
     } catch (error) {
-      // let errMsg = 'ERRROR\n'
       alert(error)
     }
   }

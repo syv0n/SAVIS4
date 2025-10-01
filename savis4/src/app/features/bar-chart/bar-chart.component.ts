@@ -9,75 +9,23 @@ import { SharedService } from '../../services/shared.service'
   styleUrls: ['./bar-chart.component.scss']
 })
 export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
-  /**
-   * Input Chart Element Reference
-   */
   @ViewChild('inputChart') chartCanvas: ElementRef<HTMLCanvasElement>
-  /**
-   * Sample Chart Element Reference
-   */
   @ViewChild('sampleChart') sampleCanvas: ElementRef<HTMLCanvasElement>
-  /**
-   * Input Data Display Element Reference
-   */
   @ViewChild('input_data_display') inputDataDisplay: ElementRef<HTMLDivElement>
-  /**
-   * Sample Data Display Element Reference
-   */
   @ViewChild('input_data_table') inputDataTable: ElementRef<HTMLTableElement>
-  /**
-   * Sample Data Display Element Reference
-   */
   @ViewChild('sample_data_display') sampleDataDisplay: ElementRef<HTMLDivElement>
-  /**
-   * Sample Data Display Element Reference
-   */
   @ViewChild('sample_data_table') sampleDataTable: ElementRef<HTMLTableElement>
-  /**
-   * File Input Element Reference
-   */
   @ViewChild('fileInput', { static: false }) fileInput: ElementRef
 
-  /**
-   * Input Data Size Number String
-   */
   inputDataSizeNum: string = 'NaN'
-  /**
-   * Sample Data Size Number String
-   */
   sampleDataSizeNum: string = 'NaN'
-
-  /**
-   * Input Chart Error Message
-   */
   inputErrorMsg = ''
-  /**
-   * Sample Chart Error Message
-   */
   sampleErrorMsg = ''
-  /**
-   * CSV Text Area string
-   */
   csvTextArea: string = ''
-  /**
-   * Sample Size Input Number
-   */
   sampleSizeInput: number = 1
-  /**
-   * Input Data Array
-   */
   inputDataArray: any[] = []
-  /**
-   * Data Category Array
-   */
   dataCategoryArray: any[] = []
-  /**
-   * Sample Data Array
-   */
   sampleDataArray: any[] = []
-  /**
-   * Datasets Array used in the Charts
-   */
   datasets: any[] = [
     {
       label: this.translate.instant('barChart_inputdata'),
@@ -92,13 +40,8 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
       data: []
     }
   ]
-  /**
-   * Input Chart
-   */
+
   inputChart: Chart
-  /**
-   * Sample Chart
-   */
   sampleChart: Chart
 
   constructor(
@@ -121,9 +64,6 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
     this.createSampleChart()
   }
 
-  /**
-   * Create Input Chart
-   */
   createInputChart(): void {
     const context = this.chartCanvas.nativeElement.getContext('2d')
     if (context) {
@@ -159,7 +99,6 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
             ],
             xAxes: [
               {
-                // barPercentage: 1.0,
                 ticks: {
                   minRotation: 45,
                   maxRotation: 45,
@@ -184,9 +123,6 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Create Sample Chart
-   */
   createSampleChart(): void {
     const context = this.sampleCanvas.nativeElement.getContext('2d')
     if (context) {
@@ -222,7 +158,6 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
             ],
             xAxes: [
               {
-                // barPercentage: 1.0,
                 ticks: {
                   minRotation: 45,
                   maxRotation: 45,
@@ -264,9 +199,6 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
       })
   }
 
-  /**
-   * Load Data Button Handler
-   */
   loadDataButton() {
     this.inputDataArray = this.csvTextArea.split(/\r?\n+|\r+/).filter(
       (x: any) => /\w+/.test(x)
@@ -282,9 +214,6 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Resets chart data and input data
-   */
   totalReset() {
     this.inputDataArray = []
     this.dataCategoryArray = []
@@ -304,9 +233,6 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
     console.log("reset")
   }
 
-  /**
-   * Resets sample chart data
-   */
   resetSampleChart() {
     this.sampleDataArray = []
     this.datasets[1].data = []
@@ -314,9 +240,6 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
    
   }
 
-  /**
-   * Updates the sample data
-   */
   updateSampleData() {
     this.sampleErrorMsg = ''
     try {
@@ -441,8 +364,6 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
     table.style.borderCollapse = 'collapse'
 
     tableElement.appendChild(table)
-
-   
   }
 
   /**
@@ -494,18 +415,6 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
   sortAlphaNumString(rawData: any) {
     let numbers = rawData.filter((x: any) => !isNaN(Number(x))).sort((a: any, b: any)=>a-b).map((x: any) => `${Number(x)}`)
     let strings = rawData.filter((x: any) => isNaN(Number(x))).sort( (a: any, b: any) => a.localeCompare(b))
-
-    // const limit = numbers.length
-    // for (let it = 0; it < limit; it++) {
-    //   const rest = Number(numbers[it+1]) - Number(numbers[it])
-
-    //   if (rest > 1) {
-    //     for (let jt = 0; jt < rest-1; jt++) {
-    //       numbers.push(String(Number(numbers[it] + jt + 1)))
-    //     }
-    //   }
-    // }
-    // numbers.sort((a: any, b: any) => a -b).map((x: any) => `${Number(x)}`)
     return numbers.concat(strings)
   }
 

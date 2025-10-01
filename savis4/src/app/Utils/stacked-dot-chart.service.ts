@@ -33,13 +33,6 @@ export class StackedDotChartService {
   initChart(domElement: any, datasets: any[], options: any = {}) {
     this.domElement = domElement;
     this.datasets = datasets
-    // for (let dataset of datasets) {
-    //   this.datasets.push(
-    //     Object.assign({}, dataset, {
-    //       pointRadius: 8
-    //     })
-    //   );
-    // }
 
     Chart.defaults.global.defaultFontSize = 16;
     Chart.defaults.global.defaultFontStyle = 'bold';
@@ -73,8 +66,6 @@ export class StackedDotChartService {
               scaleLabel: {
                 display: true,
                 labelString: "",
-                //fontColor: "black",
-                //fontSize: "14"
               }
             }],
             yAxes: [
@@ -83,17 +74,13 @@ export class StackedDotChartService {
                   fontColor: 'black',
                   fontSize: 16,
                   padding: 0,
-                  /*min: 1, // Original
-                  max:2,*/
-                  min: 0, // Rafael Diaz
+                  min: 0, 
                   stepSize: 1,
                   max: 8
                 },
                 scaleLabel: {
                   display: true,
                   labelString: "",
-                  //fontColor: "black",
-                  //fontSize: "14"
                 }
               }
             ]
