@@ -1,0 +1,62 @@
+<app-navbar></app-navbar>
+
+<div class="problems-container">
+  <h1 class="title">{{'problems_title' | translate}}</h1>
+  <div class="content">
+
+   <div class="box-container bg-lightMintGreen">
+      <div class="column">
+        <div class="tool1">{{ "homepage_Hypothesis_Testing" | translate }}</div>
+        <div class="box" routerLink="/problems-opht">
+          {{ "homepage_One_Proportion_Hypothesis_Testing" | translate }}
+        </div>
+        <div class="box" routerLink="/problems-tpht">
+          {{ "homepage_Two_Proportion_Hypothesis_Testing" | translate }}
+        </div>
+        <div class="box" routerLink="/problems-omht">
+          {{ "homepage_One_Mean_Hypothesis_Testing" | translate }}
+        </div>
+        <div class="box" routerLink="/problems-tmht">
+          {{ "homepage_Two_Mean_Hypothesis_Testing" | translate }}
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="tool2">{{ 'homepage_Graphs' | translate }}</div>
+        <div class="box2" routerLink="/problems-bar-chart">{{ 'homepage_barChart' | translate }}</div>
+        <div class="box2" routerLink="/problems-dot-plot">{{ 'homepage_dotPlot' | translate }}</div>
+      </div>
+
+      <div class="column">
+        <div class="tool3">{{ "homepage_Visualization" | translate }}</div>
+        <div class="box3" routerLink="/problems-regression">
+          {{ "homepage_Linear_Regression_Visualization" | translate }}
+        </div>
+        <div class="box3" routerLink="/problems-correlation">
+          {{ "homepage_Correlation_Visualization" | translate }}
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="tool4">{{ "homepage_Confidence_Interval" | translate }}</div>
+        <div class="box4" routerLink="/problems-opci">
+          {{ "homepage_One_Proportions_Confidence_Interval" | translate }}
+        </div>
+        <div class="box4" routerLink="/problems-tpci">
+          {{ "homepage_Two_Proportions_Confidence_Interval" | translate }}
+        </div>
+        <div class="box4" routerLink="/problems-omci">
+          {{ "homepage_One_Mean_Confidence_Interval" | translate }}
+        </div>
+        <div class="box4" routerLink="/problems-tmci">
+          {{ "homepage_Two_Mean_Confidence_Interval" | translate }}
+        </div>
+      </div>
+    </div>
+  </div>   
+  <p></p>
+</div>
+
+<footer class="static-footer">
+  {{ "nav_copyright" | translate }}
+</footer>

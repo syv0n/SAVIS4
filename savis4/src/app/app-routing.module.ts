@@ -32,6 +32,19 @@ import { TMCIManualComponent } from './user-manual/user-manual-components/tmci/t
 import { TMHTManualComponent } from './user-manual/user-manual-components/tmht/tmht.component';
 import { TPCIManualComponent } from './user-manual/user-manual-components/tpci/tpci.component';
 import { TPHTManualComponent } from './user-manual/user-manual-components/tpht/tpht.component';
+import { ProblemsComponent } from './problems/problems.component';
+import { BarChartProblemsComponent } from './problems/problems-components/bar-chart/bar-chart.component';
+import { CorrelationProblemsComponent } from './problems/problems-components/correlation/correlation_problems.component';
+import { DotPlotProblemsComponent } from './problems/problems-components/dot-plot/dot-plot.component';
+import { OMCIProblemsComponent } from './problems/problems-components/omci/omci.component';
+import { OMHTProblemsComponent } from './problems/problems-components/omht/omht.component';
+import { OPCIProblemsComponent } from './problems/problems-components/opci/opci.component';
+import { OPHTProblemsComponent } from './problems/problems-components/opht/opht.component';
+import { RegressionProblemsComponent } from './problems/problems-components/regression/regression.component';
+import { TMCIProblemsComponent } from './problems/problems-components/tmci/tmci.component';
+import { TMHTProblemsComponent } from './problems/problems-components/tmht/tmht.component';
+import { TPCIProblemsComponent } from './problems/problems-components/tpci/tpci.component';
+import { TPHTProblemsComponent } from './problems/problems-components/tpht/tpht.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -66,7 +79,20 @@ export const routes: Routes = [
   { path: 'tmci', component: TMCIManualComponent },
   { path: 'tmht', component: TMHTManualComponent },
   { path: 'tpci', component: TPCIManualComponent },
-  { path: 'tpht', component: TPHTManualComponent }
+  { path: 'tpht', component: TPHTManualComponent },
+  { path: 'problems', component: ProblemsComponent },
+  { path: 'problems-bar-chart', component: BarChartProblemsComponent },
+  { path: 'problems-correlation', component: CorrelationProblemsComponent },
+  { path: 'problems-dot-plot', component: DotPlotProblemsComponent },
+  { path: 'problems-omci', component: OMCIProblemsComponent },
+  { path: 'problems-omht', component: OMHTProblemsComponent },
+  { path: 'problems-opci', component: OPCIProblemsComponent },
+  { path: 'problems-opht', component: OPHTProblemsComponent },
+  { path: 'problems-regression', component: RegressionProblemsComponent },
+  { path: 'problems-tmci', component: TMCIProblemsComponent },
+  { path: 'problems-tmht', component: TMHTProblemsComponent },
+  { path: 'problems-tpci', component: TPCIProblemsComponent },
+  { path: 'problems-tpht', component: TPHTProblemsComponent }
 ];
 
 @NgModule({

@@ -1,0 +1,20 @@
+<app-navbar></app-navbar>
+
+<div class="dot-plot-container">
+  <h1 class="title">{{'problems_dot_plot_title' | translate}}</h1>
+  <div button="back" routerLink="/problems" class="back-button">
+      &larr; {{ 'problems_back' | translate }}
+    </div>
+  <div class="content">
+    <div class="text-section">
+      <div class="green-box">
+        <p [innerHTML]="'Hi Xai' | translate"></p>
+      </div>
+    </div>
+
+  <p></p>
+</div>
+
+<footer class="static-footer">
+  {{ "nav_copyright" | translate }}
+</footer>

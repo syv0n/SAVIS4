@@ -1,0 +1,87 @@
+.problems-container {
+  padding: 40px;
+  background-color: var(--fifth-col);
+
+  .title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+  }
+
+  .content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+
+    .text-section {
+      flex: 0.6;
+
+      h2, h3 {
+        margin: 0;
+        padding-bottom: 10px;
+        color:var(--second-col);
+      }
+    }
+  }
+}
+h1{
+  color:var(--second-col);
+  font-weight: bold;
+}
+
+.static-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #000000; 
+  color: #ffffff;
+  text-align: center;
+  padding: 10px 0; 
+}
+
+/* Top level container */
+.box-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: auto;
+}
+
+/* Styling for each column */
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 3vh;
+}
+
+/* Tool title styling */
+.tool1, .tool2, .tool3, .tool4 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 2vh;
+    color: var(--second-col);
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    text-decoration: underline;
+}
+
+/* Individual box styling */
+.box, .box2, .box3, .box4 {
+    width: 410px;
+    padding: 2vh;
+    margin: 1vh auto;
+    background-color: #257e27;
+    border-radius: 2px;
+    font-family: 'Poppins', sans-serif;
+    color: beige;
+    font-weight: bolder;
+    text-align: center;
+}
+
+/* Box hovering effects */
+.box:hover, .box2:hover, .box3:hover, .box4:hover {
+    background-color: var(--fourth-col);
+    cursor: pointer;
+}

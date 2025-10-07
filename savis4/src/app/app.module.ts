@@ -59,6 +59,19 @@ import { TMCIManualComponent } from './user-manual/user-manual-components/tmci/t
 import { TMHTManualComponent } from './user-manual/user-manual-components/tmht/tmht.component';
 import { TPCIManualComponent } from './user-manual/user-manual-components/tpci/tpci.component';
 import { TPHTManualComponent } from './user-manual/user-manual-components/tpht/tpht.component';
+import { ProblemsComponent } from './problems/problems.component';``
+import { BarChartProblemsComponent } from './problems/problems-components/bar-chart/bar-chart.component';
+import { CorrelationProblemsComponent } from './problems/problems-components/correlation/correlation_problems.component';
+import { DotPlotProblemsComponent } from './problems/problems-components/dot-plot/dot-plot.component';
+import { OMCIProblemsComponent } from './problems/problems-components/omci/omci.component';
+import { OMHTProblemsComponent } from './problems/problems-components/omht/omht.component';
+import { OPCIProblemsComponent } from './problems/problems-components/opci/opci.component';
+import { OPHTProblemsComponent } from './problems/problems-components/opht/opht.component';
+import { RegressionProblemsComponent } from './problems/problems-components/regression/regression.component';
+import { TMCIProblemsComponent } from './problems/problems-components/tmci/tmci.component';
+import { TMHTProblemsComponent } from './problems/problems-components/tmht/tmht.component';
+import { TPCIProblemsComponent } from './problems/problems-components/tpci/tpci.component';
+import { TPHTProblemsComponent } from './problems/problems-components/tpht/tpht.component';
 
 export function HttpLoaderFactory(http: HttpClient){
   return new TranslateHttpLoader(http)
@@ -119,7 +132,20 @@ export function setupTranslateFactory(service : TranslateService): Function {
     TMCIManualComponent,
     TMHTManualComponent,
     TPCIManualComponent,
-    TPHTManualComponent
+    TPHTManualComponent,
+    ProblemsComponent,
+    BarChartProblemsComponent,
+    CorrelationProblemsComponent,
+    DotPlotProblemsComponent,
+    OMCIProblemsComponent,
+    OMHTProblemsComponent,
+    OPCIProblemsComponent,
+    OPHTProblemsComponent,
+    RegressionProblemsComponent,
+    TMCIProblemsComponent,
+    TMHTProblemsComponent,
+    TPCIProblemsComponent,
+    TPHTProblemsComponent
 
   ],
   imports: [
