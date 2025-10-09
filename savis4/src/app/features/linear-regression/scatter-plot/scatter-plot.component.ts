@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
-import { ChartDataSets, ChartOptions, ChartType, Chart, ChartData } from 'chart.js'; // Change this line
+import { ChartDataSets, ChartOptions, ChartType, Chart, ChartData, ChartLegendItem, ChartLegendLabelItem } from 'chart.js'; // Change this line
 import { errorBarsPlugin, movableReferenceLinePlugin } from '../../../Utils/chartjs-plugin';
 import { errorSquaresPlugin } from '../../../Utils/chartjs-plugin';
 import { BaseChartDirective } from 'ng2-charts';
@@ -35,7 +35,8 @@ export class ScatterPlotComponent implements OnChanges {
   private slope: number = 0;
   private intercept: number = 0;
   public regressionFormula: string = '';
-  public activeLine: 'regression' | 'reference' = 'regression';
+
+  public activeLine: 'regression' | 'reference' = 'reference';
 
   private refLineDrag = {
     dragging: false,
@@ -52,7 +53,23 @@ export class ScatterPlotComponent implements OnChanges {
         yAxes: [{ type: 'linear', position: 'left', id: 'y-axis-0' }]
     },
     referenceLineSlop: 0,
-    referenceLineIntercept: 0
+    referenceLineIntercept: 0,
+    legend: {
+      onClick: (_e: MouseEvent, legendItem: ChartLegendLabelItem) => {
+        const label = legendItem.text;
+        if (label === this.translate.instant('lr_regression_line')) {
+          this.activeLine = 'regression';
+        } else if (label === 'Reference Line') {
+          this.activeLine = 'reference';
+        } else {
+          return;
+        }
+
+        this.updateActiveLineVisibility();
+        this.updateDependentData();
+        this.chart.update();
+      }
+    }
   } as ChartOptions & any;   // 👈 allow scales without TS error
 
 
@@ -89,6 +106,8 @@ export class ScatterPlotComponent implements OnChanges {
 
       this.updateChartData();
       this.leastSquares = this.calculateLeastSquares();
+      this.updateActiveLineVisibility()
+
     }
   }
 
@@ -190,6 +209,7 @@ export class ScatterPlotComponent implements OnChanges {
 
   private onMouseMove(event: MouseEvent) {
     if (!this.refLineDrag.dragging || !this.chart) return;
+    if (this.activeLine !== 'reference') return;
     const chartAny = this.chart.chart as any;
     const yAxis = chartAny.scales['y-axis-0'];
 //    const yAxis = (this.chart.chart.scales as any)['y-axis-0'];
@@ -214,9 +234,31 @@ export class ScatterPlotComponent implements OnChanges {
       }));
     }
 
-    this.chart.update();
+    const errorBarsDataset = this.scatterChartData.find(ds =>ds.label === this.translate.instant('lr_error_bars'));
+    if (errorBarsDataset) {
+      errorBarsDataset.data = this.dataPoints.map(p => ({
+        x: p.x,
+        y: m * p.x + b,
+        y1: p.y
+      }));
+    }
+
+    const errorSquaresDataset = this.scatterChartData.find(ds => ds.label === 'Residual Squares');
+    if (errorSquaresDataset) {
+      errorSquaresDataset.data = this.dataPoints.map(p => ({
+        x: p.x,
+        y: m * p.x + b,
+        y1: p.y
+      }));
+    }
+
 
     this.leastSquares = this.calculateLeastSquaresForReferenceLine(m, b);
+
+    this.regressionFormula = `y = ${m.toFixed(2)}x ${b >= 0 ? '+' : '-'} ${Math.abs(b).toFixed(2)}`;
+    this.updateDependentData
+    this.chart.update();
+
   }
 
   private onMouseUp() {
@@ -329,6 +371,48 @@ export class ScatterPlotComponent implements OnChanges {
       borderWidth: 2,
       errorBarsY1: true
     }
+  }
+
+  private updateActiveLineVisibility(): void {
+    const regressionLine = this.scatterChartData.find(ds => ds.label === this.translate.instant('lr_regression_line'));
+    const referenceLine = this.scatterChartData.find(ds => ds.label === 'Reference Line');
+    
+    if (regressionLine) regressionLine.hidden = this.activeLine !== 'regression';
+    if (referenceLine) referenceLine.hidden = this.activeLine !== 'reference';
+  }
+
+  public toggleActiveLine(): void {
+    this.activeLine = this.activeLine === 'regression' ? 'reference' : 'regression';
+    this.updateActiveLineVisibility();
+    this.updateDependentData();
+    this.chart.update();
+  }
+
+  private updateDependentData(): void {
+    const isRegression = this.activeLine === 'regression';
+    const m = isRegression ? this.slope : this.scatterChartOptions.referenceLineSlope!;
+    const b = isRegression ? this.intercept : this.scatterChartOptions.referenceLineIntercept!;
+
+    const errorSquaresDataset = this.scatterChartData.find(ds => ds.label === 'Residual Squares');
+    if (errorSquaresDataset) {
+      errorSquaresDataset.data = this.dataPoints.map(p => ({
+        x: p.x,
+        y: m * p.x + b,
+        y1: p.y
+      }));
+    }
+
+    const errorBarsDataset = this.scatterChartData.find(ds => ds.label === this.translate.instant('lr_error_bars'));
+    if (errorBarsDataset) {
+      errorBarsDataset.data = this.dataPoints.map(p => ({
+        x: p.x,
+        y: m * p.x + b,
+        y1: p.y
+      }));
+    }
+
+    this.leastSquares = this.calculateLeastSquaresForReferenceLine(m, b);
+    this.regressionFormula = `y = ${m.toFixed(2)}x ${b >= 0 ? '+' : '-'} ${Math.abs(b).toFixed(2)}`;
   }
 
   private updateRegressionParameters(): void {
