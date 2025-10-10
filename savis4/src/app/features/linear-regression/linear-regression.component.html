@@ -48,13 +48,15 @@
       </form>
     </div>
 
-    <div class="rhs">
-      <div class="chart">
-        <app-scatter-plot 
-          class="chartData" 
-          [dataPoints]="parsedDatapoints">
-        </app-scatter-plot>
-      </div>
+      <div class="rhs">
+    <div class="chart-header">
+      <h3>Drag to move line vertically | Shift+Drag to rotate | Arrow keys for both</h3>
+    </div>
+    <div class="chart">
+      <app-scatter-plot 
+        class="chartData" 
+        [dataPoints]="parsedDatapoints">
+      </app-scatter-plot>
     </div>
   </div>
   <!-- footer -->
