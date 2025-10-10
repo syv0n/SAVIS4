@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { ChartDataSets, ChartOptions, ChartType, Chart, ChartData, ChartLegendItem, ChartLegendLabelItem } from 'chart.js'; // Change this line
-import { errorBarsPlugin, movableReferenceLinePlugin } from '../../../Utils/chartjs-plugin';
-import { errorSquaresPlugin } from '../../../Utils/chartjs-plugin';
+import { errorBarsPlugin, errorSquaresPlugin, movableReferenceLinePlugin } from '../../../Utils/chartjs-plugin';
 import { BaseChartDirective } from 'ng2-charts';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -34,13 +33,21 @@ export class ScatterPlotComponent implements OnChanges {
   leastSquares: number = 0;
   private slope: number = 0;
   private intercept: number = 0;
+  private keyboardListener?: (event: KeyboardEvent) => void;
   public regressionFormula: string = '';
 
   public activeLine: 'regression' | 'reference' = 'reference';
 
   private refLineDrag = {
     dragging: false,
-    initialY: 0
+    rotating: false,
+    initialY: 0,
+    initialX: 0,
+    // if you use slope instead of this, it will have an issue when it approaches 0
+    lastMouseX: 0, 
+    lastMouseY: 0, 
+    pivotX: 0,
+    pivotY: 0
   };
   
   constructor(private translate: TranslateService) {
@@ -101,6 +108,9 @@ export class ScatterPlotComponent implements OnChanges {
     canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
     canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
     canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
+
+    this.keyboardListener = this.onKeyDown.bind(this);
+    window.addEventListener('keydown', this.keyboardListener);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -120,6 +130,9 @@ export class ScatterPlotComponent implements OnChanges {
   ngOnDestroy(): void {
     Chart.plugins.unregister(errorBarsPlugin);
     Chart.plugins.unregister(errorSquaresPlugin);
+    if (this.keyboardListener) {
+      window.removeEventListener('keydown', this.keyboardListener);
+    }
   }
 
   private initializeReferenceLine() {
@@ -171,7 +184,8 @@ export class ScatterPlotComponent implements OnChanges {
         data: confidenceInterval.upper,
         fill: '+1',
         borderColor: 'rgba(0, 255, 0, 0.5)',
-        cubicInterpolationMode: 'monotone'
+        cubicInterpolationMode: 'monotone',
+        hidden: true
       },
       // Lower bound of confidence interval
       {
@@ -180,7 +194,8 @@ export class ScatterPlotComponent implements OnChanges {
         data: confidenceInterval.lower,
         fill: '-1',
         borderColor: 'rgba(0, 0, 255, 0.5)',
-        cubicInterpolationMode: 'monotone'
+        cubicInterpolationMode: 'monotone',
+        hidden: true
       },
       this.calculateErrorBars(),
       this.calculateErrorSquares(),
@@ -193,7 +208,6 @@ export class ScatterPlotComponent implements OnChanges {
     const chartAny = this.chart.chart as any;
     const yAxis = chartAny.scales['y-axis-0'];
     const xAxis = chartAny.scales['x-axis-0'];
-//    const yAxis = (this.chart.chart.scales as any)['y-axis-0'];
     const canvasRect = this.chart.chart.canvas.getBoundingClientRect();
 
     const mouseY = event.clientY - canvasRect.top;
@@ -208,27 +222,135 @@ export class ScatterPlotComponent implements OnChanges {
     const lineYPixel = yAxis.getPixelForValue(lineYValue);
     
     if (Math.abs(mouseY - lineYPixel) < 10) {
-      this.refLineDrag.dragging = true;
+      if (event.shiftKey) {
+        // Rotation mode
+        this.refLineDrag.rotating = true;
+        const xValues = this.dataPoints.map(p => p.x);
+        const pivotX = (Math.min(...xValues) + Math.max(...xValues)) / 2;
+        this.refLineDrag.pivotX = pivotX;
+        this.refLineDrag.pivotY = m * pivotX + b;
+      } else {
+        // Translation mode
+        this.refLineDrag.dragging = true;
+      }
       this.refLineDrag.initialY = mouseY;
+      this.refLineDrag.initialX = mouseX;
+      this.refLineDrag.lastMouseX = mouseX; 
+      this.refLineDrag.lastMouseY = mouseY; 
     }
   }
 
   private onMouseMove(event: MouseEvent) {
-    if (!this.refLineDrag.dragging || !this.chart) return;
+    if ((!this.refLineDrag.dragging && !this.refLineDrag.rotating) || !this.chart) return;
     if (this.activeLine !== 'reference') return;
+    
     const chartAny = this.chart.chart as any;
     const yAxis = chartAny.scales['y-axis-0'];
-//    const yAxis = (this.chart.chart.scales as any)['y-axis-0'];
+    const xAxis = chartAny.scales['x-axis-0'];
     const canvasRect = this.chart.chart.canvas.getBoundingClientRect();
     const mouseY = event.clientY - canvasRect.top;
-    const initialY  = this.refLineDrag.initialY;
+    const mouseX = event.clientX - canvasRect.left;
 
-    const deltaYValue = yAxis.getValueForPixel(mouseY) - yAxis.getValueForPixel(initialY);
-    //const newValue = yAxis.getValueForPixel(mouseY);
-    this.scatterChartOptions.referenceLineIntercept += deltaYValue;
+    if (this.refLineDrag.rotating) {
+      const lastX = this.refLineDrag.lastMouseX;
+      const lastY = this.refLineDrag.lastMouseY;
+      
+      const dataX1 = xAxis.getValueForPixel(lastX);
+      const dataX2 = xAxis.getValueForPixel(mouseX);
+      const dataY1 = yAxis.getValueForPixel(lastY);
+      const dataY2 = yAxis.getValueForPixel(mouseY);
+      
+      const deltaXData = dataX2 - dataX1;
+      const deltaYData = dataY2 - dataY1;
+      
+      if (Math.abs(deltaXData) > 0.001 || Math.abs(deltaYData) > 0.001) {
+        const sensitivity = 0.5;
+        
+        let slopeChange = 0;
+        const magnitude = Math.sqrt(deltaXData * deltaXData + deltaYData * deltaYData);
+        if (magnitude > 0.001) {
+          slopeChange = (deltaYData - deltaXData * this.scatterChartOptions.referenceLineSlope!) * sensitivity;
+        }
+        
+        const currentSlope = this.scatterChartOptions.referenceLineSlope!;
+        const newSlope = currentSlope + slopeChange;
+        
+        const pivotX = this.refLineDrag.pivotX;
+        const pivotY = this.refLineDrag.pivotY;
+        const newIntercept = pivotY - newSlope * pivotX;
+        
+        this.scatterChartOptions.referenceLineSlope = newSlope;
+        this.scatterChartOptions.referenceLineIntercept = newIntercept;
+        
+        this.refLineDrag.lastMouseX = mouseX;
+        this.refLineDrag.lastMouseY = mouseY;
+      }
+    } else if (this.refLineDrag.dragging) {
+      const initialY = this.refLineDrag.initialY;
+      const deltaYValue = yAxis.getValueForPixel(mouseY) - yAxis.getValueForPixel(initialY);
+      this.scatterChartOptions.referenceLineIntercept! += deltaYValue;
+      this.refLineDrag.initialY = mouseY;
+    }
+    this.updateReferenceLineData();
+  }
 
-    this.refLineDrag.initialY = mouseY;
+  private onMouseUp() {
+    this.refLineDrag.dragging = false;
+    this.refLineDrag.rotating = false;
+  }
 
+  private onKeyDown(event: KeyboardEvent): void {
+    if (this.activeLine !== 'reference') return;
+    const arrowKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+    if (!arrowKeys.includes(event.key)) return;
+    // prevent default scrolling
+    event.preventDefault();
+    
+    if (!this.chart || !this.dataPoints.length) return;
+
+    const m = this.scatterChartOptions.referenceLineSlope!;
+    const b = this.scatterChartOptions.referenceLineIntercept!;
+    
+    // Calculate step sizes based on data range
+    const yValues = this.dataPoints.map(p => p.y);
+    const yRange = Math.max(...yValues) - Math.min(...yValues);
+    const interceptStep = yRange * 0.02; 
+    
+    const xValues = this.dataPoints.map(p => p.x);
+    const pivotX = (Math.min(...xValues) + Math.max(...xValues)) / 2;
+    const slopeStep = 0.1; 
+    
+    switch (event.key) {
+      case 'ArrowUp':
+        // Move line up (increase intercept)
+        this.scatterChartOptions.referenceLineIntercept = b + interceptStep;
+        break;
+        
+      case 'ArrowDown':
+        // Move line down (decrease intercept)
+        this.scatterChartOptions.referenceLineIntercept = b - interceptStep;
+        break;
+        
+      case 'ArrowLeft':
+        // Rotate counter-clockwise (decrease slope)
+        const newSlopeLeft = m - slopeStep;
+        this.scatterChartOptions.referenceLineSlope = newSlopeLeft;
+        // Adjust intercept to keep pivot point fixed
+        this.scatterChartOptions.referenceLineIntercept = (m * pivotX + b) - newSlopeLeft * pivotX;
+        break;
+        
+      case 'ArrowRight':
+        // Rotate clockwise (increase slope)
+        const newSlopeRight = m + slopeStep;
+        this.scatterChartOptions.referenceLineSlope = newSlopeRight;
+        // Adjust intercept to keep pivot point fixed
+        this.scatterChartOptions.referenceLineIntercept = (m * pivotX + b) - newSlopeRight * pivotX;
+        break;
+    }
+    this.updateReferenceLineData();
+  }
+
+  private updateReferenceLineData(): void {
     const m = this.scatterChartOptions.referenceLineSlope!;
     const b = this.scatterChartOptions.referenceLineIntercept!;
 
@@ -240,7 +362,7 @@ export class ScatterPlotComponent implements OnChanges {
       }));
     }
 
-    const errorBarsDataset = this.scatterChartData.find(ds =>ds.label === this.translate.instant('lr_error_bars'));
+    const errorBarsDataset = this.scatterChartData.find(ds => ds.label === this.translate.instant('lr_error_bars'));
     if (errorBarsDataset) {
       errorBarsDataset.data = this.dataPoints.map(p => ({
         x: p.x,
@@ -258,17 +380,10 @@ export class ScatterPlotComponent implements OnChanges {
       }));
     }
 
-
     this.leastSquares = this.calculateLeastSquaresForReferenceLine(m, b);
-
     this.regressionFormula = `y = ${m.toFixed(2)}x ${b >= 0 ? '+' : '-'} ${Math.abs(b).toFixed(2)}`;
-    this.updateDependentData
+    
     this.chart.update();
-
-  }
-
-  private onMouseUp() {
-    this.refLineDrag.dragging = false;
   }
 
   private calculateLeastSquaresForReferenceLine(m: number, b: number): number {
@@ -282,20 +397,27 @@ export class ScatterPlotComponent implements OnChanges {
       // Linear regression requires at least two points
       return [];
     }
-  
+
     // Calculate the mean of x and y
     const meanX = this.dataPoints.reduce((sum, point) => sum + point.x, 0) / n;
     const meanY = this.dataPoints.reduce((sum, point) => sum + point.y, 0) / n;
-  
+
     // Calculate the slope (m) and y-intercept (b)
     const numerator = this.dataPoints.reduce((sum, point) => sum + (point.x - meanX) * (point.y - meanY), 0);
     const denominator = this.dataPoints.reduce((sum, point) => sum + Math.pow(point.x - meanX, 2), 0);
-  
+
     const m = numerator / denominator;
     const b = meanY - m * meanX;
-  
-    // Calculate regression points
-    return this.dataPoints.map(point => ({ x: point.x, y: m * point.x + b }));
+
+    // Calculate regression points - only need two points for a straight line
+    const xValues = this.dataPoints.map(p => p.x);
+    const minX = Math.min(...xValues);
+    const maxX = Math.max(...xValues);
+
+    return [
+      { x: minX, y: m * minX + b },
+      { x: maxX, y: m * maxX + b }
+    ];
   }
 
   private calculateConfidenceInterval(): { upper: { x: number, y: number }[], lower: { x: number, y: number }[] } {
