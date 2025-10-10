@@ -46,6 +46,8 @@ export class ScatterPlotComponent implements OnChanges {
   constructor(private translate: TranslateService) {
     Chart.plugins.register(errorBarsPlugin);
     Chart.plugins.register(errorSquaresPlugin);
+    
+    const defaultLegendClick = Chart.defaults.global.legend.onClick;
 
     this.scatterChartOptions = {
       scales: {
@@ -55,14 +57,18 @@ export class ScatterPlotComponent implements OnChanges {
     referenceLineSlop: 0,
     referenceLineIntercept: 0,
     legend: {
-      onClick: (_e: MouseEvent, legendItem: ChartLegendLabelItem) => {
+      onClick: (e: MouseEvent, legendItem: ChartLegendLabelItem) => {
         const label = legendItem.text;
-        if (label === this.translate.instant('lr_regression_line')) {
-          this.activeLine = 'regression';
-        } else if (label === 'Reference Line') {
-          this.activeLine = 'reference';
+
+        if (label === this.translate.instant('lr_regression_line') ||
+          label === 'Reference Line'
+        ) {
+          this.activeLine = label === 'Reference Line' ? 'reference' : 'regression';
+          this.updateActiveLineVisibility();
+          this.updateDependentData();
+          this.chart.update();
         } else {
-          return;
+          defaultLegendClick.call(this.chart.chart, e, legendItem);
         }
 
         this.updateActiveLineVisibility();
