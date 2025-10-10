@@ -447,16 +447,14 @@ export class ScatterPlotComponent implements OnChanges {
   }
 
   private calculateLeastSquares(): number {
-    const regressionPoints = this.calculateRegressionPoints();
-    
     // Calculate the sum of squared residuals
     let sumSquaredResiduals = 0;
     for (let i = 0; i < this.dataPoints.length; i++) {
       const actualY = this.dataPoints[i].y;
-      const predictedY = regressionPoints[i].y;
+      const predictedY = this.calculateRegressionY(this.dataPoints[i].x);
       sumSquaredResiduals += Math.pow(actualY - predictedY, 2);
     }
-  
+
     return sumSquaredResiduals;
   }
   
