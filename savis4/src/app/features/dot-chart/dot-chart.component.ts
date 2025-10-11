@@ -3,6 +3,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Chart } from 'chart.js';
 import { SharedService } from '../../services/shared.service';
 
+import type { Paragraph, Table } from 'docx';
+
 @Component({
   selector: 'app-dot-chart',
   templateUrl: './dot-chart.component.html',
@@ -844,6 +846,140 @@ export class DotChartComponent implements AfterViewInit, OnInit, OnDestroy {
       };
       reader.readAsText(file)
     }
+  }
+
+
+  /**
+   * Helper function to create a DOCX table from headers and data rows.
+   */
+  private createDocxTable(headers: string[], rows: (string | number)[][]): Promise<Table> {
+    return import('docx').then(({ Table, TableRow, TableCell, Paragraph, TextRun, WidthType }) => {
+        const header = new TableRow({
+            children: headers.map(headerText => new TableCell({
+                children: [new Paragraph({ children: [new TextRun({ text: headerText, bold: true })] })]
+            })),
+        });
+
+        const dataRows = rows.map(row => new TableRow({
+            children: row.map(cellText => new TableCell({ children: [new Paragraph(String(cellText))] })),
+        }));
+        
+        return new Table({ rows: [header, ...dataRows], width: { size: 100, type: WidthType.PERCENTAGE } });
+    });
+  }
+
+  // --- Input Data Exports ---
+  async exportInputAsPDF(): Promise<void> {
+    if (this.inputDataArray.length === 0) return;
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+
+      const doc = new jsPDF();
+      doc.setFontSize(16).text('Dot Plot - Input Data Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+      const imgData = this.inputDataChart.toBase64Image();
+      const canvas = this.inputDataChartRef.nativeElement;
+      const imgHeight = (canvas.height * 170) / canvas.width;
+      doc.addImage(imgData, 'PNG', 15, 25, 170, imgHeight);
+      
+      const tableRows = this.inputDataArray.map(item => [item.id, item.value]);
+      autoTable(doc, { startY: 35 + imgHeight, head: [['ID', 'Value']], body: tableRows });
+      doc.save('dot-plot-input-export.pdf');
+    } catch (error) { console.error("Failed to generate PDF:", error); }
+  }
+
+  async exportInputAsDOCX(): Promise<void> {
+    if (this.inputDataArray.length === 0) return;
+    const { Document, Packer, Paragraph, TextRun, ImageRun, AlignmentType } = await import('docx');
+    const FileSaver = await import('file-saver');
+
+    const children: (Paragraph | Table)[] = [new Paragraph({ children: [new TextRun({ text: 'Dot Plot - Input Data Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER })];
+    const imgData = this.inputDataChart.toBase64Image();
+    children.push(new Paragraph({ children: [new ImageRun({ type: "png", data: imgData.split(',')[1], transformation: { width: 500, height: 250 } })] }));
+    
+    const tableRows = this.inputDataArray.map(item => [item.id, item.value]);
+    // FIX: Added 'await' to wait for the table to be created
+    const docxTable = await this.createDocxTable(['ID', 'Value'], tableRows);
+    children.push(docxTable);
+
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'dot-plot-input-export.docx'));
+  }
+
+  // --- Sample Data Exports ---
+  async exportSampleAsPDF(): Promise<void> {
+    if (this.sampleDataArray.length === 0) return;
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+
+      const doc = new jsPDF();
+      doc.setFontSize(16).text('Dot Plot - Sample Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+      const imgData = this.sampleDataChart.toBase64Image();
+      const canvas = this.sampleDataChartRef.nativeElement;
+      const imgHeight = (canvas.height * 170) / canvas.width;
+      doc.addImage(imgData, 'PNG', 15, 25, 170, imgHeight);
+      
+      const tableRows = this.sampleDataArray.map(item => [item.id, item.value]);
+      autoTable(doc, { startY: 35 + imgHeight, head: [['Original ID', 'Value']], body: tableRows });
+      doc.save('dot-plot-sample-export.pdf');
+    } catch (error) { console.error("Failed to generate PDF:", error); }
+  }
+
+  async exportSampleAsDOCX(): Promise<void> {
+    if (this.sampleDataArray.length === 0) return;
+    const { Document, Packer, Paragraph, TextRun, ImageRun, AlignmentType } = await import('docx');
+    const FileSaver = await import('file-saver');
+
+    const children: (Paragraph | Table)[] = [new Paragraph({ children: [new TextRun({ text: 'Dot Plot - Sample Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER })];
+    const imgData = this.sampleDataChart.toBase64Image();
+    children.push(new Paragraph({ children: [new ImageRun({ type: "png", data: imgData.split(',')[1], transformation: { width: 500, height: 250 } })] }));
+    
+    const tableRows = this.sampleDataArray.map(item => [item.id, item.value]);
+    // FIX: Added 'await' to wait for the table to be created
+    const docxTable = await this.createDocxTable(['Original ID', 'Value'], tableRows);
+    children.push(docxTable);
+
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'dot-plot-sample-export.docx'));
+  }
+
+  // --- Sample Means Distribution Exports ---
+  async exportMeansAsPDF(): Promise<void> {
+    if (this.sampleMeans.length === 0) return;
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+
+      const doc = new jsPDF();
+      doc.setFontSize(16).text('Dot Plot - Distribution of Sample Means Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+      const imgData = this.sampleMeansChart.toBase64Image();
+      const canvas = this.sampleMeansChartRef.nativeElement;
+      const imgHeight = (canvas.height * 170) / canvas.width;
+      doc.addImage(imgData, 'PNG', 15, 25, 170, imgHeight);
+      
+      const tableRows = this.sampleMeans.map((mean, index) => [index + 1, mean]);
+      autoTable(doc, { startY: 35 + imgHeight, head: [['Sample #', 'Mean']], body: tableRows });
+      doc.save('dot-plot-means-export.pdf');
+    } catch (error) { console.error("Failed to generate PDF:", error); }
+  }
+
+  async exportMeansAsDOCX(): Promise<void> {
+    if (this.sampleMeans.length === 0) return;
+    const { Document, Packer, Paragraph, TextRun, ImageRun, AlignmentType } = await import('docx');
+    const FileSaver = await import('file-saver');
+
+    const children: (Paragraph | Table)[] = [new Paragraph({ children: [new TextRun({ text: 'Dot Plot - Distribution of Sample Means Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER })];
+    const imgData = this.sampleMeansChart.toBase64Image();
+    children.push(new Paragraph({ children: [new ImageRun({ type: "png", data: imgData.split(',')[1], transformation: { width: 500, height: 250 } })] }));
+    
+    const tableRows = this.sampleMeans.map((mean, index) => [index + 1, mean]);
+   
+    const docxTable = await this.createDocxTable(['Sample #', 'Mean'], tableRows);
+    children.push(docxTable);
+
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'dot-plot-means-export.docx'));
   }
 
   ngOnDestroy(): void {

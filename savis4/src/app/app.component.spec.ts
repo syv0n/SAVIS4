@@ -36,6 +36,7 @@ import { BarChartComponent } from "./features/bar-chart/bar-chart.component"
 import { DotChartComponent } from "./features/dot-chart/dot-chart.component"
 import { SharedService } from "./services/shared.service"
 import { SaveLoadButtonsComponent } from "./components/save-load-buttons/save-load-buttons.component"
+import { CalculatorComponent } from './components/calculator/calculator.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -65,7 +66,8 @@ describe('AppComponent', () => {
         LanguageSwitcherComponent,
         SaveLoadButtonsComponent,
         BarChartComponent,
-        DotChartComponent
+        DotChartComponent,
+        CalculatorComponent
       ],
       imports: [
         BrowserModule,

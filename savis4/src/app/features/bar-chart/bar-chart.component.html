@@ -34,6 +34,12 @@
                 <div class="form-group">
                     <button class="btn" id="upload-btn" (click)="triggerFileInput()">{{ 'barChart_uploadData' | translate }}</button>
                 </div>
+                <div class="form-group">
+                    <button class="btn" id="export-input-pdf-btn" (click)="exportInputAsPDF()" [disabled]="isInputDataSizeNumNaN()">Export as PDF</button>
+                </div>
+                <div class="form-group">
+                    <button class="btn" id="export-input-docx-btn" (click)="exportInputAsDOCX()" [disabled]="isInputDataSizeNumNaN()">Export as DOCX</button>
+                </div>
                 <input type="file" id="fileInput" (change)="onFileSelect($event)" #fileInput style="display: none;">
                 <div class="form-group">
                     <p class="text-display" id="input-data-size-text">{{ 'barChart_size' | translate }} <i>N</i> : {{ inputDataSizeNum }}</p>
@@ -69,6 +75,12 @@
                 </div>
                 <div class="form-group">
                     <button class="btn" id="get-sample-btn" (click)="updateSampleData()" [disabled]="isInputDataSizeNumNaN()">{{ 'barChart_run_sim' | translate }}</button>
+                </div>
+                <div class="form-group">
+                    <button class="btn" id="export-sample-pdf-btn" (click)="exportSampleAsPDF()" [disabled]="sampleDataArray.length === 0">Export as PDF</button>
+                </div>
+                <div class="form-group">
+                    <button class="btn" id="export-sample-docx-btn" (click)="exportSampleAsDOCX()" [disabled]="sampleDataArray.length === 0">Export as DOCX</button>
                 </div>
                 <p class="text-display" id="=sample-data-size-text">{{ 'barChart_size' | translate }} <i>n</i> : {{ sampleDataSizeNum }}</p>
                 <p class="text-error" id="get-sample-error-msg" *ngIf="sampleErrorMsg">{{ sampleErrorMsg }}</p>

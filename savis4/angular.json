@@ -35,6 +35,12 @@
               "src/styles.scss"
             ],
             "scripts": [],
+            "allowedCommonJsDependencies": [
+              "canvg",
+              "raf",
+              "core-js"
+            ],
+
             "serviceWorker": true,
             "ngswConfigPath": "ngsw-config.json"
           },

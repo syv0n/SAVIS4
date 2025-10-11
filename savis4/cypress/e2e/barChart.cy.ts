@@ -99,4 +99,58 @@ describe('template spec', () => {
         cy.get(':nth-child(4) > #result').should('exist')
     })
 
+        // --- NEW EXPORT TESTS ---
+    describe('Export Functionality', () => {
+        const downloadsFolder = Cypress.config('downloadsFolder');
+
+        beforeEach(() => {
+            // Load data before each export test
+            cy.get('#sample-data-options').select("Example 1");
+            cy.get('#load-data-btn').click();
+            cy.wait(500); // wait for chart to render
+        });
+
+        it('should download the input data as a PDF', () => {
+            const fileName = 'bar-chart-input-export.pdf';
+            const filePath = `${downloadsFolder}/${fileName}`;
+            
+            cy.get('#export-input-pdf-btn').click();
+            cy.task('checkFileExists', filePath).should('be.true');
+        });
+
+        it('should download the input data as a DOCX', () => {
+            const fileName = 'bar-chart-input-export.docx';
+            const filePath = `${downloadsFolder}/${fileName}`;
+
+            cy.get('#export-input-docx-btn').click();
+            cy.task('checkFileExists', filePath).should('be.true');
+        });
+
+        it('should download the sample data as a PDF', () => {
+            const fileName = 'bar-chart-sample-export.pdf';
+            const filePath = `${downloadsFolder}/${fileName}`;
+
+            // Generate sample data first
+            cy.get('#sampleInput').clear().type('5');
+            cy.get('#get-sample-btn').click();
+            cy.wait(500); // wait for sample chart
+
+            cy.get('#export-sample-pdf-btn').click();
+            cy.task('checkFileExists', filePath).should('be.true');
+        });
+
+        it('should download the sample data as a DOCX', () => {
+            const fileName = 'bar-chart-sample-export.docx';
+            const filePath = `${downloadsFolder}/${fileName}`;
+
+            // Generate sample data first
+            cy.get('#sampleInput').clear().type('5');
+            cy.get('#get-sample-btn').click();
+            cy.wait(500);
+
+            cy.get('#export-sample-docx-btn').click();
+            cy.task('checkFileExists', filePath).should('be.true');
+        });
+    });
+
 })
