@@ -2,6 +2,27 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy } fr
 import { TranslateService } from '@ngx-translate/core'
 import { Chart } from 'chart.js'
 import { SharedService } from '../../services/shared.service'
+import type { Paragraph, Table } from 'docx';
+
+/**
+ * 
+
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
+import { Document, Packer, Paragraph, TextRun, ImageRun, Table, TableRow, TableCell, WidthType, AlignmentType } from 'docx'
+import * as FileSaver from 'file-saver'
+ */
+
+interface FrequencyDataRow {
+  index: number;
+  category: any;
+  absFreq: number;
+  relFreq: string;
+}
+
+
+
+
 
 @Component({
   selector: 'app-bar-chart',
@@ -508,6 +529,131 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
       reader.readAsText(file)
     }
   }
+
+
+  /**
+   * Helper function to generate frequency data for tables.
+   */
+  private generateFrequencyData(dataArray: any[]): FrequencyDataRow[] {
+    if (!dataArray || dataArray.length === 0) return [];
+    const valuesArr = [...dataArray.map(x => x.value)];
+    const contValues = this.dataCategoryArray.map(x => valuesArr.filter(val => (x === val)).length);
+    const relativesVal = contValues.map(x => this.roundToPlaces(x / valuesArr.length, 4));
+    return this.dataCategoryArray.map((val, idx) => ({
+      index: idx + 1,
+      category: val,
+      absFreq: contValues[idx],
+      relFreq: relativesVal[idx].toFixed(4)
+    }));
+  }
+
+  /**
+   * Helper function to create a DOCX table from frequency data.
+   */
+  private createDocxTable(tableData: FrequencyDataRow[]): Promise<any> {
+    return import('docx').then(({ Table, TableRow, TableCell, Paragraph, TextRun, WidthType }) => {
+        const header = new TableRow({
+            children: [
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Index', bold: true })] })] }),
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Category', bold: true })] })] }),
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Absolute Frequency', bold: true })] })] }),
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Relative Frequency', bold: true })] })] }),
+            ],
+        });
+
+        const rows = tableData.map(row => new TableRow({
+            children: [
+                new TableCell({ children: [new Paragraph(String(row.index))] }),
+                new TableCell({ children: [new Paragraph(String(row.category))] }),
+                new TableCell({ children: [new Paragraph(String(row.absFreq))] }),
+                new TableCell({ children: [new Paragraph(String(row.relFreq))] }),
+            ],
+        }));
+        
+        return new Table({ rows: [header, ...rows], width: { size: 100, type: WidthType.PERCENTAGE } });
+    });
+  }
+
+  async exportInputAsPDF(): Promise<void> {
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+
+      const doc = new jsPDF();
+      doc.setFontSize(16).text('Bar Chart - Input Data Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+      const imgData = this.inputChart.toBase64Image();
+      const canvas = this.chartCanvas.nativeElement;
+      const imgHeight = (canvas.height * 170) / canvas.width;
+      doc.addImage(imgData, 'PNG', 15, 25, 170, imgHeight);
+      
+      const tableData = this.generateFrequencyData(this.inputDataArray);
+      autoTable(doc, {
+        startY: 35 + imgHeight,
+        head: [['Index', 'Category', 'Absolute Frequency', 'Relative Frequency']],
+        body: tableData.map((row: FrequencyDataRow) => [row.index, row.category, row.absFreq, row.relFreq]),
+      });
+      doc.save('bar-chart-input-export.pdf');
+    } catch (error) { console.error("Failed to generate PDF:", error); }
+  }
+
+  async exportInputAsDOCX(): Promise<void> {
+    const { Document, Packer, Paragraph, TextRun, ImageRun, Table, AlignmentType } = await import('docx');
+    const FileSaver = await import('file-saver');
+
+    const children: (Paragraph | Table)[] = [new Paragraph({ children: [new TextRun({ text: 'Bar Chart - Input Data Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER })];
+    const imgData = this.inputChart.toBase64Image();
+    children.push(new Paragraph({ children: [new ImageRun({ type: "png", data: imgData.split(',')[1], transformation: { width: 500, height: 250 } })] }));
+    
+    const tableData = this.generateFrequencyData(this.inputDataArray);
+    // FIX: Added 'await' to wait for the table to be created before pushing it.
+    const docxTable = await this.createDocxTable(tableData);
+    children.push(docxTable);
+
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'bar-chart-input-export.docx'));
+  }
+
+  async exportSampleAsPDF(): Promise<void> {
+    if (this.sampleDataArray.length === 0) return;
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+
+      const doc = new jsPDF();
+      doc.setFontSize(16).text('Bar Chart - Sample Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+      const imgData = this.sampleChart.toBase64Image();
+      const canvas = this.sampleCanvas.nativeElement;
+      const imgHeight = (canvas.height * 170) / canvas.width;
+      doc.addImage(imgData, 'PNG', 15, 25, 170, imgHeight);
+      
+      const tableData = this.generateFrequencyData(this.sampleDataArray);
+      autoTable(doc, {
+        startY: 35 + imgHeight,
+        head: [['Index', 'Category', 'Absolute Frequency', 'Relative Frequency']],
+        body: tableData.map((row: FrequencyDataRow) => [row.index, row.category, row.absFreq, row.relFreq]),
+      });
+      doc.save('bar-chart-sample-export.pdf');
+    } catch (error) { console.error("Failed to generate sample PDF:", error); }
+  }
+
+  async exportSampleAsDOCX(): Promise<void> {
+    if (this.sampleDataArray.length === 0) return;
+    const { Document, Packer, Paragraph, TextRun, ImageRun, Table, AlignmentType } = await import('docx');
+    const FileSaver = await import('file-saver');
+
+    const children: (Paragraph | Table)[] = [new Paragraph({ children: [new TextRun({ text: 'Bar Chart - Sample Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER })];
+    const imgData = this.sampleChart.toBase64Image();
+    children.push(new Paragraph({ children: [new ImageRun({ type: "png", data: imgData.split(',')[1], transformation: { width: 500, height: 250 } })] }));
+    
+    const tableData = this.generateFrequencyData(this.sampleDataArray);
+    
+    const docxTable = await this.createDocxTable(tableData);
+    children.push(docxTable);
+
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'bar-chart-sample-export.docx'));
+  }
+
 
   /**
    * When feature is closed, clear the data in shared service

@@ -49,7 +49,16 @@
                     [feature]="'dotPlot'"
                 ></app-save-load-buttons>
             </div>
-            
+
+            <div class="d-flex justify-content-center mt-2">
+                <div class="form-group mx-1">
+                    <button class="btn" (click)="exportInputAsPDF()" [disabled]="inputDataArray.length === 0">Export as PDF</button>
+                </div>
+                <div class="form-group mx-1">
+                    <button class="btn" (click)="exportInputAsDOCX()" [disabled]="inputDataArray.length === 0">Export as DOCX</button>
+                </div>
+            </div>
+ 
         </div>
 
         <div class="data-form">
@@ -85,6 +94,16 @@
             <input type="number" min="1" step="1" id="no-of-sample" [(ngModel)]="noOfSim" [disabled]="disabledInput">
             <br>
             <button class="btn" id="get-sample-btn" (click)="runSimulationButton()" [disabled]="disabledInput">{{ 'dotPlot_run_sim' | translate }}</button>
+           
+            <div class="d-flex justify-content-center mt-2">
+                <div class="form-group mx-1">
+                    <button class="btn" (click)="exportSampleAsPDF()" [disabled]="sampleDataArray.length === 0">Export as PDF</button>
+                </div>
+                <div class="form-group mx-1">
+                    <button class="btn" (click)="exportSampleAsDOCX()" [disabled]="sampleDataArray.length === 0">Export as DOCX</button>
+                </div>
+            </div>
+           
             <p id="run-sim-error-msg"></p>
         </div>
 
@@ -135,6 +154,16 @@
             <p>{{ sampleMeansChosen }}</p>
             <p>{{ 'dotPlot_proportions_of_samples_unchosen' | translate }}:</p>
             <p>{{ sampleMeansUnchosen }}</p>
+
+            <div class="d-flex justify-content-center mt-2">
+                <div class="form-group mx-1">
+                    <button class="btn" (click)="exportMeansAsPDF()" [disabled]="sampleMeans.length === 0">Export as PDF</button>
+                </div>
+                <div class="form-group mx-1">
+                    <button class="btn" (click)="exportMeansAsDOCX()" [disabled]="sampleMeans.length === 0">Export as DOCX</button>
+                </div>
+            </div>
+
         </div>
 
         <div class="data-form">

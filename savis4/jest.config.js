@@ -2,7 +2,6 @@ module.exports = {
   testEnvironment: 'jsdom',
   preset: 'jest-preset-angular',
   setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
-  globalSetup: '<rootDir>/setup-jest.ts',
   moduleNameMapper: {
     "^src/(.*)$": "<rootDir>/src/$1",
   },
@@ -28,5 +27,6 @@ module.exports = {
     "savis4-win32-x64/",
     "build",
   ],
+  setupFilesAfterEnv: ['<rootDir>/src/setup-jest.ts'],
   setupFiles: ['jest-canvas-mock'],
 };

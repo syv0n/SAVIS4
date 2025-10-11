@@ -10,6 +10,8 @@ import Chart from 'chart.js';
 import { ElementRef } from '@angular/core';
 import { SaveLoadButtonsComponent } from 'src/app/components/save-load-buttons/save-load-buttons.component';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { LanguageSwitcherComponent } from 'src/app/components/language-switcher/language-switcher.component';
+import { CalculatorComponent } from 'src/app/components/calculator/calculator.component';
 
 describe('BarChartComponent', () => {
   let component: BarChartComponent;
@@ -24,7 +26,7 @@ describe('BarChartComponent', () => {
         RouterTestingModule,
         MatDialogModule
       ],
-      declarations: [BarChartComponent, FooterComponent, NavbarComponent, SaveLoadButtonsComponent],
+      declarations: [BarChartComponent, FooterComponent, NavbarComponent, SaveLoadButtonsComponent, LanguageSwitcherComponent, CalculatorComponent],
       providers:[
         {provide: MatDialogRef, useValue: {}},
         {provide: MAT_DIALOG_DATA, useValue: []}

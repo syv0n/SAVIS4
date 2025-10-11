@@ -92,5 +92,62 @@ describe('template spec', () => {
         cy.get('#get-sample-btn').click()
         cy.get('#includeMax').click()
       })
+
+
+  // --- NEW EXPORT TESTS ---
+    describe('Export Functionality', () => {
+        const downloadsFolder = Cypress.config('downloadsFolder');
+
+        beforeEach(() => {
+            // Load data before each export test
+            cy.get('#sample-data-options').select("Example 1");
+            cy.get('#load-data-btn').click();
+            cy.wait(500); // wait for chart to render
+        });
+
+        it('should download the input data as a PDF and DOCX', () => {
+            const pdfFileName = 'dot-plot-input-export.pdf';
+            const pdfFilePath = `${downloadsFolder}/${pdfFileName}`;
+            cy.get('button').contains('Export as PDF').first().click();
+            cy.task('checkFileExists', pdfFilePath).should('be.true');
+            
+            const docxFileName = 'dot-plot-input-export.docx';
+            const docxFilePath = `${downloadsFolder}/${docxFileName}`;
+            cy.get('button').contains('Export as DOCX').first().click();
+            cy.task('checkFileExists', docxFilePath).should('be.true');
+        });
+
+        it('should download the sample data as a PDF and DOCX', () => {
+            // Generate sample data
+            cy.get('#get-sample-btn').click();
+            cy.wait(500);
+
+            const pdfFileName = 'dot-plot-sample-export.pdf';
+            const pdfFilePath = `${downloadsFolder}/${pdfFileName}`;
+            cy.get('.chart-input-form').eq(1).find('button').contains('Export as PDF').click();
+            cy.task('checkFileExists', pdfFilePath).should('be.true');
+
+            const docxFileName = 'dot-plot-sample-export.docx';
+            const docxFilePath = `${downloadsFolder}/${docxFileName}`;
+            cy.get('.chart-input-form').eq(1).find('button').contains('Export as DOCX').click();
+            cy.task('checkFileExists', docxFilePath).should('be.true');
+        });
+
+        it('should download the sample means data as a PDF and DOCX', () => {
+            // Generate sample means data
+            cy.get('#get-sample-btn').click();
+            cy.wait(500);
+
+            const pdfFileName = 'dot-plot-means-export.pdf';
+            const pdfFilePath = `${downloadsFolder}/${pdfFileName}`;
+            cy.get('.chart-input-form').eq(2).find('button').contains('Export as PDF').click();
+            cy.task('checkFileExists', pdfFilePath).should('be.true');
+            
+            const docxFileName = 'dot-plot-means-export.docx';
+            const docxFilePath = `${downloadsFolder}/${docxFileName}`;
+            cy.get('.chart-input-form').eq(2).find('button').contains('Export as DOCX').click();
+            cy.task('checkFileExists', docxFilePath).should('be.true');
+        });
+    });
      
 })
