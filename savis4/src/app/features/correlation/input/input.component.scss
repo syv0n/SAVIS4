@@ -45,6 +45,11 @@ b,p{
   background: var(--fourth-col);
 }
 
+.btn:disabled {
+  background: var(--ninth-col);
+  cursor: not-allowed;
+}
+
 #chart-wrap{
   background-color:var(--eighth-col);
   border-radius: 10px;

@@ -83,6 +83,53 @@ describe('template spec', () => {
       })
     it('should click file input', () => {
       cy.get('label.file-input span.btn').click()
-      })      
+      })
+
+    describe('Export Functionality', () => {
+        beforeEach(() => {
+            // Setup data and chart
+            cy.get('#columnX').type('1,2,3,4,5')
+            cy.get('#columnY').type('2,4,6,8,10')
+            cy.get('button.btn').contains(/update chart|correlation_update_chart/i).click()
+            cy.get('#data-chart-1').should('be.visible')
+            cy.wait(500)
+        })
+
+        it('should display export buttons when chart is loaded', () => {
+            cy.get('#export-pdf-btn').should('be.visible')
+            cy.get('#export-docx-btn').should('be.visible')
+        })
+
+        it('should disable export buttons when no data is available', () => {
+            cy.get('#columnX').clear()
+            cy.get('#columnY').clear()
+            cy.get('button.btn').contains(/update chart|correlation_update_chart/i).click()
+            cy.get('#export-pdf-btn').should('be.disabled')
+            cy.get('#export-docx-btn').should('be.disabled')
+        })
+
+        it('should export PDF successfully', () => {
+            cy.get('#export-pdf-btn').click()
+            cy.task('checkFileExists', 'cypress/downloads/correlation-export.pdf')
+        })
+
+        it('should export DOCX successfully', () => {
+            cy.get('#export-docx-btn').click()
+            cy.task('checkFileExists', 'cypress/downloads/correlation-export.docx')
+        })
+
+        it('should export with different data sets', () => {
+            // Test with different data
+            cy.get('#columnX').clear()
+            cy.get('#columnY').clear()
+            cy.get('#columnX').type('10,20,30,40,50')
+            cy.get('#columnY').type('5,15,25,35,45')
+            cy.get('button.btn').contains(/update chart|correlation_update_chart/i).click()
+            cy.wait(500)
+            
+            cy.get('#export-pdf-btn').click()
+            cy.task('checkFileExists', 'cypress/downloads/correlation-export.pdf')
+        })
+    })
 
 })
