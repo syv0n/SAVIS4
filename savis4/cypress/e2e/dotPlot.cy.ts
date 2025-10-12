@@ -102,7 +102,7 @@ describe('template spec', () => {
             // Load data before each export test
             cy.get('#sample-data-options').select("Example 1");
             cy.get('#load-data-btn').click();
-            cy.wait(500); // wait for chart to render
+            cy.get('button').contains('Export as PDF').first().should('not.be.disabled');
         });
 
         it('should download the input data as a PDF and DOCX', () => {
@@ -119,8 +119,9 @@ describe('template spec', () => {
 
         it('should download the sample data as a PDF and DOCX', () => {
             // Generate sample data
-            cy.get('#get-sample-btn').click();
-            cy.wait(500);
+            cy.get('#get-sample-btn').should('not.be.disabled').click();
+            
+            cy.get('.chart-input-form').eq(1).find('button').contains('Export as PDF').should('not.be.disabled');
 
             const pdfFileName = 'dot-plot-sample-export.pdf';
             const pdfFilePath = `${downloadsFolder}/${pdfFileName}`;
@@ -135,8 +136,9 @@ describe('template spec', () => {
 
         it('should download the sample means data as a PDF and DOCX', () => {
             // Generate sample means data
-            cy.get('#get-sample-btn').click();
-            cy.wait(500);
+            cy.get('#get-sample-btn').should('not.be.disabled').click();
+            
+            cy.get('.chart-input-form').eq(2).find('button').contains('Export as PDF').should('not.be.disabled');
 
             const pdfFileName = 'dot-plot-means-export.pdf';
             const pdfFilePath = `${downloadsFolder}/${pdfFileName}`;

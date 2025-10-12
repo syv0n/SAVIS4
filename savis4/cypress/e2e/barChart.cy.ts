@@ -99,7 +99,7 @@ describe('template spec', () => {
         cy.get(':nth-child(4) > #result').should('exist')
     })
 
-        // --- NEW EXPORT TESTS ---
+      // --- NEW EXPORT TESTS ---
     describe('Export Functionality', () => {
         const downloadsFolder = Cypress.config('downloadsFolder');
 
@@ -107,13 +107,15 @@ describe('template spec', () => {
             // Load data before each export test
             cy.get('#sample-data-options').select("Example 1");
             cy.get('#load-data-btn').click();
-            cy.wait(500); // wait for chart to render
+            cy.get('#export-input-pdf-btn').should('not.be.disabled');
         });
 
+        // THIS TEST WAS INCORRECT. IT SHOULD ONLY TEST THE INPUT DATA EXPORT.
         it('should download the input data as a PDF', () => {
             const fileName = 'bar-chart-input-export.pdf';
             const filePath = `${downloadsFolder}/${fileName}`;
             
+            // Correct action: Just click the input data export button.
             cy.get('#export-input-pdf-btn').click();
             cy.task('checkFileExists', filePath).should('be.true');
         });
@@ -126,16 +128,19 @@ describe('template spec', () => {
             cy.task('checkFileExists', filePath).should('be.true');
         });
 
+        // THIS TEST HAD THE WRONG ORDER OF ACTIONS.
         it('should download the sample data as a PDF', () => {
             const fileName = 'bar-chart-sample-export.pdf';
             const filePath = `${downloadsFolder}/${fileName}`;
 
-            // Generate sample data first
+            // Correct order:
+            // 1. Type in the sample size.
             cy.get('#sampleInput').clear().type('5');
-            cy.get('#get-sample-btn').click();
-            cy.wait(500); // wait for sample chart
+            // 2. Generate the sample data.
+            cy.get('#get-sample-btn').should('not.be.disabled').click();
+            // 3. Now that data exists, click the export button.
+            cy.get('#export-sample-pdf-btn').should('not.be.disabled').click();
 
-            cy.get('#export-sample-pdf-btn').click();
             cy.task('checkFileExists', filePath).should('be.true');
         });
 
@@ -143,14 +148,12 @@ describe('template spec', () => {
             const fileName = 'bar-chart-sample-export.docx';
             const filePath = `${downloadsFolder}/${fileName}`;
 
-            // Generate sample data first
+            // Correct order:
             cy.get('#sampleInput').clear().type('5');
-            cy.get('#get-sample-btn').click();
-            cy.wait(500);
+            cy.get('#get-sample-btn').should('not.be.disabled').click();
+            cy.get('#export-sample-docx-btn').should('not.be.disabled').click();
 
-            cy.get('#export-sample-docx-btn').click();
             cy.task('checkFileExists', filePath).should('be.true');
         });
     });
-
 })
