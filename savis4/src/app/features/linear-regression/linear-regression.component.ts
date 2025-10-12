@@ -25,7 +25,9 @@ export class LinearRegressionComponent implements OnInit{
   updateChart() {
     // Parse the user input into data points
     this.parsedDatapoints = this.datapoints.split('\n')
+      .filter(line => line.trim() !== '') // Filter out empty lines
       .map(point => point.split(',').map(coord => +coord))
+      .filter(coords => coords.length === 2 && !isNaN(coords[0]) && !isNaN(coords[1])) // Filter out invalid entries
       .map(coords => ({ x: coords[0], y: coords[1] }));
   }
 
