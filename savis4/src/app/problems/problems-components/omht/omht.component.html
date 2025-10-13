@@ -8,11 +8,30 @@
   <div class="content">
     <div class="text-section">
       <div class="green-box">
-        <p [innerHTML]="'Hi Xai' | translate"></p>
+        <p [innerHTML]="'Word Problem' | translate"></p>
+      </div>
+      <!--textbox for user to type their answer-->
+      <textarea class = "textbox" rows = "1" placeholder="Type the answer here" [(ngModel)] = "inputAnswer">
+      </textarea>
+      <!--submit button-->
+      <button class = "submit-button" (click)="submitAnswer()">Submit Answer</button>
+      <!--show if user answer is correct or incorrect-->
+      <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: answerIsCorrect, incorrect: !answerIsCorrect}">
+        <p>{{answerIsCorrect? 'Correct!' : 'Incorrect answer. Please try again'}}</p>
+        <p *ngIf = "!answerIsCorrect">
+          Correct answer: {{ correctAnswer }}
+        </p>
+        <!--hide answer button-->
+        <button (click) = "hideAnswer()" class="hide-button">Hide Answer</button>
       </div>
     </div>
 
-  <p></p>
+    <!--left side of the page-->
+    <!--add blank bar chart-->
+    <div class ="chart container">
+      <canvas #inputChart width="950" height="600"></canvas>
+    </div>
+  </div>
 </div>
 
 <footer class="static-footer">

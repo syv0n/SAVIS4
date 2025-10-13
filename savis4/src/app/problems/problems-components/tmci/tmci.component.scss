@@ -31,12 +31,14 @@
 
   .content {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
     gap: 40px;
 
     .text-section {
-      flex: 0.6;
+      flex: 1;
+      flex-direction
 
       h2, h3 {
         margin: 0;
@@ -51,6 +53,16 @@
         border-radius: 8px;
         font-size: 1.5rem;
         line-height: 1.6;
+      }
+
+      .chart-container{
+        flex: 1;
+        max-width: 50%;
+        canvas{
+          width: 100%;
+          max-width: 500px;
+          height: auto;
+        }
       }
     }
 
@@ -120,4 +132,54 @@ h1{
 .box:hover, .box2:hover, .box3:hover {
     background-color: var(--fourth-col);
     cursor: pointer;
+}
+
+.textbox {
+  width: 500px;
+  height: 100px;
+  padding: 20px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  border: 2px solid #938f8f;
+  resize: none;
+  margin-top: 10px;
+}
+
+.submit-button{
+  display: block;
+  width: 30%;
+  padding: 10px;
+  font-size: 1rem;
+  background-color: #39843b;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 10px;
+
+  &:hover{
+    background-color: #106c14;
+  }
+}
+
+.hide-button{
+  display: block;
+  width: 30%;
+  padding: 10px;
+  font-size: 1rem;
+  background-color: #294c2b;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 12px;
+
+  &:hover{
+    background-color: #388e3c;
+  }
+}
+
+answer-box{
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1.1rem;
 }
