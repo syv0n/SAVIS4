@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnChanges, ViewChild } from '@ang
 import { TranslateService } from '@ngx-translate/core';
 import { Chart } from 'chart.js';
 import { oneProportionDynamicBubbleSize, oneProportionOffset, oneProportionSampleLegendColor } from '../../Utils/chartjs-plugin';
+import type { Paragraph, Table } from 'docx';
 
 @Component({
   selector: 'app-one-proportion',
@@ -572,6 +573,89 @@ export class OneProportionComponent implements AfterViewInit, OnChanges{
   ngOnChanges() {
     this.updateChart()
   }
+
+
+
+  /**
+   * @description Helper function to gather and format the chart data for export.
+   * It compiles the frequency data and a summary of key statistics.
+   * @returns An object containing table headers, data rows, and a statistics string.
+   */
+  private getExportData(): { headers: string[], rows: (string | number)[][], stats: string } {
+    const headers = ['Heads', 'Frequency'];
+    const rows = this.samples.map((count, index) => [index, count]).filter(row => row[1] > 0);
+    const stats = `Total Samples: ${this.totalSamples}\nMean: ${this.mean.toFixed(3)}\nStd Dev: ${this.std.toFixed(3)}`;
+    return { headers, rows, stats };
+  }
+
+  /**
+   * @description Exports the current chart view and its associated data as a PDF document.
+   * This function dynamically imports the required libraries only when called.
+   */
+  async exportAsPDF(): Promise<void> {
+    if (this.totalSamples === 0) return;
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+      const { headers, rows, stats } = this.getExportData();
+
+      const doc = new jsPDF();
+      doc.setFontSize(16).text('One Proportion Hypothesis Test Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+
+      const imgData = this.chart.toBase64Image();
+      const canvas = this.chartCanvas.nativeElement;
+      const imgHeight = (canvas.height * 170) / canvas.width;
+      doc.addImage(imgData, 'PNG', 15, 25, 170, imgHeight);
+
+      doc.setFontSize(12).text('Summary Statistics', 15, 35 + imgHeight);
+      doc.setFontSize(10).text(stats, 15, 42 + imgHeight);
+      
+      autoTable(doc, {
+        startY: 65 + imgHeight,
+        head: [headers],
+        body: rows,
+      });
+      doc.save('one-proportion-export.pdf');
+    } catch (error) { console.error("Failed to generate PDF:", error); }
+  }
+
+  /**
+   * @description Exports the current chart view and its associated data as a DOCX document.
+   * This function dynamically imports the required libraries only when called.
+   */
+  async exportAsDOCX(): Promise<void> {
+    if (this.totalSamples === 0) return;
+    const { Document, Packer, Paragraph, TextRun, ImageRun, Table, TableRow, TableCell, WidthType, AlignmentType } = await import('docx');
+    const FileSaver = await import('file-saver');
+    const { headers, rows, stats } = this.getExportData();
+
+    const children: (Paragraph | Table)[] = [
+      new Paragraph({ children: [new TextRun({ text: 'One Proportion Hypothesis Test Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER })
+    ];
+    
+    const imgData = this.chart.toBase64Image();
+    children.push(new Paragraph({
+      children: [new ImageRun({ type: "png", data: imgData.split(',')[1], transformation: { width: 500, height: 250 } })]
+    }));
+
+    children.push(new Paragraph({ children: [new TextRun({ text: 'Summary Statistics', bold: true, size: 24, break: 1 })] }));
+    stats.split('\n').forEach(line => {
+      children.push(new Paragraph({ children: [new TextRun(line)] }));
+    });
+    
+    const tableHeader = new TableRow({
+        children: headers.map(headerText => new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: headerText, bold: true })] })] })),
+    });
+    const dataRows = rows.map(row => new TableRow({
+        children: row.map(cellText => new TableCell({ children: [new Paragraph(String(cellText))] })),
+    }));
+    const docxTable = new Table({ rows: [tableHeader, ...dataRows], width: { size: 100, type: WidthType.PERCENTAGE } });
+    children.push(docxTable);
+
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'one-proportion-export.docx'));
+  }
+
 
   /**
    * Unregister the chart plugins when the component is destroyed

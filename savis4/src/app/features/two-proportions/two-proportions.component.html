@@ -69,6 +69,10 @@
             <span>{{ sampleProportionDiff }}</span>
           </div>
         </div>
+        <div class="export-buttons mt-3">
+          <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDataAsPDF()" [disabled]="!isDataLoaded">Export as PDF</button>
+          <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDataAsDOCX()" [disabled]="!isDataLoaded">Export as DOCX</button>
+        </div>
       </div>
       <div class="rhs w-9/12">
           <canvas #chart1 height="200"></canvas>
@@ -105,6 +109,10 @@
         <div class="flex justify-between">
           <span>{{ 'tp_diff_2' | translate }} (p<sub>A</sub> - p<sub>B</sub>) :</span>
           <span summary="sampleProportioniff">{{sampleProportionDiff_chart2}} </span>
+        </div>
+        <div class="export-buttons mt-3">
+          <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportSimulationAsPDF()" [disabled]="!isSimRun">Export as PDF</button>
+          <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportSimulationAsDOCX()" [disabled]="!isSimRun">Export as DOCX</button>
         </div>
       </div>
     </div>
@@ -170,6 +178,10 @@
         <div class="flex justify-between">
           <span>{{ 'tp_extreme_diff' | translate }}</span>
           <span summary="proportion">{{propextremediff_chart3}}</span>
+        </div>
+         <div class="export-buttons mt-3">
+          <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDistributionAsPDF()" [disabled]="simulations.length === 0">Export as PDF</button>
+          <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDistributionAsDOCX()" [disabled]="simulations.length === 0">Export as DOCX</button>
         </div>
       </div>
     </div>

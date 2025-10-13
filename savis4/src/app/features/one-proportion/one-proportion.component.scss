@@ -150,6 +150,11 @@ button {
   &:hover {
     background: var(--fourth-col);
   }
+
+  &:disabled {
+    background: var(--ninth-col);
+    cursor: not-allowed;
+  }
 }
 
 input[type="number"] {

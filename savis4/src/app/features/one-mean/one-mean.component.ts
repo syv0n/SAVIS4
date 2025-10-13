@@ -2,6 +2,7 @@ import { Component, AfterViewInit, ViewChild, ElementRef, OnInit, OnDestroy } fr
 import { TranslateService } from '@ngx-translate/core';
 import { Chart } from 'chart.js';
 import { SharedService } from '../../services/shared.service';
+import type { Paragraph, Table } from 'docx'
 
 @Component({
   selector: 'app-one-mean',
@@ -54,6 +55,7 @@ export class OneMeanComponent implements AfterViewInit, OnInit, OnDestroy {
 
   disabledInput: boolean = true
   sampleMeanDisabled: boolean = true
+  isDataLoaded: boolean = false
 
   @ViewChild('inputChart') inputDataChartRef: ElementRef<HTMLCanvasElement>
 
@@ -296,6 +298,7 @@ export class OneMeanComponent implements AfterViewInit, OnInit, OnDestroy {
     if(this.inputDataArray.length) {
       this.updateData(0)
       this.inputDataSize = this.inputDataArray.length
+      this.isDataLoaded = true
     }
 
     this.disabledInput = false
@@ -377,6 +380,7 @@ export class OneMeanComponent implements AfterViewInit, OnInit, OnDestroy {
     this.disabledInput = true
     this.sampleMeanDisabled = true
     this.sampleMeansSize = NaN
+    this.isDataLoaded = false;
     this.csvTextArea = ''
     this.fileInput.nativeElement.value = ''
     
@@ -845,6 +849,157 @@ export class OneMeanComponent implements AfterViewInit, OnInit, OnDestroy {
       };
       reader.readAsText(file)
     }
+  }
+
+  /**
+   * @description Helper function to create a DOCX table from headers and data rows.
+   * @param headers An array of strings for the table header.
+   * @param rows A 2D array of strings or numbers for the table body.
+   * @returns A Promise that resolves to a DOCX Table object.
+   */
+  private async createDocxTable(headers: string[], rows: (string | number)[][]): Promise<Table> {
+    const { Table, TableRow, TableCell, Paragraph, TextRun, WidthType } = await import('docx');
+    const header = new TableRow({
+        children: headers.map(headerText => new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: headerText, bold: true })] })] })),
+    });
+    const dataRows = rows.map(row => new TableRow({
+        children: row.map(cellText => new TableCell({ children: [new Paragraph(String(cellText))] })),
+    }));
+    return new Table({ rows: [header, ...dataRows], width: { size: 100, type: WidthType.PERCENTAGE } });
+  }
+
+  // --- 1. Original Data Exports ---
+
+  /**
+   * @description Exports the original data chart and its summary statistics as a PDF document.
+   */
+  async exportInputDataAsPDF(): Promise<void> {
+    if (!this.isDataLoaded) return;
+    const { default: jsPDF } = await import('jspdf');
+    const { default: autoTable } = await import('jspdf-autotable');
+    const doc = new jsPDF();
+    doc.setFontSize(16).text('One Mean Hypothesis Testing - Data Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+    const imgData = this.inputDataChart.toBase64Image();
+    const imgHeight = (this.inputDataChart.canvas.height * 180) / this.inputDataChart.canvas.width;
+    doc.addImage(imgData, 'PNG', 15, 25, 180, imgHeight);
+    const tableBody = [
+      [`Mean (${this.meanSymbol})`, this.inputDataMean],
+      [`Standard Deviation (${this.stdSymbol})`, this.inputDataStd],
+      [`Size (${this.sizeSymbol})`, this.inputDataSize],
+    ];
+    autoTable(doc, { startY: 25 + imgHeight + 10, head: [['Statistic', 'Value']], body: tableBody });
+    doc.save('one-mean-data-export.pdf');
+  }
+
+  /**
+   * @description Exports the original data chart and its summary statistics as a DOCX document.
+   */
+  async exportInputDataAsDOCX(): Promise<void> {
+    if (!this.isDataLoaded) return;
+    const { Document, Packer, Paragraph, TextRun, ImageRun, AlignmentType, Table } = await import('docx');
+    const FileSaver = await import('file-saver');
+    const table = await this.createDocxTable(['Statistic', 'Value'], [
+      [`Mean (${this.meanSymbol})`, this.inputDataMean],
+      [`Standard Deviation (${this.stdSymbol})`, this.inputDataStd],
+      [`Size (${this.sizeSymbol})`, this.inputDataSize],
+    ]);
+    const children: (Paragraph | Table)[] = [
+      new Paragraph({ children: [new TextRun({ text: 'One Mean Hypothesis Testing - Data Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER }),
+      new Paragraph({ children: [new ImageRun({ type: "png", data: this.inputDataChart.toBase64Image().split(',')[1], transformation: { width: 500, height: 250 } })] }),
+      new Paragraph({ children: [new TextRun({ text: 'Summary Statistics', bold: true, size: 24, break: 1 })] }),
+      table,
+    ];
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'one-mean-data-export.docx'));
+  }
+
+  // --- 2. Sample Data Exports ---
+
+  /**
+   * @description Exports the most recent sample's chart and summary statistics as a PDF document.
+   */
+  async exportSampleDataAsPDF(): Promise<void> {
+    if (this.sampleDataArray.length === 0) return;
+    const { default: jsPDF } = await import('jspdf');
+    const { default: autoTable } = await import('jspdf-autotable');
+    const doc = new jsPDF();
+    doc.setFontSize(16).text('One Mean Hypothesis Testing - Sample Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+    const imgData = this.sampleDataChart.toBase64Image();
+    const imgHeight = (this.sampleDataChart.canvas.height * 180) / this.sampleDataChart.canvas.width;
+    doc.addImage(imgData, 'PNG', 15, 25, 180, imgHeight);
+    autoTable(doc, {
+      startY: 25 + imgHeight + 10,
+      head: [['Statistic', 'Value']],
+      body: [['Mean (x̄)', this.sampleDataMean], ['Standard Deviation (s)', this.sampleDataStd]],
+    });
+    doc.save('one-mean-sample-export.pdf');
+  }
+
+  /**
+   * @description Exports the most recent sample's chart and summary statistics as a DOCX document.
+   */
+  async exportSampleDataAsDOCX(): Promise<void> {
+    if (this.sampleDataArray.length === 0) return;
+    const { Document, Packer, Paragraph, TextRun, ImageRun, AlignmentType, Table } = await import('docx');
+    const FileSaver = await import('file-saver');
+    const table = await this.createDocxTable(['Statistic', 'Value'], [['Mean (x̄)', this.sampleDataMean], ['Standard Deviation (s)', this.sampleDataStd]]);
+    const children: (Paragraph | Table)[] = [
+      new Paragraph({ children: [new TextRun({ text: 'One Mean Hypothesis Testing - Sample Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER }),
+      new Paragraph({ children: [new ImageRun({ type: "png", data: this.sampleDataChart.toBase64Image().split(',')[1], transformation: { width: 500, height: 250 } })] }),
+      new Paragraph({ children: [new TextRun({ text: 'Summary Statistics', bold: true, size: 24, break: 1 })] }),
+      table,
+    ];
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'one-mean-sample-export.docx'));
+  }
+
+  // --- 3. Distribution Exports ---
+
+  /**
+   * @description Exports the sampling distribution chart and its summary statistics as a PDF document.
+   */
+  async exportDistributionAsPDF(): Promise<void> {
+    if (this.sampleMeans.length === 0) return;
+    const { default: jsPDF } = await import('jspdf');
+    const { default: autoTable } = await import('jspdf-autotable');
+    const doc = new jsPDF();
+    doc.setFontSize(16).text('One Mean Hypothesis Testing - Sampling Distribution Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+    const imgData = this.sampleMeansChart.toBase64Image();
+    const imgHeight = (this.sampleMeansChart.canvas.height * 180) / this.sampleMeansChart.canvas.width;
+    doc.addImage(imgData, 'PNG', 15, 25, 180, imgHeight);
+    const tableBody = [
+      ['Mean of Sample Means', this.sampleMeansMean],
+      ['Std Dev of Sample Means', this.sampleMeansStd],
+      ['Total Samples', this.sampleMeansSize],
+      ['Samples in Interval', this.sampleMeansChosen],
+      ['Samples not in Interval', this.sampleMeansUnchosen],
+    ];
+    autoTable(doc, { startY: 25 + imgHeight + 10, head: [['Statistic', 'Value']], body: tableBody });
+    doc.save('one-mean-distribution-export.pdf');
+  }
+
+  /**
+   * @description Exports the sampling distribution chart and its summary statistics as a DOCX document.
+   */
+  async exportDistributionAsDOCX(): Promise<void> {
+    if (this.sampleMeans.length === 0) return;
+    const { Document, Packer, Paragraph, TextRun, ImageRun, AlignmentType, Table } = await import('docx');
+    const FileSaver = await import('file-saver');
+    const table = await this.createDocxTable(['Statistic', 'Value'], [
+      ['Mean of Sample Means', this.sampleMeansMean],
+      ['Std Dev of Sample Means', this.sampleMeansStd],
+      ['Total Samples', this.sampleMeansSize],
+      ['Samples in Interval', this.sampleMeansChosen],
+      ['Samples not in Interval', this.sampleMeansUnchosen],
+    ]);
+    const children: (Paragraph | Table)[] = [
+      new Paragraph({ children: [new TextRun({ text: 'One Mean Hypothesis Testing - Sampling Distribution Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER }),
+      new Paragraph({ children: [new ImageRun({ type: "png", data: this.sampleMeansChart.toBase64Image().split(',')[1], transformation: { width: 500, height: 250 } })] }),
+      new Paragraph({ children: [new TextRun({ text: 'Summary Statistics', bold: true, size: 24, break: 1 })] }),
+      table,
+    ];
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'one-mean-distribution-export.docx'));
   }
 
   ngOnDestroy(): void {

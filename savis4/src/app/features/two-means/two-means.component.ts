@@ -9,6 +9,7 @@ import * as XLS from 'xlsx';
 import { TranslateService } from '@ngx-translate/core'; 
 import { SharedService } from '../../services/shared.service';
 import { MathService } from '../../Utils/math.service';
+import type { Paragraph, Table } from 'docx';
 
 @Component({
   selector: 'app-two-means',
@@ -548,6 +549,234 @@ export class TwoMeansComponent implements OnInit, AfterViewInit, OnDestroy {
     event.stopPropagation();
     this.onFileSelected(event)
   }
+
+
+
+  /**
+   * @description Helper function to create a DOCX table from headers and data rows.
+   * @param headers An array of strings for the table header.
+   * @param rows A 2D array of strings or numbers for the table body.
+   * @returns A Promise that resolves to a DOCX Table object.
+   */
+  private async createDocxTable(headers: string[], rows: (string | number)[][]): Promise<Table> {
+    const { Table, TableRow, TableCell, Paragraph, TextRun, WidthType } = await import('docx');
+    
+    const header = new TableRow({
+        children: headers.map(headerText => new TableCell({
+            children: [new Paragraph({ children: [new TextRun({ text: headerText, bold: true })] })]
+        })),
+    });
+
+    const dataRows = rows.map(row => new TableRow({
+        children: row.map(cellText => new TableCell({ children: [new Paragraph(String(cellText))] })),
+    }));
+    
+    return new Table({ rows: [header, ...dataRows], width: { size: 100, type: WidthType.PERCENTAGE } });
+  }
+
+  // --- Section 1: Original Data Exports ---
+
+  /**
+   * @description Exports the original data charts (Group 1 and Group 2) and summary table as a PDF document.
+   */
+  async exportDataAsPDF(): Promise<void> {
+    if (!this.activateSim) return;
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+      const doc = new jsPDF();
+      
+      doc.setFontSize(16).text('Two Means Significance Test - Data Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+      
+      // --- Add Charts ---
+      doc.setFontSize(12).text('Group 1 Data', 15, 25);
+      const img1Data = this.chart1.chart.toBase64Image();
+      const img1Height = (this.chart1.chart.canvas.height * 170) / this.chart1.chart.canvas.width;
+      doc.addImage(img1Data, 'PNG', 15, 30, 170, img1Height);
+      
+      const chart2YPos = 40 + img1Height;
+      doc.setFontSize(12).text('Group 2 Data', 15, chart2YPos);
+      const img2Data = this.chart2.chart.toBase64Image();
+      const img2Height = (this.chart2.chart.canvas.height * 170) / this.chart2.chart.canvas.width;
+      doc.addImage(img2Data, 'PNG', 15, chart2YPos + 5, 170, img2Height);
+
+      // --- ADDED: Create and add summary data table ---
+      const tableBody = [
+        ['Size n (Group 1)', this.dataSize1],
+        ['Mean 1 (Group 1)', this.datamean1],
+        ['Size n (Group 2)', this.dataSize2],
+        ['Mean 2 (Group 2)', this.datamean2],
+        ['Difference of Means (Mean 1 - Mean 2)', this.mean_diff]
+      ];
+      
+      autoTable(doc, {
+        startY: chart2YPos + img2Height + 15,
+        head: [['Statistic', 'Value']],
+        body: tableBody,
+      });
+      
+      doc.save('two-means-data-export.pdf');
+    } catch (error) { console.error("Failed to generate PDF:", error); }
+  }
+
+  /**
+   * @description Exports the original data charts (Group 1 and Group 2) and summary table as a DOCX document.
+   */
+  async exportDataAsDOCX(): Promise<void> {
+    if (!this.activateSim) return;
+    const { Document, Packer, Paragraph, TextRun, ImageRun, AlignmentType, Table } = await import('docx');
+    const FileSaver = await import('file-saver');
+
+    // --- ADDED: Create summary data table ---
+    const tableHeaders = ['Statistic', 'Value'];
+    const tableRows = [
+        ['Size n (Group 1)', this.dataSize1],
+        ['Mean 1 (Group 1)', this.datamean1],
+        ['Size n (Group 2)', this.dataSize2],
+        ['Mean 2 (Group 2)', this.datamean2],
+        ['Difference of Means (Mean 1 - Mean 2)', this.mean_diff]
+    ];
+    const summaryTable = await this.createDocxTable(tableHeaders, tableRows);
+
+    const children: (Paragraph | Table)[] = [
+      new Paragraph({ children: [new TextRun({ text: 'Two Means Significance Test - Data Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER }),
+      new Paragraph({ children: [new TextRun({ text: 'Group 1 Data', bold: true, size: 24, break: 1 })] }),
+      new Paragraph({ children: [new ImageRun({ type: "png", data: this.chart1.chart.toBase64Image().split(',')[1], transformation: { width: 500, height: 250 } })] }),
+      new Paragraph({ children: [new TextRun({ text: 'Group 2 Data', bold: true, size: 24, break: 1 })] }),
+      new Paragraph({ children: [new ImageRun({ type: "png", data: this.chart2.chart.toBase64Image().split(',')[1], transformation: { width: 500, height: 250 } })] }),
+      new Paragraph({ children: [new TextRun({ text: 'Summary Statistics', bold: true, size: 24, break: 1 })] }),
+      summaryTable // Add table to document
+    ];
+
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'two-means-data-export.docx'));
+  }
+
+  // --- Section 2: Simulation Exports ---
+
+  /**
+   * @description Exports the charts and summary table from the most recent simulation run as a PDF document.
+   */
+  async exportSimulationAsPDF(): Promise<void> {
+    if (!this.samDisActive) return;
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+      const doc = new jsPDF();
+      doc.setFontSize(16).text('Two Means Significance Test - Simulation Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+      
+      // --- Add Charts ---
+      doc.setFontSize(12).text('Resampled Group 1', 15, 25);
+      const img3Data = this.chart3.chart.toBase64Image();
+      const img3Height = (this.chart3.chart.canvas.height * 170) / this.chart3.chart.canvas.width;
+      doc.addImage(img3Data, 'PNG', 15, 30, 170, img3Height);
+      
+      const chart4YPos = 40 + img3Height;
+      doc.setFontSize(12).text('Resampled Group 2', 15, chart4YPos);
+      const img4Data = this.chart4.chart.toBase64Image();
+      const img4Height = (this.chart4.chart.canvas.height * 170) / this.chart4.chart.canvas.width;
+      doc.addImage(img4Data, 'PNG', 15, chart4YPos + 5, 170, img4Height);
+      
+      // --- ADDED: Create and add summary data table ---
+      const tableBody = [
+        ['Mean (Resampled Group 1)', this.simsummary.sampleMean1],
+        ['Mean (Resampled Group 2)', this.simsummary.sampleMean2],
+        ['Difference of Means', this.simsummary.sampleMeanDiff]
+      ];
+      
+      autoTable(doc, {
+        startY: chart4YPos + img4Height + 15,
+        head: [['Statistic', 'Value']],
+        body: tableBody,
+      });
+
+      doc.save('two-means-simulation-export.pdf');
+    } catch (error) { console.error("Failed to generate PDF:", error); }
+  }
+
+  /**
+   * @description Exports the charts and summary table from the most recent simulation run as a DOCX document.
+   */
+  async exportSimulationAsDOCX(): Promise<void> {
+    if (!this.samDisActive) return;
+    const { Document, Packer, Paragraph, TextRun, ImageRun, AlignmentType, Table } = await import('docx');
+    const FileSaver = await import('file-saver');
+
+    // --- ADDED: Create summary data table ---
+    const tableHeaders = ['Statistic', 'Value'];
+    const tableRows = [
+      ['Mean (Resampled Group 1)', this.simsummary.sampleMean1],
+      ['Mean (Resampled Group 2)', this.simsummary.sampleMean2],
+      ['Difference of Means', this.simsummary.sampleMeanDiff]
+    ];
+    const summaryTable = await this.createDocxTable(tableHeaders, tableRows);
+
+    const children: (Paragraph | Table)[] = [
+      new Paragraph({ children: [new TextRun({ text: 'Two Means Significance Test - Simulation Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER }),
+      new Paragraph({ children: [new TextRun({ text: 'Resampled Group 1', bold: true, size: 24, break: 1 })] }),
+      new Paragraph({ children: [new ImageRun({ type: "png", data: this.chart3.chart.toBase64Image().split(',')[1], transformation: { width: 500, height: 250 } })] }),
+      new Paragraph({ children: [new TextRun({ text: 'Resampled Group 2', bold: true, size: 24, break: 1 })] }),
+      new Paragraph({ children: [new ImageRun({ type: "png", data: this.chart4.chart.toBase64Image().split(',')[1], transformation: { width: 500, height: 250 } })] }),
+      new Paragraph({ children: [new TextRun({ text: 'Summary Statistics', bold: true, size: 24, break: 1 })] }),
+      summaryTable // Add table to document
+    ];
+
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'two-means-simulation-export.docx'));
+  }
+
+  // --- Section 3: Distribution Exports ---
+
+  /**
+   * @description Exports the sampling distribution chart and its data table as a PDF document.
+   */
+  async exportDistributionAsPDF(): Promise<void> {
+    if (this.simulations.length === 0) return;
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+      const doc = new jsPDF();
+      
+      doc.setFontSize(16).text('Two Means Significance Test - Sampling Distribution Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+      
+      const imgData = this.chart5.toBase64Image();
+      const canvas = this.chart5Ref.nativeElement;
+      const imgHeight = (canvas.height * 170) / canvas.width;
+      doc.addImage(imgData, 'PNG', 15, 25, 170, imgHeight);
+      
+      const tableRows = this.simulations.map((mean, index) => [index + 1, mean.toFixed(4)]);
+      autoTable(doc, {
+        startY: 35 + imgHeight,
+        head: [['Simulation #', 'Difference of Means']],
+        body: tableRows,
+      });
+      doc.save('two-means-distribution-export.pdf');
+    } catch (error) { console.error("Failed to generate PDF:", error); }
+  }
+
+  /**
+   * @description Exports the sampling distribution chart and its data table as a DOCX document.
+   */
+  async exportDistributionAsDOCX(): Promise<void> {
+    if (this.simulations.length === 0) return;
+    const { Document, Packer, Paragraph, TextRun, ImageRun, AlignmentType, Table } = await import('docx');
+    const FileSaver = await import('file-saver');
+
+    const children: (Paragraph | Table)[] = [
+      new Paragraph({ children: [new TextRun({ text: 'Two Means Significance Test - Sampling Distribution Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER })
+    ];
+    
+    const imgData = this.chart5.toBase64Image();
+    children.push(new Paragraph({ children: [new ImageRun({ type: "png", data: imgData.split(',')[1], transformation: { width: 500, height: 250 } })] }));
+    
+    const tableRows = this.simulations.map((mean, index) => [index + 1, mean.toFixed(4)]);
+    const docxTable = await this.createDocxTable(['Simulation #', 'Difference of Means'], tableRows);
+    children.push(docxTable);
+
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'two-means-distribution-export.docx'));
+  }
+
 
   ngOnDestroy(): void {
     this.sharedService.changeData('')

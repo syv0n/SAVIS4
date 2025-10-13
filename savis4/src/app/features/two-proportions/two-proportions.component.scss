@@ -107,3 +107,10 @@ button:hover{
     background-color: darkgreen; 
   }
 }
+
+.export-buttons button[disabled] {
+  background-color: #AAAAAA !important;
+  color: #FFFFFF !important;
+  opacity: 1 !important;
+  cursor: not-allowed !important;
+}

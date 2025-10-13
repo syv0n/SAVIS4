@@ -101,4 +101,27 @@ describe('template spec', () => {
 
     })
 
+   // ---  EXPORT TEST ---
+describe('Export Functionality', () => {
+    const downloadsFolder = Cypress.config('downloadsFolder');
+
+    it('should download the chart data as a PDF and DOCX', () => {
+        // Step 1: Click the button by its location, without checking the text
+        cy.get('.mid > button').should('not.be.disabled').click();
+
+        // Step 2: Verify the export buttons are now enabled
+        cy.get('.export-buttons button').contains('Export as PDF').should('not.be.disabled');
+
+        // Step 3: Test the PDF download
+        const pdfFilePath = `${downloadsFolder}/one-proportion-export.pdf`;
+        cy.get('.export-buttons button').contains('Export as PDF').click();
+        cy.task('checkFileExists', pdfFilePath).should('be.true');
+        
+        // Step 4: Test the DOCX download
+        const docxFilePath = `${downloadsFolder}/one-proportion-export.docx`;
+        cy.get('.export-buttons button').contains('Export as DOCX').click();
+        cy.task('checkFileExists', docxFilePath).should('be.true');
+    });
+});
+
 })
