@@ -288,6 +288,14 @@
           <span>{{ simTotal }}</span>
         </div>
       </div>
+      
+      <!-- Export buttons -->
+      <div class="form-group mt-3">
+        <button class="btn" id="export-pdf-btn" (click)="exportAsPDF()" [disabled]="!isExportEnabled">{{ 'tpc_export_pdf' | translate }}</button>
+      </div>
+      <div class="form-group mt-3">
+        <button class="btn" id="export-docx-btn" (click)="exportAsDOCX()" [disabled]="!isExportEnabled">{{ 'tpc_export_docx' | translate }}</button>
+      </div>
     </div>
     <div class="rhs-chart3">
       <canvas #chart3 class="half-height"></canvas>

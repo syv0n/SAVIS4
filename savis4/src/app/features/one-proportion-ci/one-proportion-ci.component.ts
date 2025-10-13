@@ -761,4 +761,258 @@ export class OneProportionCIComponent implements OnInit, AfterViewInit {
     this.sampleMeansChosen = `${totalChosen} / ${this.total} = ${proportionChosen}`
     this.sampleMeansUnchosen = `${totalUnchosen} / ${this.total} = ${proportionUnchosen}`
   }
+
+  // Export functionality
+  get isExportEnabled(): boolean {
+    return this.numsuccess > 0 && 
+           this.numfailure > 0 && 
+           !isNaN(this.mean) && 
+           !isNaN(this.stddev) &&
+           this.sampleSize > 0 &&
+           this.numSimulations > 0;
+  }
+
+  async exportAsPDF() {
+    if (!this.isExportEnabled) return;
+
+    try {
+      const { jsPDF } = await import('jspdf');
+      const { autoTable } = await import('jspdf-autotable');
+
+      const doc = new jsPDF();
+      
+      // Title
+      doc.setFontSize(16);
+      doc.text('One Proportion Confidence Interval Analysis', 20, 20);
+
+      // Chart 1: Input Data
+      if (this.chart && this.chart.chart) {
+        const chart1Image = this.chart.chart.toBase64Image();
+        doc.addImage(chart1Image, 'PNG', 20, 30, 80, 60);
+        doc.setFontSize(12);
+        doc.text('Input Data (Successes vs Failures)', 20, 100);
+      }
+
+      // Chart 2: Simulation Results
+      if (this.chart && this.chart.chart) {
+        const chart2Image = this.chart.chart.toBase64Image();
+        doc.addImage(chart2Image, 'PNG', 110, 30, 80, 60);
+        doc.setFontSize(12);
+        doc.text('Simulation Results', 110, 100);
+      }
+
+      // Chart 3: Sampling Distribution
+      if (this.chart3) {
+        const chart3Image = this.chart3.toBase64Image();
+        doc.addImage(chart3Image, 'PNG', 20, 110, 120, 80);
+        doc.setFontSize(12);
+        doc.text('Sampling Distribution of Proportions', 20, 200);
+      }
+
+      // Input Data Table
+      const inputData = [
+        ['Successes', this.numsuccess],
+        ['Failures', this.numfailure],
+        ['Proportion of Successes', this.proportion.toFixed(4)]
+      ];
+
+      autoTable(doc, {
+        startY: 220,
+        head: [['Input Data', 'Value']],
+        body: inputData,
+        theme: 'grid'
+      });
+
+      // Simulation Results Table
+      const simulationData = [
+        ['Sample Size', this.sampleSize],
+        ['Number of Simulations', this.numSimulations],
+        ['Mean of Sample Proportions', this.mean.toFixed(4)],
+        ['Standard Deviation', this.stddev.toFixed(4)],
+        ['Lower Bound', this.lower.toFixed(4)],
+        ['Upper Bound', this.upper.toFixed(4)],
+        ['Total Samples', this.total],
+        ['Proportions Selected', this.sampleMeansChosen],
+        ['Proportions Not Selected', this.sampleMeansUnchosen]
+      ];
+
+      autoTable(doc, {
+        startY: 280,
+        head: [['Simulation Results', 'Value']],
+        body: simulationData,
+        theme: 'grid'
+      });
+
+      // Save the PDF
+      doc.save('one-proportion-ci-analysis.pdf');
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+    }
+  }
+
+  async exportAsDOCX() {
+    if (!this.isExportEnabled) return;
+
+    try {
+      const { Document, Packer, Paragraph, TextRun, ImageRun, Table, TableRow, TableCell } = await import('docx');
+      const { saveAs } = await import('file-saver');
+
+      const children: any[] = [];
+
+      // Title
+      children.push(new Paragraph({
+        children: [new TextRun({ text: 'One Proportion Confidence Interval Analysis', bold: true, size: 32 })],
+        spacing: { after: 400 }
+      }));
+
+      // Chart 1: Input Data
+      if (this.chart && this.chart.chart) {
+        const chart1Image = this.chart.chart.toBase64Image();
+        children.push(new Paragraph({
+          children: [new TextRun({ text: 'Input Data (Successes vs Failures)', bold: true })],
+          spacing: { after: 200 }
+        }));
+        children.push(new Paragraph({
+          children: [new ImageRun({ data: chart1Image, transformation: { width: 300, height: 200 }, type: "png" })]
+        }));
+      }
+
+      // Chart 2: Simulation Results
+      if (this.chart && this.chart.chart) {
+        const chart2Image = this.chart.chart.toBase64Image();
+        children.push(new Paragraph({
+          children: [new TextRun({ text: 'Simulation Results', bold: true })],
+          spacing: { after: 200 }
+        }));
+        children.push(new Paragraph({
+          children: [new ImageRun({ data: chart2Image, transformation: { width: 300, height: 200 }, type: "png" })]
+        }));
+      }
+
+      // Chart 3: Sampling Distribution
+      if (this.chart3) {
+        const chart3Image = this.chart3.toBase64Image();
+        children.push(new Paragraph({
+          children: [new TextRun({ text: 'Sampling Distribution of Proportions', bold: true })],
+          spacing: { after: 200 }
+        }));
+        children.push(new Paragraph({
+          children: [new ImageRun({ data: chart3Image, transformation: { width: 400, height: 300 }, type: "png" })]
+        }));
+      }
+
+      // Input Data Table
+      children.push(new Paragraph({
+        children: [new TextRun({ text: 'Input Data', bold: true })],
+        spacing: { after: 200 }
+      }));
+
+      const inputTable = new Table({
+        rows: [
+          new TableRow({
+            children: [
+              new TableCell({ children: [new Paragraph('Metric')] }),
+              new TableCell({ children: [new Paragraph('Value')] })
+            ]
+          }),
+          new TableRow({
+            children: [
+              new TableCell({ children: [new Paragraph('Successes')] }),
+              new TableCell({ children: [new Paragraph(this.numsuccess.toString())] })
+            ]
+          }),
+          new TableRow({
+            children: [
+              new TableCell({ children: [new Paragraph('Failures')] }),
+              new TableCell({ children: [new Paragraph(this.numfailure.toString())] })
+            ]
+          }),
+          new TableRow({
+            children: [
+              new TableCell({ children: [new Paragraph('Proportion of Successes')] }),
+              new TableCell({ children: [new Paragraph(this.proportion.toFixed(4))] })
+            ]
+          })
+        ]
+      });
+      children.push(inputTable);
+
+      // Simulation Results Table
+      children.push(new Paragraph({
+        children: [new TextRun({ text: 'Simulation Results', bold: true })],
+        spacing: { after: 200 }
+      }));
+
+      const simulationTable = new Table({
+        rows: [
+          new TableRow({
+            children: [
+              new TableCell({ children: [new Paragraph('Metric')] }),
+              new TableCell({ children: [new Paragraph('Value')] })
+            ]
+          }),
+          new TableRow({
+            children: [
+              new TableCell({ children: [new Paragraph('Sample Size')] }),
+              new TableCell({ children: [new Paragraph(this.sampleSize.toString())] })
+            ]
+          }),
+          new TableRow({
+            children: [
+              new TableCell({ children: [new Paragraph('Number of Simulations')] }),
+              new TableCell({ children: [new Paragraph(this.numSimulations.toString())] })
+            ]
+          }),
+          new TableRow({
+            children: [
+              new TableCell({ children: [new Paragraph('Mean of Sample Proportions')] }),
+              new TableCell({ children: [new Paragraph(this.mean.toFixed(4))] })
+            ]
+          }),
+          new TableRow({
+            children: [
+              new TableCell({ children: [new Paragraph('Standard Deviation')] }),
+              new TableCell({ children: [new Paragraph(this.stddev.toFixed(4))] })
+            ]
+          }),
+          new TableRow({
+            children: [
+              new TableCell({ children: [new Paragraph('Lower Bound')] }),
+              new TableCell({ children: [new Paragraph(this.lower.toFixed(4))] })
+            ]
+          }),
+          new TableRow({
+            children: [
+              new TableCell({ children: [new Paragraph('Upper Bound')] }),
+              new TableCell({ children: [new Paragraph(this.upper.toFixed(4))] })
+            ]
+          }),
+          new TableRow({
+            children: [
+              new TableCell({ children: [new Paragraph('Total Samples')] }),
+              new TableCell({ children: [new Paragraph(this.total.toString())] })
+            ]
+          }),
+          new TableRow({
+            children: [
+              new TableCell({ children: [new Paragraph('Proportions Selected')] }),
+              new TableCell({ children: [new Paragraph(this.sampleMeansChosen)] })
+            ]
+          }),
+          new TableRow({
+            children: [
+              new TableCell({ children: [new Paragraph('Proportions Not Selected')] }),
+              new TableCell({ children: [new Paragraph(this.sampleMeansUnchosen)] })
+            ]
+          })
+        ]
+      });
+      children.push(simulationTable);
+
+      const doc = new Document({ sections: [{ children }] });
+      Packer.toBlob(doc).then(blob => saveAs(blob, 'one-proportion-ci-analysis.docx'));
+    } catch (error) {
+      console.error('Error exporting DOCX:', error);
+    }
+  }
 }

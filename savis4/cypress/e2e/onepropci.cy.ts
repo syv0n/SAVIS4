@@ -100,4 +100,105 @@ describe('One Proprtion Confidence Interval', () => {
             expect(message).to.equal('The value of successes and failures must be greater than 0')
         })
     })
+
+    describe('Export Functionality', () => {
+        it('should display export buttons when workflow is completed', () => {
+            // Complete the full workflow
+            cy.get('#success').type('20')
+            cy.get('#failure').type('80')
+            cy.get('.load-button').click()
+
+            cy.get('#sample-size').type('10')
+            cy.get('#numOfSims').type('1000')
+            cy.get('#runSim').click()
+
+            // Export buttons should be visible and enabled
+            cy.get('#export-pdf-btn').should('be.visible').and('not.be.disabled')
+            cy.get('#export-docx-btn').should('be.visible').and('not.be.disabled')
+        })
+
+        it('should disable export buttons when no data is available', () => {
+            // Export buttons should be disabled initially
+            cy.get('#export-pdf-btn').should('be.disabled')
+            cy.get('#export-docx-btn').should('be.disabled')
+        })
+
+        it('should disable export buttons after only loading data', () => {
+            // Load data but don't run simulations
+            cy.get('#success').type('20')
+            cy.get('#failure').type('80')
+            cy.get('.load-button').click()
+
+            // Export buttons should still be disabled
+            cy.get('#export-pdf-btn').should('be.disabled')
+            cy.get('#export-docx-btn').should('be.disabled')
+        })
+
+        it('should export PDF successfully', () => {
+            // Complete the full workflow
+            cy.get('#success').type('20')
+            cy.get('#failure').type('80')
+            cy.get('.load-button').click()
+
+            cy.get('#sample-size').type('10')
+            cy.get('#numOfSims').type('1000')
+            cy.get('#runSim').click()
+
+            // Click export PDF button and verify it doesn't throw errors
+            cy.get('#export-pdf-btn').should('not.be.disabled')
+            cy.get('#export-pdf-btn').click()
+            
+            // Wait for export process to complete
+            cy.wait(2000)
+            
+            // Verify button is still functional (not disabled after click)
+            cy.get('#export-pdf-btn').should('not.be.disabled')
+        })
+
+        it('should export DOCX successfully', () => {
+            // Complete the full workflow
+            cy.get('#success').type('20')
+            cy.get('#failure').type('80')
+            cy.get('.load-button').click()
+
+            cy.get('#sample-size').type('10')
+            cy.get('#numOfSims').type('1000')
+            cy.get('#runSim').click()
+
+            // Click export DOCX button and verify it doesn't throw errors
+            cy.get('#export-docx-btn').should('not.be.disabled')
+            cy.get('#export-docx-btn').click()
+            
+            // Wait for export process to complete
+            cy.wait(2000)
+            
+            // Verify button is still functional (not disabled after click)
+            cy.get('#export-docx-btn').should('not.be.disabled')
+        })
+
+        it('should export with different data sets', () => {
+            // Test with different data
+            cy.get('#success').type('60')
+            cy.get('#failure').type('40')
+            cy.get('.load-button').click()
+
+            cy.get('#sample-size').type('15')
+            cy.get('#numOfSims').type('2000')
+            cy.get('#runSim').click()
+
+            // Export should work with different data
+            cy.get('#export-pdf-btn').should('not.be.disabled')
+            cy.get('#export-docx-btn').should('not.be.disabled')
+
+            // Test PDF export with different data
+            cy.get('#export-pdf-btn').click()
+            cy.wait(2000)
+            cy.get('#export-pdf-btn').should('not.be.disabled')
+            
+            // Test DOCX export with different data
+            cy.get('#export-docx-btn').click()
+            cy.wait(2000)
+            cy.get('#export-docx-btn').should('not.be.disabled')
+        })
+    })
 })

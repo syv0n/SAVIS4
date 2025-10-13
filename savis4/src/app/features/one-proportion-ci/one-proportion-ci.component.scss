@@ -129,6 +129,11 @@
     background-color: var(--fourth-col);
   }
 
+  .btn:disabled {
+    background: var(--ninth-col);
+    cursor: not-allowed;
+  }
+
   .load-button,
   .reset-button{
     display: block;

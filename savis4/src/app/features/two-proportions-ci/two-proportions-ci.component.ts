@@ -55,6 +55,15 @@ export class TwoProportionsCIComponent implements AfterViewInit {
 
   constructor(public translate: TranslateService) {}
 
+  get isExportEnabled(): boolean {
+    return this.inputProportionsGroupA !== 'NaN' && 
+           this.inputProportionsGroupB !== 'NaN' && 
+           this.simTotal !== 'NaN' && 
+           this.lowerBound !== 'NaN' && 
+           this.upperBound !== 'NaN' &&
+           this.numSimulations > 0;
+  }
+
   ngAfterViewInit(): void {
     this.createChart1();
     this.createChart2();
@@ -573,6 +582,288 @@ export class TwoProportionsCIComponent implements AfterViewInit {
       max > 10 ? Math.ceil(max * 0.2) : 1;
     if (max > 1000) {
       chart.options.scales.yAxes[0].ticks.min = 0;
+    }
+  }
+
+  async exportAsPDF() {
+    if (!this.isExportEnabled) return;
+
+    try {
+      const jsPDF = (await import('jspdf')).default;
+      const autoTable = (await import('jspdf-autotable')).default;
+
+      const doc = new jsPDF();
+      
+      // Title
+      doc.setFontSize(16);
+      doc.text('Two Proportions Confidence Interval Analysis', 20, 20);
+
+      // Chart images
+      const chart1Image = this.chart1.toBase64Image();
+      const chart2Image = this.chart2.toBase64Image();
+      const chart3Image = this.chart3.toBase64Image();
+
+      doc.addImage(chart1Image, 'PNG', 20, 30, 80, 60);
+      doc.addImage(chart2Image, 'PNG', 110, 30, 80, 60);
+      doc.addImage(chart3Image, 'PNG', 20, 100, 170, 80);
+
+      // Input data table
+      const inputData = [
+        ['Group A Successes', this.numASuccesses.toString()],
+        ['Group A Failures', this.numAFailures.toString()],
+        ['Group B Successes', this.numBSuccesses.toString()],
+        ['Group B Failures', this.numBFailures.toString()],
+        ['Proportion Group A', this.inputProportionsGroupA],
+        ['Proportion Group B', this.inputProportionsGroupB],
+        ['Difference (pA - pB)', this.inputDifferenceProportions]
+      ];
+
+      autoTable(doc, {
+        head: [['Parameter', 'Value']],
+        body: inputData,
+        startY: 200,
+        theme: 'grid'
+      });
+
+      // Simulation results table
+      const simData = [
+        ['Number of Simulations', this.numSimulations.toString()],
+        ['Simulation Proportion Group A', this.simulationProportionGroupA],
+        ['Simulation Proportion Group B', this.simulationProportionGroupB],
+        ['Simulation Difference', this.simulationDifferenceProportions],
+        ['Mean of Sample Differences', this.simMean],
+        ['Standard Deviation', this.simStdDev],
+        ['Total Number of Samples', this.simTotal]
+      ];
+
+      autoTable(doc, {
+        head: [['Simulation Results', 'Value']],
+        body: simData,
+        startY: (doc as any).lastAutoTable.finalY + 10,
+        theme: 'grid'
+      });
+
+      // Confidence interval results
+      const ciData = [
+        ['Confidence Level', `${this.confidenceLevel}%`],
+        ['Lower Bound', this.lowerBound],
+        ['Upper Bound', this.upperBound]
+      ];
+
+      autoTable(doc, {
+        head: [['Confidence Interval', 'Value']],
+        body: ciData,
+        startY: (doc as any).lastAutoTable.finalY + 10,
+        theme: 'grid'
+      });
+
+      doc.save('two-proportions-ci-analysis.pdf');
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+    }
+  }
+
+  async exportAsDOCX() {
+    if (!this.isExportEnabled) return;
+
+    try {
+      const docx = await import('docx');
+      const { saveAs } = await import('file-saver');
+
+      // Chart images
+      const chart1Image = this.chart1.toBase64Image();
+      const chart2Image = this.chart2.toBase64Image();
+      const chart3Image = this.chart3.toBase64Image();
+
+      const children: any[] = [
+        new docx.Paragraph({
+          children: [
+            new docx.TextRun({
+              text: 'Two Proportions Confidence Interval Analysis',
+              bold: true,
+              size: 32
+            })
+          ],
+          alignment: docx.AlignmentType.CENTER
+        }),
+        new docx.Paragraph({ text: '' }),
+        
+        // Chart images
+        new docx.Paragraph({
+          children: [
+            new docx.ImageRun({
+              data: chart1Image.split(',')[1],
+              transformation: { width: 300, height: 200 },
+              type: 'png'
+            })
+          ],
+          alignment: docx.AlignmentType.CENTER
+        }),
+        new docx.Paragraph({ text: '' }),
+        
+        new docx.Paragraph({
+          children: [
+            new docx.ImageRun({
+              data: chart2Image.split(',')[1],
+              transformation: { width: 300, height: 200 },
+              type: 'png'
+            })
+          ],
+          alignment: docx.AlignmentType.CENTER
+        }),
+        new docx.Paragraph({ text: '' }),
+        
+        new docx.Paragraph({
+          children: [
+            new docx.ImageRun({
+              data: chart3Image.split(',')[1],
+              transformation: { width: 400, height: 250 },
+              type: 'png'
+            })
+          ],
+          alignment: docx.AlignmentType.CENTER
+        }),
+        new docx.Paragraph({ text: '' }),
+
+        // Input data table
+        new docx.Paragraph({
+          children: [new docx.TextRun({ text: 'Input Data', bold: true, size: 24 })]
+        }),
+        new docx.Table({
+          rows: [
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Parameter', bold: true })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Value', bold: true })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Group A Successes' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.numASuccesses.toString() })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Group A Failures' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.numAFailures.toString() })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Group B Successes' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.numBSuccesses.toString() })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Group B Failures' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.numBFailures.toString() })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Proportion Group A' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.inputProportionsGroupA })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Proportion Group B' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.inputProportionsGroupB })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Difference (pA - pB)' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.inputDifferenceProportions })] })] })
+              ]
+            })
+          ]
+        }),
+        new docx.Paragraph({ text: '' }),
+
+        // Simulation results
+        new docx.Paragraph({
+          children: [new docx.TextRun({ text: 'Simulation Results', bold: true, size: 24 })]
+        }),
+        new docx.Table({
+          rows: [
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Parameter', bold: true })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Value', bold: true })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Number of Simulations' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.numSimulations.toString() })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Mean of Sample Differences' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.simMean })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Standard Deviation' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.simStdDev })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Total Number of Samples' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.simTotal })] })] })
+              ]
+            })
+          ]
+        }),
+        new docx.Paragraph({ text: '' }),
+
+        // Confidence interval
+        new docx.Paragraph({
+          children: [new docx.TextRun({ text: 'Confidence Interval Results', bold: true, size: 24 })]
+        }),
+        new docx.Table({
+          rows: [
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Parameter', bold: true })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Value', bold: true })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Confidence Level' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: `${this.confidenceLevel}%` })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Lower Bound' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.lowerBound })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Upper Bound' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.upperBound })] })] })
+              ]
+            })
+          ]
+        })
+      ];
+
+      const docxDoc = new docx.Document({ sections: [{ children }] });
+      
+      docx.Packer.toBlob(docxDoc).then(blob => {
+        saveAs(blob, 'two-proportions-ci-analysis.docx');
+      });
+    } catch (error) {
+      console.error('Error exporting DOCX:', error);
     }
   }
 }
