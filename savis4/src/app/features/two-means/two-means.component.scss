@@ -114,17 +114,16 @@ button:hover, #buttonStyle:hover{
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  background-color: green; 
+  background-color: var(--third-col); 
   color: white; 
   padding: 8px 16px; 
   border: none; 
   border-radius: 4px; 
   cursor: pointer; 
-  font-weight: bold; 
   transition: background-color 0.3s; 
 
   &:hover {
-    background-color: darkgreen; 
+    background-color: var(--fourth-col);
   }
 }
 
@@ -141,17 +140,16 @@ button:hover, #buttonStyle:hover{
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  background-color: green; 
+  background-color: var(--third-col);
   color: white; 
   padding: 8px 16px; 
   border: none; 
   border-radius: 4px; 
   cursor: pointer; 
-  font-weight: bold; 
   transition: background-color 0.3s; 
 
   &:hover {
-    background-color: darkgreen; 
+    background-color: var(--fourth-col); 
   }
 }
 
