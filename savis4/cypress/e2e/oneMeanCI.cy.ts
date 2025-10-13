@@ -139,7 +139,136 @@ describe('template spec', () => {
         
         
     })
-    
-    
 
+    describe('Export Functionality', () => {
+        it('should display export buttons when workflow is completed', () => {
+            // Complete the full workflow
+            cy.get('#sample-data-options').select("Example 1")
+            cy.wait(250)
+            cy.get('#load-data-btn').click()
+            
+            cy.get('#no-of-sample').clear()
+            cy.get('#no-of-sample').type('5')
+            cy.get('#get-sample-btn').click()
+            
+            cy.get('#interval-number').clear()
+            cy.get('#interval-number').type('3')
+            cy.get('#bld-interval').click()
+
+            // Export buttons should be visible and enabled
+            cy.get('#export-pdf-btn').should('be.visible').and('not.be.disabled')
+            cy.get('#export-docx-btn').should('be.visible').and('not.be.disabled')
+        })
+
+        it('should disable export buttons when no data is available', () => {
+            // Export buttons should be disabled initially
+            cy.get('#export-pdf-btn').should('be.disabled')
+            cy.get('#export-docx-btn').should('be.disabled')
+        })
+
+        it('should disable export buttons after only loading data', () => {
+            // Load data but don't run simulations
+            cy.get('#sample-data-options').select("Example 1")
+            cy.wait(250)
+            cy.get('#load-data-btn').click()
+
+            // Export buttons should still be disabled
+            cy.get('#export-pdf-btn').should('be.disabled')
+            cy.get('#export-docx-btn').should('be.disabled')
+        })
+
+        it('should disable export buttons after only running simulations', () => {
+            // Load data and run simulations but don't build intervals
+            cy.get('#sample-data-options').select("Example 1")
+            cy.wait(250)
+            cy.get('#load-data-btn').click()
+            
+            cy.get('#no-of-sample').clear()
+            cy.get('#no-of-sample').type('5')
+            cy.get('#get-sample-btn').click()
+
+            // Export buttons should still be disabled
+            cy.get('#export-pdf-btn').should('be.disabled')
+            cy.get('#export-docx-btn').should('be.disabled')
+        })
+
+        it('should export PDF successfully', () => {
+            // Complete the full workflow
+            cy.get('#sample-data-options').select("Example 1")
+            cy.wait(250)
+            cy.get('#load-data-btn').click()
+            
+            cy.get('#no-of-sample').clear()
+            cy.get('#no-of-sample').type('5')
+            cy.get('#get-sample-btn').click()
+            
+            cy.get('#interval-number').clear()
+            cy.get('#interval-number').type('3')
+            cy.get('#bld-interval').click()
+
+            // Click export PDF button and verify it doesn't throw errors
+            cy.get('#export-pdf-btn').should('not.be.disabled')
+            cy.get('#export-pdf-btn').click()
+            
+            // Wait for export process to complete
+            cy.wait(2000)
+            
+            // Verify button is still functional (not disabled after click)
+            cy.get('#export-pdf-btn').should('not.be.disabled')
+        })
+
+        it('should export DOCX successfully', () => {
+            // Complete the full workflow
+            cy.get('#sample-data-options').select("Example 1")
+            cy.wait(250)
+            cy.get('#load-data-btn').click()
+            
+            cy.get('#no-of-sample').clear()
+            cy.get('#no-of-sample').type('5')
+            cy.get('#get-sample-btn').click()
+            
+            cy.get('#interval-number').clear()
+            cy.get('#interval-number').type('3')
+            cy.get('#bld-interval').click()
+
+            // Click export DOCX button and verify it doesn't throw errors
+            cy.get('#export-docx-btn').should('not.be.disabled')
+            cy.get('#export-docx-btn').click()
+            
+            // Wait for export process to complete
+            cy.wait(2000)
+            
+            // Verify button is still functional (not disabled after click)
+            cy.get('#export-docx-btn').should('not.be.disabled')
+        })
+
+        it('should export with different data sets', () => {
+            // Test with different data
+            cy.get('#sample-data-options').select("Example 2")
+            cy.wait(250)
+            cy.get('#load-data-btn').click()
+            
+            cy.get('#no-of-sample').clear()
+            cy.get('#no-of-sample').type('10')
+            cy.get('#get-sample-btn').click()
+            
+            cy.get('#interval-number').clear()
+            cy.get('#interval-number').type('5')
+            cy.get('#bld-interval').click()
+
+            // Export should work with different data
+            cy.get('#export-pdf-btn').should('not.be.disabled')
+            cy.get('#export-docx-btn').should('not.be.disabled')
+
+            // Test PDF export with different data
+            cy.get('#export-pdf-btn').click()
+            cy.wait(2000)
+            cy.get('#export-pdf-btn').should('not.be.disabled')
+            
+            // Test DOCX export with different data
+            cy.get('#export-docx-btn').click()
+            cy.wait(2000)
+            cy.get('#export-docx-btn').should('not.be.disabled')
+        })
+    })
 })

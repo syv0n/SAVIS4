@@ -96,6 +96,15 @@ export class OneMeanCIComponent implements OnInit, AfterViewInit, OnDestroy {
     private sharedService: SharedService
   ) { }
 
+  get isExportEnabled(): boolean {
+    return this.inputDataMean !== NaN && 
+           this.inputDataStd !== NaN && 
+           this.inputDataSize !== NaN &&
+           this.sampleMeans.length > 0 &&
+           this.sampleMeansMean !== NaN &&
+           (this.confidenceIntervalCount > 0 || this.confidenceIntervalCountNot > 0);
+  }
+
   ngOnInit(): void {
     this.includeValMin = false
     this.includeValMax = false
@@ -1017,6 +1026,274 @@ export class OneMeanCIComponent implements OnInit, AfterViewInit, OnDestroy {
 
   triggerFileInput(): void {
     this.fileInput.nativeElement.click()
+  }
+
+  async exportAsPDF() {
+    if (!this.isExportEnabled) return;
+
+    try {
+      const jsPDF = (await import('jspdf')).default;
+      const autoTable = (await import('jspdf-autotable')).default;
+
+      const doc = new jsPDF();
+      
+      // Title
+      doc.setFontSize(16);
+      doc.text('One Mean Confidence Interval Analysis', 20, 20);
+
+      // Chart images
+      const inputChartImage = this.inputDataChart.toBase64Image();
+      const sampleChartImage = this.sampleDataChart.toBase64Image();
+      const sampleMeansChartImage = this.sampleMeansChart.toBase64Image();
+      const confidenceIntervalChartImage = this.confidenceIntervalChart.chart.toBase64Image();
+
+      doc.addImage(inputChartImage, 'PNG', 20, 30, 80, 60);
+      doc.addImage(sampleChartImage, 'PNG', 110, 30, 80, 60);
+      doc.addImage(sampleMeansChartImage, 'PNG', 20, 100, 80, 60);
+      doc.addImage(confidenceIntervalChartImage, 'PNG', 110, 100, 80, 60);
+
+      // Input data table
+      const inputData = [
+        ['Mean (μ)', this.inputDataMean.toString()],
+        ['Standard Deviation (σ)', this.inputDataStd.toString()],
+        ['Size (N)', this.inputDataSize.toString()]
+      ];
+
+      autoTable(doc, {
+        head: [['Input Data', 'Value']],
+        body: inputData,
+        startY: 200,
+        theme: 'grid'
+      });
+
+      // Simulation results table
+      const simData = [
+        ['Sample Size', this.sampleSize.toString()],
+        ['Number of Simulations', this.noOfSim.toString()],
+        ['Sample Mean (x̄)', this.sampleDataMean.toString()],
+        ['Sample Standard Deviation (s)', this.sampleDataStd.toString()],
+        ['Sample Means Mean', this.sampleMeansMean.toString()],
+        ['Sample Means Standard Deviation', this.sampleMeansStd.toString()]
+      ];
+
+      autoTable(doc, {
+        head: [['Simulation Results', 'Value']],
+        body: simData,
+        startY: (doc as any).lastAutoTable.finalY + 10,
+        theme: 'grid'
+      });
+
+      // Confidence interval results
+      const ciData = [
+        ['Number of Intervals', this.noOfIntervals.toString()],
+        ['Intervals Containing Population Mean', this.confidenceIntervalCount.toString()],
+        ['Intervals Not Containing Population Mean', this.confidenceIntervalCountNot.toString()]
+      ];
+
+      autoTable(doc, {
+        head: [['Confidence Interval Results', 'Value']],
+        body: ciData,
+        startY: (doc as any).lastAutoTable.finalY + 10,
+        theme: 'grid'
+      });
+
+      doc.save('one-mean-ci-analysis.pdf');
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+    }
+  }
+
+  async exportAsDOCX() {
+    if (!this.isExportEnabled) return;
+
+    try {
+      const docx = await import('docx');
+      const { saveAs } = await import('file-saver');
+
+      // Chart images
+      const inputChartImage = this.inputDataChart.toBase64Image();
+      const sampleChartImage = this.sampleDataChart.toBase64Image();
+      const sampleMeansChartImage = this.sampleMeansChart.toBase64Image();
+      const confidenceIntervalChartImage = this.confidenceIntervalChart.chart.toBase64Image();
+
+      const children: any[] = [
+        new docx.Paragraph({
+          children: [
+            new docx.TextRun({
+              text: 'One Mean Confidence Interval Analysis',
+              bold: true,
+              size: 32
+            })
+          ],
+          alignment: docx.AlignmentType.CENTER
+        }),
+        new docx.Paragraph({ text: '' }),
+        
+        // Chart images
+        new docx.Paragraph({
+          children: [
+            new docx.ImageRun({
+              data: inputChartImage.split(',')[1],
+              transformation: { width: 300, height: 200 },
+              type: 'png'
+            })
+          ],
+          alignment: docx.AlignmentType.CENTER
+        }),
+        new docx.Paragraph({ text: '' }),
+        
+        new docx.Paragraph({
+          children: [
+            new docx.ImageRun({
+              data: sampleChartImage.split(',')[1],
+              transformation: { width: 300, height: 200 },
+              type: 'png'
+            })
+          ],
+          alignment: docx.AlignmentType.CENTER
+        }),
+        new docx.Paragraph({ text: '' }),
+        
+        new docx.Paragraph({
+          children: [
+            new docx.ImageRun({
+              data: sampleMeansChartImage.split(',')[1],
+              transformation: { width: 300, height: 200 },
+              type: 'png'
+            })
+          ],
+          alignment: docx.AlignmentType.CENTER
+        }),
+        new docx.Paragraph({ text: '' }),
+        
+        new docx.Paragraph({
+          children: [
+            new docx.ImageRun({
+              data: confidenceIntervalChartImage.split(',')[1],
+              transformation: { width: 300, height: 200 },
+              type: 'png'
+            })
+          ],
+          alignment: docx.AlignmentType.CENTER
+        }),
+        new docx.Paragraph({ text: '' }),
+
+        // Input data table
+        new docx.Paragraph({
+          children: [new docx.TextRun({ text: 'Input Data', bold: true, size: 24 })]
+        }),
+        new docx.Table({
+          rows: [
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Parameter', bold: true })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Value', bold: true })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Mean (μ)' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.inputDataMean.toString() })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Standard Deviation (σ)' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.inputDataStd.toString() })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Size (N)' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.inputDataSize.toString() })] })] })
+              ]
+            })
+          ]
+        }),
+        new docx.Paragraph({ text: '' }),
+
+        // Simulation results
+        new docx.Paragraph({
+          children: [new docx.TextRun({ text: 'Simulation Results', bold: true, size: 24 })]
+        }),
+        new docx.Table({
+          rows: [
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Parameter', bold: true })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Value', bold: true })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Sample Size' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.sampleSize.toString() })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Number of Simulations' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.noOfSim.toString() })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Sample Mean (x̄)' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.sampleDataMean.toString() })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Sample Standard Deviation (s)' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.sampleDataStd.toString() })] })] })
+              ]
+            })
+          ]
+        }),
+        new docx.Paragraph({ text: '' }),
+
+        // Confidence interval
+        new docx.Paragraph({
+          children: [new docx.TextRun({ text: 'Confidence Interval Results', bold: true, size: 24 })]
+        }),
+        new docx.Table({
+          rows: [
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Parameter', bold: true })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Value', bold: true })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Number of Intervals' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.noOfIntervals.toString() })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Intervals Containing Population Mean' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.confidenceIntervalCount.toString() })] })] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: 'Intervals Not Containing Population Mean' })] })] }),
+                new docx.TableCell({ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: this.confidenceIntervalCountNot.toString() })] })] })
+              ]
+            })
+          ]
+        })
+      ];
+
+      const docxDoc = new docx.Document({ sections: [{ children }] });
+      
+      docx.Packer.toBlob(docxDoc).then(blob => {
+        saveAs(blob, 'one-mean-ci-analysis.docx');
+      });
+    } catch (error) {
+      console.error('Error exporting DOCX:', error);
+    }
   }
 
   ngOnDestroy():void {
