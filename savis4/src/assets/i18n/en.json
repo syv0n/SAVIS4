@@ -109,6 +109,8 @@
   "tpc_export_docx": "Export as DOCX",
   "omci_export_pdf": "Export as PDF",
   "omci_export_docx": "Export as DOCX",
+  "tmci_export_pdf": "Export as PDF",
+  "tmci_export_docx": "Export as DOCX",
     "//Two_means_hypothesis": "These are the translations for the Two means hypothesis component",
     "two_mean_title": "Two Means Significance Test",
     "tm_enter_data": "1. Enter Data",

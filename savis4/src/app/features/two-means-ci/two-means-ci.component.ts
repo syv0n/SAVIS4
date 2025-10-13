@@ -318,6 +318,9 @@ export class TwoMeansCIComponent
     this.chart1.options.scales.yAxes[0].ticks.max = 10;
     this.csvraw = ''
     this.activateSim = false
+    this.incrementPerformed = false;
+    this.lowerBound = 'NaN';
+    this.upperBound = 'NaN';
   }
   resetAxis(chartInstance: any) {
     if (chartInstance.chart.options.scales.yAxes) {
@@ -500,9 +503,7 @@ export class TwoMeansCIComponent
         stdev1sim: Number(stdevSim1.toFixed(3)),
         stdev2sim: Number(stdevSim2.toFixed(3)),
       };
-      this.updateLastChart();
       this.tail.addAllResults(results); // TODO: REMOVE
-      // this.updateLastChart()
     }
     this.samDisActive = true;
     this.stdevFinal = Number(
@@ -663,5 +664,348 @@ export class TwoMeansCIComponent
 
   ngOnDestroy(): void {
       this.sharedService.changeData('')
+  }
+
+  get isExportEnabled(): boolean {
+    return this.activateSim && 
+           this.incrementPerformed && 
+           this.simulations.length > 0 &&
+           this.upperBound !== 'NaN' &&
+           this.lowerBound !== 'NaN';
+  }
+
+  async exportAsPDF() {
+    if (!this.isExportEnabled) return;
+    
+    try {
+      const jsPDF = (await import('jspdf')).default;
+      const autoTable = (await import('jspdf-autotable')).default;
+      
+      const doc = new jsPDF();
+      doc.setFontSize(16);
+      doc.text('Two Mean Confidence Interval Analysis', 20, 20);
+      
+      // Add chart images
+      const chart1Image = this.chart1.chart.toBase64Image();
+      const chart2Image = this.chart2.chart.toBase64Image();
+      const chart3Image = this.chart3.chart.toBase64Image();
+      const chart4Image = this.chart4.chart.toBase64Image();
+      const chart5Image = this.chart5.toBase64Image();
+      
+      doc.addImage(chart1Image, 'PNG', 20, 30, 80, 60);
+      doc.addImage(chart2Image, 'PNG', 110, 30, 80, 60);
+      doc.addImage(chart3Image, 'PNG', 20, 100, 80, 60);
+      doc.addImage(chart4Image, 'PNG', 110, 100, 80, 60);
+      doc.addImage(chart5Image, 'PNG', 20, 170, 170, 80);
+      
+      // Input data table
+      const inputData = [
+        ['Group 1 Size (n)', this.dataSize1.toString()],
+        ['Group 1 Mean', this.datamean1.toString()],
+        ['Group 1 Standard Deviation', this.stDev1.toString()],
+        ['Group 2 Size (n)', this.dataSize2.toString()],
+        ['Group 2 Mean', this.datamean2.toString()],
+        ['Group 2 Standard Deviation', this.stDev2.toString()],
+        ['Difference of Means', this.mean_diff.toString()]
+      ];
+      
+      autoTable(doc, {
+        head: [['Input Data', 'Value']],
+        body: inputData,
+        startY: 270,
+        theme: 'grid'
+      });
+      
+      // Simulation results table
+      const simData = [
+        ['Number of Simulations', this.numofSem.toString()],
+        ['Sample Mean 1', this.simsummary.sampleMean1.toString()],
+        ['Sample Mean 2', this.simsummary.sampleMean2.toString()],
+        ['Sample Mean Difference', this.simsummary.sampleMeanDiff.toString()],
+        ['Sample Std Dev 1', this.simsummary.stdev1sim.toString()],
+        ['Sample Std Dev 2', this.simsummary.stdev2sim.toString()],
+        ['Final Standard Deviation', this.stdevFinal.toString()]
+      ];
+      
+      autoTable(doc, {
+        head: [['Simulation Results', 'Value']],
+        body: simData,
+        startY: (doc as any).lastAutoTable.finalY + 10,
+        theme: 'grid'
+      });
+      
+      // Confidence interval results table
+      const ciData = [
+        ['Confidence Level', this.confidenceLevel + '%'],
+        ['Lower Bound', this.lowerBound],
+        ['Upper Bound', this.upperBound],
+        ['Total Samples', this.simulations.length.toString()]
+      ];
+      
+      autoTable(doc, {
+        head: [['Confidence Interval Results', 'Value']],
+        body: ciData,
+        startY: (doc as any).lastAutoTable.finalY + 10,
+        theme: 'grid'
+      });
+      
+      doc.save('two-mean-ci-analysis.pdf');
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+    }
+  }
+
+  async exportAsDOCX() {
+    if (!this.isExportEnabled) return;
+    
+    try {
+      const docx = await import('docx');
+      const { saveAs } = await import('file-saver');
+      
+      // Get chart images
+      const chart1Image = this.chart1.chart.toBase64Image();
+      const chart2Image = this.chart2.chart.toBase64Image();
+      const chart3Image = this.chart3.chart.toBase64Image();
+      const chart4Image = this.chart4.chart.toBase64Image();
+      const chart5Image = this.chart5.toBase64Image();
+      
+      const children: any[] = [
+        new docx.Paragraph({
+          children: [
+            new docx.TextRun({
+              text: 'Two Mean Confidence Interval Analysis',
+              bold: true,
+              size: 32
+            })
+          ],
+          alignment: docx.AlignmentType.CENTER
+        }),
+        new docx.Paragraph({ text: '' }),
+        
+        // Charts
+        new docx.Paragraph({
+          children: [
+            new docx.ImageRun({
+              data: chart1Image,
+              transformation: { width: 300, height: 200 },
+              type: "png"
+            })
+          ],
+          alignment: docx.AlignmentType.CENTER
+        }),
+        new docx.Paragraph({
+          children: [
+            new docx.ImageRun({
+              data: chart2Image,
+              transformation: { width: 300, height: 200 },
+              type: "png"
+            })
+          ],
+          alignment: docx.AlignmentType.CENTER
+        }),
+        new docx.Paragraph({
+          children: [
+            new docx.ImageRun({
+              data: chart3Image,
+              transformation: { width: 300, height: 200 },
+              type: "png"
+            })
+          ],
+          alignment: docx.AlignmentType.CENTER
+        }),
+        new docx.Paragraph({
+          children: [
+            new docx.ImageRun({
+              data: chart4Image,
+              transformation: { width: 300, height: 200 },
+              type: "png"
+            })
+          ],
+          alignment: docx.AlignmentType.CENTER
+        }),
+        new docx.Paragraph({
+          children: [
+            new docx.ImageRun({
+              data: chart5Image,
+              transformation: { width: 500, height: 300 },
+              type: "png"
+            })
+          ],
+          alignment: docx.AlignmentType.CENTER
+        }),
+        
+        new docx.Paragraph({ text: '' }),
+        
+        // Input data table
+        new docx.Paragraph({
+          children: [
+            new docx.TextRun({
+              text: 'Input Data',
+              bold: true,
+              size: 24
+            })
+          ]
+        }),
+        new docx.Table({
+          rows: [
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Parameter')] }),
+                new docx.TableCell({ children: [new docx.Paragraph('Value')] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Group 1 Size (n)')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.dataSize1.toString())] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Group 1 Mean')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.datamean1.toString())] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Group 1 Standard Deviation')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.stDev1.toString())] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Group 2 Size (n)')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.dataSize2.toString())] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Group 2 Mean')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.datamean2.toString())] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Group 2 Standard Deviation')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.stDev2.toString())] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Difference of Means')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.mean_diff.toString())] })
+              ]
+            })
+          ]
+        }),
+        
+        new docx.Paragraph({ text: '' }),
+        
+        // Simulation results table
+        new docx.Paragraph({
+          children: [
+            new docx.TextRun({
+              text: 'Simulation Results',
+              bold: true,
+              size: 24
+            })
+          ]
+        }),
+        new docx.Table({
+          rows: [
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Parameter')] }),
+                new docx.TableCell({ children: [new docx.Paragraph('Value')] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Number of Simulations')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.numofSem.toString())] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Sample Mean 1')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.simsummary.sampleMean1.toString())] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Sample Mean 2')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.simsummary.sampleMean2.toString())] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Sample Mean Difference')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.simsummary.sampleMeanDiff.toString())] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Final Standard Deviation')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.stdevFinal.toString())] })
+              ]
+            })
+          ]
+        }),
+        
+        new docx.Paragraph({ text: '' }),
+        
+        // Confidence interval results table
+        new docx.Paragraph({
+          children: [
+            new docx.TextRun({
+              text: 'Confidence Interval Results',
+              bold: true,
+              size: 24
+            })
+          ]
+        }),
+        new docx.Table({
+          rows: [
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Parameter')] }),
+                new docx.TableCell({ children: [new docx.Paragraph('Value')] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Confidence Level')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.confidenceLevel + '%')] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Lower Bound')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.lowerBound)] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Upper Bound')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.upperBound)] })
+              ]
+            }),
+            new docx.TableRow({
+              children: [
+                new docx.TableCell({ children: [new docx.Paragraph('Total Samples')] }),
+                new docx.TableCell({ children: [new docx.Paragraph(this.simulations.length.toString())] })
+              ]
+            })
+          ]
+        })
+      ];
+      
+      const docxDoc = new docx.Document({ sections: [{ children }] });
+      docx.Packer.toBlob(docxDoc).then(blob => {
+        saveAs(blob, 'two-mean-ci-analysis.docx');
+      });
+    } catch (error) {
+      console.error('Error exporting DOCX:', error);
+    }
   }
 }
