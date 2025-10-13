@@ -74,6 +74,14 @@
         <br>
         <label for="proportions">{{ 'op_proportion' | translate }} {{ proportion }}</label>
       </div>
+
+
+      <div class="export-buttons mt-3">
+          <button class="mb-2" (click)="exportAsPDF()" [disabled]="totalSamples === 0">Export as PDF</button>
+          <button (click)="exportAsDOCX()" [disabled]="totalSamples === 0">Export as DOCX</button>
+      </div>
+
+    
     </div>
   </div>
   

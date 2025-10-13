@@ -79,6 +79,12 @@
           <span>{{ 'tm_difference1' | translate }}</span>
           <span>{{mean_diff}}</span>
         </div>
+
+        <div class="export-buttons mt-3">
+          <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDataAsPDF()" [disabled]="!activateSim">Export as PDF</button>
+          <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDataAsDOCX()" [disabled]="!activateSim">Export as DOCX</button>
+        </div>
+
       </div>
     </div>
     <div class="w-9/12">
@@ -124,6 +130,12 @@
           <span>{{ 'tm_difference2' | translate }}</span>
           <span summary="sampleMeanDiff">{{simsummary.sampleMeanDiff}}</span>
         </div>
+
+        <div class="export-buttons mt-3">
+          <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportSimulationAsPDF()" [disabled]="!samDisActive">Export as PDF</button>
+          <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportSimulationAsDOCX()" [disabled]="!samDisActive">Export as DOCX</button>
+        </div>
+
       </div>
     </div>
     <div class="rhs w-9/12">
@@ -185,6 +197,12 @@
           <span>{{ 'tm_proportion' | translate }}</span>
           <span summary="proportion">{{proportion }}</span>
         </div>
+
+        <div class="export-buttons mt-3">
+          <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDistributionAsPDF()" [disabled]="simulations.length === 0">Export as PDF</button>
+          <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDistributionAsDOCX()" [disabled]="simulations.length === 0">Export as DOCX</button>
+        </div>
+        
       </div>
     </div>
     <div class="rhs w-9/12">

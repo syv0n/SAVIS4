@@ -4,6 +4,7 @@ import {MathService} from 'src/app/Utils/math.service'
 import { ChartDataSets } from 'chart.js';
 import { Sampling } from 'src/app/Utils/sampling';
 import { TranslateService } from '@ngx-translate/core';
+import type { Paragraph, Table } from 'docx'
 
 @Component({
   selector: 'app-two-proportions',
@@ -32,6 +33,7 @@ export class TwoProportionsComponent implements OnInit, AfterViewInit {
   sampleBSuccess: number;
   numSimulations: number;
   isDataLoaded: boolean = false;
+  isSimRun: boolean = false;
   selectedTestOption: string;
   prop_diff: number;
   samDisActive: boolean = false;
@@ -347,6 +349,7 @@ loadData(): void {
           numBFailure: 0
       });
        this.chart2.update();
+       this.isDataLoaded = true;
   }
 }
 
@@ -393,6 +396,7 @@ runSim() {
     this.stddev_chart3 = (String)(MathService.roundToPlaces((MathService.stddev(this.simulations)),2));
     this.totalsamples_chart3 = (String)(this.simulations.length);
     this.buildDiffOfProp();
+    this.isSimRun = true;
     
     
   }
@@ -526,5 +530,208 @@ runSim() {
     return Math.round(values * pow10) / pow10 
   }
 
+  /**
+   * @description Helper function to create a DOCX table from headers and data rows.
+   * @param headers An array of strings for the table header.
+   * @param rows A 2D array of strings or numbers for the table body.
+   * @returns A Promise that resolves to a DOCX Table object.
+   */
+  private async createDocxTable(headers: string[], rows: (string | number)[][]): Promise<Table> {
+    const { Table, TableRow, TableCell, Paragraph, TextRun, WidthType } = await import('docx');
+    
+    const header = new TableRow({
+        children: headers.map(headerText => new TableCell({
+            children: [new Paragraph({ children: [new TextRun({ text: headerText, bold: true })] })]
+        })),
+    });
+
+    const dataRows = rows.map(row => new TableRow({
+        children: row.map(cellText => new TableCell({ children: [new Paragraph(String(cellText))] })),
+    }));
+    
+    return new Table({ rows: [header, ...dataRows], width: { size: 100, type: WidthType.PERCENTAGE } });
+  }
+
+  // --- Section 1: Original Data Exports ---
+
+  /**
+   * @description Exports the original data chart and summary statistics table as a PDF document.
+   */
+  async exportDataAsPDF(): Promise<void> {
+    if (!this.isDataLoaded) return;
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+      const doc = new jsPDF();
+      
+      doc.setFontSize(16).text('Two Proportion Hypothesis Testing - Data Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+      
+      const img1Data = this.chart1.toBase64Image();
+      const img1Height = (this.chart1.canvas.height * 180) / this.chart1.canvas.width;
+      doc.addImage(img1Data, 'PNG', 15, 25, 180, img1Height);
+      
+      const tableBody = [
+        ['Successes (Group A)', this.numASuccess],
+        ['Failures (Group A)', this.numAFailure],
+        ['Successes (Group B)', this.numBSuccess],
+        ['Failures (Group B)', this.numBFailure],
+        ['Proportion A (pA)', this.sampleProportionA],
+        ['Proportion B (pB)', this.sampleProportionB],
+        ['Difference (pA - pB)', this.sampleProportionDiff]
+      ];
+      
+      autoTable(doc, {
+        startY: 25 + img1Height + 10,
+        head: [['Statistic', 'Value']],
+        body: tableBody,
+      });
+      
+      doc.save('two-proportions-data-export.pdf');
+    } catch (error) { console.error("Failed to generate PDF:", error); }
+  }
+
+  /**
+   * @description Exports the original data chart and summary statistics table as a DOCX document.
+   */
+  async exportDataAsDOCX(): Promise<void> {
+    if (!this.isDataLoaded) return;
+    const { Document, Packer, Paragraph, TextRun, ImageRun, AlignmentType, Table } = await import('docx');
+    const FileSaver = await import('file-saver');
+
+    const tableHeaders = ['Statistic', 'Value'];
+    const tableRows = [
+      ['Successes (Group A)', this.numASuccess],
+      ['Failures (Group A)', this.numAFailure],
+      ['Successes (Group B)', this.numBSuccess],
+      ['Failures (Group B)', this.numBFailure],
+      ['Proportion A (pA)', this.sampleProportionA],
+      ['Proportion B (pB)', this.sampleProportionB],
+      ['Difference (pA - pB)', this.sampleProportionDiff]
+    ];
+    const summaryTable = await this.createDocxTable(tableHeaders, tableRows);
+
+    const children: (Paragraph | Table)[] = [
+      new Paragraph({ children: [new TextRun({ text: 'Two Proportion Hypothesis Testing - Data Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER }),
+      new Paragraph({ children: [new ImageRun({ type: "png", data: this.chart1.toBase64Image().split(',')[1], transformation: { width: 500, height: 250 } })] }),
+      new Paragraph({ children: [new TextRun({ text: 'Summary Statistics', bold: true, size: 24, break: 1 })] }),
+      summaryTable
+    ];
+
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'two-proportions-data-export.docx'));
+  }
+
+  // --- Section 2: Simulation Exports ---
+
+  /**
+   * @description Exports the chart and summary table from the most recent simulation run as a PDF document.
+   */
+  async exportSimulationAsPDF(): Promise<void> {
+    if (!this.isSimRun) return;
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+      const doc = new jsPDF();
+
+      doc.setFontSize(16).text('Two Proportion Hypothesis Testing - Simulation Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+      
+      const imgData = this.chart2.toBase64Image();
+      const imgHeight = (this.chart2.canvas.height * 180) / this.chart2.canvas.width;
+      doc.addImage(imgData, 'PNG', 15, 25, 180, imgHeight);
+
+      const tableBody = [
+        ['Random Proportions (Group A)', this.sampleProportionA_chart2],
+        ['Random Proportions (Group B)', this.sampleProportionB_chart2],
+        ['Difference of Proportions', this.sampleProportionDiff_chart2]
+      ];
+      
+      autoTable(doc, {
+        startY: 25 + imgHeight + 10,
+        head: [['Statistic', 'Value']],
+        body: tableBody,
+      });
+      
+      doc.save('two-proportions-simulation-export.pdf');
+    } catch (error) { console.error("Failed to generate PDF:", error); }
+  }
+
+  /**
+   * @description Exports the chart and summary table from the most recent simulation run as a DOCX document.
+   */
+  async exportSimulationAsDOCX(): Promise<void> {
+    if (!this.isSimRun) return;
+    const { Document, Packer, Paragraph, TextRun, ImageRun, AlignmentType, Table } = await import('docx');
+    const FileSaver = await import('file-saver');
+
+    const tableHeaders = ['Statistic', 'Value'];
+    const tableRows = [
+      ['Random Proportions (Group A)', this.sampleProportionA_chart2],
+      ['Random Proportions (Group B)', this.sampleProportionB_chart2],
+      ['Difference of Proportions', this.sampleProportionDiff_chart2]
+    ];
+    const summaryTable = await this.createDocxTable(tableHeaders, tableRows);
+
+    const children: (Paragraph | Table)[] = [
+      new Paragraph({ children: [new TextRun({ text: 'Two Proportion Hypothesis Testing - Simulation Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER }),
+      new Paragraph({ children: [new ImageRun({ type: "png", data: this.chart2.toBase64Image().split(',')[1], transformation: { width: 500, height: 250 } })] }),
+      new Paragraph({ children: [new TextRun({ text: 'Summary Statistics', bold: true, size: 24, break: 1 })] }),
+      summaryTable
+    ];
+
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'two-proportions-simulation-export.docx'));
+  }
+
+  // --- Section 3: Distribution Exports ---
+
+  /**
+   * @description Exports the sampling distribution chart and a table of all simulation results as a PDF document.
+   */
+  async exportDistributionAsPDF(): Promise<void> {
+    if (this.simulations.length === 0) return;
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+      const doc = new jsPDF();
+      
+      doc.setFontSize(16).text('Two Proportion Hypothesis Testing - Sampling Distribution Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+      
+      const imgData = this.chart3.toBase64Image();
+      const canvas = this.chart3Ref.nativeElement;
+      const imgHeight = (canvas.height * 170) / canvas.width;
+      doc.addImage(imgData, 'PNG', 15, 25, 170, imgHeight);
+      
+      const tableRows = this.simulations.map((diff, index) => [index + 1, diff.toFixed(4)]);
+      autoTable(doc, {
+        startY: 35 + imgHeight,
+        head: [['Simulation #', 'Difference of Proportions']],
+        body: tableRows,
+      });
+      doc.save('two-proportions-distribution-export.pdf');
+    } catch (error) { console.error("Failed to generate PDF:", error); }
+  }
+
+  /**
+   * @description Exports the sampling distribution chart and a table of all simulation results as a DOCX document.
+   */
+  async exportDistributionAsDOCX(): Promise<void> {
+    if (this.simulations.length === 0) return;
+    const { Document, Packer, Paragraph, TextRun, ImageRun, AlignmentType, Table } = await import('docx');
+    const FileSaver = await import('file-saver');
+
+    const children: (Paragraph | Table)[] = [
+      new Paragraph({ children: [new TextRun({ text: 'Two Proportion Hypothesis Testing - Sampling Distribution Export', bold: true, size: 32 })], alignment: AlignmentType.CENTER })
+    ];
+    
+    const imgData = this.chart3.toBase64Image();
+    children.push(new Paragraph({ children: [new ImageRun({ type: "png", data: imgData.split(',')[1], transformation: { width: 500, height: 250 } })] }));
+    
+    const tableRows = this.simulations.map((diff, index) => [index + 1, diff.toFixed(4)]);
+    const docxTable = await this.createDocxTable(['Simulation #', 'Difference of Proportions'], tableRows);
+    children.push(docxTable);
+
+    const doc = new Document({ sections: [{ children }] });
+    Packer.toBlob(doc).then(blob => FileSaver.saveAs(blob, 'two-proportions-distribution-export.docx'));
+  }
 
 }

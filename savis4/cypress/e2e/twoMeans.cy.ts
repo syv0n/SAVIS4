@@ -74,10 +74,53 @@ describe('template spec', () => {
         cy.get('.w-3\\/12 > .mt-1').click({ force: true });
         cy.get('#includeMin').click({ force: true })
     })
-   
-   
-    
-    
 
+
+    describe('Export Functionality', () => {
+        const downloadsFolder = Cypress.config('downloadsFolder');
+
+        beforeEach(() => {
+            cy.get('.border-t-0').select("Sample 1");
+            cy.get('#loadData').click();
+            cy.get('.export-buttons').first().find('button').contains('Export as PDF').should('not.be.disabled');
+        });
+
+        it('should download the original data as a PDF and DOCX', () => {
+            const pdfFilePath = `${downloadsFolder}/two-means-data-export.pdf`;
+            cy.get('.export-buttons').first().find('button').contains('Export as PDF').click();
+            cy.task('checkFileExists', pdfFilePath).should('be.true');
+            
+            const docxFilePath = `${downloadsFolder}/two-means-data-export.docx`;
+            cy.get('.export-buttons').first().find('button').contains('Export as DOCX').click();
+            cy.task('checkFileExists', docxFilePath).should('be.true');
+        });
+
+        it('should download the simulation data as a PDF and DOCX', () => {
+            cy.get('button').contains('Run Simulation').should('not.be.disabled').click({ force: true });
+            cy.get('.export-buttons').eq(1).find('button').contains('Export as PDF').should('not.be.disabled');
+
+            const pdfFilePath = `${downloadsFolder}/two-means-simulation-export.pdf`;
+            cy.get('.export-buttons').eq(1).find('button').contains('Export as PDF').click();
+            cy.task('checkFileExists', pdfFilePath).should('be.true');
+
+            const docxFilePath = `${downloadsFolder}/two-means-simulation-export.docx`;
+            cy.get('.export-buttons').eq(1).find('button').contains('Export as DOCX').click();
+            cy.task('checkFileExists', docxFilePath).should('be.true');
+        });
+
+        it('should download the distribution data as a PDF and DOCX', () => {
+            cy.get('button').contains('Run Simulation').should('not.be.disabled').click({ force: true });
+            cy.get('.export-buttons').eq(2).find('button').contains('Export as PDF').should('not.be.disabled');
+
+            const pdfFilePath = `${downloadsFolder}/two-means-distribution-export.pdf`;
+            cy.get('.export-buttons').eq(2).find('button').contains('Export as PDF').click();
+            cy.task('checkFileExists', pdfFilePath).should('be.true');
+            
+            const docxFilePath = `${downloadsFolder}/two-means-distribution-export.docx`;
+            cy.get('.export-buttons').eq(2).find('button').contains('Export as DOCX').click();
+            cy.task('checkFileExists', docxFilePath).should('be.true');
+        });
+    });
+   
     
 })

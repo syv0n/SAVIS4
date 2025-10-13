@@ -50,6 +50,11 @@
                     [feature]="'dotPlot'"
                 ></app-save-load-buttons>
             </div>
+
+            <div class="export-buttons mt-3">
+                <button class="btn mb-2 w-full" (click)="exportInputDataAsPDF()" [disabled]="!isDataLoaded">Export as PDF</button>
+                <button class="btn w-full" (click)="exportInputDataAsDOCX()" [disabled]="!isDataLoaded">Export as DOCX</button>
+            </div>
             
         </div>
 
@@ -87,6 +92,10 @@
             <br>
             <button class="btn" id="get-sample-btn" (click)="runSimulationButton()" [disabled]="disabledInput">{{ 'dotPlot_run_sim' | translate }}</button>
             <p id="run-sim-error-msg"></p>
+            <div class="export-buttons mt-3">
+                <button class="btn mb-2 w-full" (click)="exportSampleDataAsPDF()" [disabled]="sampleDataArray.length === 0">Export as PDF</button>
+                <button class="btn w-full" (click)="exportSampleDataAsDOCX()" [disabled]="sampleDataArray.length === 0">Export as DOCX</button>
+            </div>
         </div>
 
         <div class="data-form">
@@ -136,8 +145,12 @@
             <p>{{ sampleMeansChosen }}</p>
             <p>{{ 'dotPlot_proportions_of_samples_unchosen' | translate }}:</p>
             <p>{{ sampleMeansUnchosen }}</p>
-        </div>
+            <div class="export-buttons mt-3">
+                <button class="btn mb-2 w-full" (click)="exportDistributionAsPDF()" [disabled]="sampleMeans.length === 0">Export as PDF</button>
+                <button class="btn w-full" (click)="exportDistributionAsDOCX()" [disabled]="sampleMeans.length === 0">Export as DOCX</button>
+            </div>
 
+        </div>
         <div class="data-form">
             <textarea
                 rows="10"
