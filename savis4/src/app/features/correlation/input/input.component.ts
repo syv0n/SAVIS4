@@ -14,6 +14,155 @@ import { Chart } from 'chart.js';
 export class InputComponent implements OnInit, OnDestroy {
   constructor(private translate: TranslateService) {}
 
+  /**
+   * Export correlation data and chart as PDF
+   */
+  async exportAsPDF(): Promise<void> {
+    if (this.demodata1.length === 0) return;
+    
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+
+      const doc = new jsPDF();
+      doc.setFontSize(16).text('Correlation Visualization Export', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+      
+      // Add chart image
+      if (this.chart1) {
+        const imgData = this.chart1.toBase64Image();
+        const canvas = this.chart1.canvas;
+        const imgHeight = (canvas.height * 170) / canvas.width;
+        doc.addImage(imgData, 'PNG', 15, 25, 170, imgHeight);
+      }
+
+      // Add data table
+      const tableData = this.demodata1.map((point, index) => [
+        index + 1,
+        point.x,
+        point.y
+      ]);
+
+      autoTable(doc, {
+        head: [['Point', 'X Value', 'Y Value']],
+        body: tableData,
+        startY: 200,
+        styles: { fontSize: 10 },
+        headStyles: { fillColor: [41, 128, 185] }
+      });
+
+      // Add correlation statistics
+      const statsY = (doc as any).lastAutoTable.finalY + 15;
+      doc.setFontSize(12).text('Correlation Statistics:', 15, statsY);
+      doc.setFontSize(10).text(`Correlation Coefficient (r): ${this.correlationValue1}`, 15, statsY + 10);
+      
+      // Determine correlation strength
+      const rVal = parseFloat(this.correlationValue1 || '0');
+      let strength = '';
+      if (Math.abs(rVal) >= 0.9) strength = 'Very Strong';
+      else if (Math.abs(rVal) >= 0.7) strength = 'Strong';
+      else if (Math.abs(rVal) >= 0.5) strength = 'Moderate';
+      else if (Math.abs(rVal) >= 0.3) strength = 'Weak';
+      else strength = 'Very Weak';
+      
+      doc.text(`Correlation Strength: ${strength}`, 15, statsY + 20);
+      doc.text(`Direction: ${rVal >= 0 ? 'Positive' : 'Negative'}`, 15, statsY + 30);
+
+      doc.save('correlation-export.pdf');
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+    }
+  }
+
+  /**
+   * Export correlation data and chart as DOCX
+   */
+  async exportAsDOCX(): Promise<void> {
+    if (this.demodata1.length === 0) return;
+    
+    try {
+      const { Document, Packer, Paragraph, TextRun, ImageRun, Table, TableRow, TableCell, WidthType, AlignmentType } = await import('docx');
+      const FileSaver = await import('file-saver');
+
+      // Create table data
+      const tableRows = [
+        new TableRow({
+          children: [
+            new TableCell({ children: [new Paragraph('Point')] }),
+            new TableCell({ children: [new Paragraph('X Value')] }),
+            new TableCell({ children: [new Paragraph('Y Value')] })
+          ]
+        })
+      ];
+
+      this.demodata1.forEach((point, index) => {
+        tableRows.push(new TableRow({
+          children: [
+            new TableCell({ children: [new Paragraph((index + 1).toString())] }),
+            new TableCell({ children: [new Paragraph(point.x.toString())] }),
+            new TableCell({ children: [new Paragraph(point.y.toString())] })
+          ]
+        }));
+      });
+
+      const children: any[] = [
+        new Paragraph({
+          children: [new TextRun({ text: 'Correlation Visualization Export', bold: true, size: 32 })],
+          alignment: AlignmentType.CENTER
+        }),
+        new Paragraph({ text: '' })
+      ];
+
+      // Add chart image
+      if (this.chart1) {
+        const imgData = this.chart1.toBase64Image().split(',')[1]; // Remove data:image/png;base64, prefix
+        children.push(new Paragraph({
+          children: [new ImageRun({ 
+            type: "png", 
+            data: imgData, 
+            transformation: { width: 400, height: 300 }
+          })]
+        }));
+        children.push(new Paragraph({ text: '' }));
+      }
+
+      // Add data table
+      children.push(new Table({
+        rows: tableRows,
+        width: { size: 100, type: WidthType.PERCENTAGE }
+      }));
+
+      // Add correlation statistics
+      children.push(new Paragraph({ text: '' }));
+      children.push(new Paragraph({
+        children: [new TextRun({ text: 'Correlation Statistics:', bold: true })]
+      }));
+      
+      const rVal = parseFloat(this.correlationValue1 || '0');
+      let strength = '';
+      if (Math.abs(rVal) >= 0.9) strength = 'Very Strong';
+      else if (Math.abs(rVal) >= 0.7) strength = 'Strong';
+      else if (Math.abs(rVal) >= 0.5) strength = 'Moderate';
+      else if (Math.abs(rVal) >= 0.3) strength = 'Weak';
+      else strength = 'Very Weak';
+
+      children.push(new Paragraph({
+        children: [new TextRun({ text: `Correlation Coefficient (r): ${this.correlationValue1}` })]
+      }));
+      children.push(new Paragraph({
+        children: [new TextRun({ text: `Correlation Strength: ${strength}` })]
+      }));
+      children.push(new Paragraph({
+        children: [new TextRun({ text: `Direction: ${rVal >= 0 ? 'Positive' : 'Negative'}` })]
+      }));
+
+      const doc = new Document({ sections: [{ children }] });
+      const blob = await Packer.toBlob(doc);
+      FileSaver.saveAs(blob, 'correlation-export.docx');
+    } catch (error) {
+      console.error('Error exporting DOCX:', error);
+    }
+  }
+
   isFileData: boolean = false;
   extension: string | undefined = undefined;
   fileContent: string | null = null;
@@ -415,9 +564,6 @@ export class InputComponent implements OnInit, OnDestroy {
   
     // Render the updated chart
     this.chart1.update();
-  
-    // Clear for next run
-    this.demodata1 = [];
   }  
   
   updateChart(chart: any, data: any) {

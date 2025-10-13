@@ -107,9 +107,11 @@ button.btn {
   background: var(--fourth-col);
 }
 
-.btn[disabled] {
-  color: #bbbbbb;
-  background-color: #666666;
+.btn[disabled],
+#control .btn[disabled] {
+  color: #bbbbbb !important;
+  background-color: #666666 !important;
+  cursor: not-allowed !important;
 }
 
 .btn-dark {

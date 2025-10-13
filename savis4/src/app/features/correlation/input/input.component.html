@@ -1,7 +1,7 @@
 <div class="p-4 flex gap-4" style="margin-bottom: 2rem">
   <!-- Manual Input -->
   <form [formGroup]="formGroupValues" class="flex gap-4">
-    <div>
+    <div id="control">
       <h2 class="text-xl font-bold">
         {{ "correlation_manual_input" | translate }}
       </h2>
@@ -49,6 +49,15 @@
             #fileInput>
           <span class="btn">{{ "correlation_choose_file" | translate }}</span>
         </label>
+      </div>
+      <br>
+      <!-- Export buttons -->
+      <div>
+        <button class="btn" id="export-pdf-btn" (click)="exportAsPDF()" [disabled]="demodata1.length === 0">Export as PDF</button>
+      </div>
+      <br>
+      <div>
+        <button class="btn" id="export-docx-btn" (click)="exportAsDOCX()" [disabled]="demodata1.length === 0">Export as DOCX</button>
       </div>
     </div>
   </form>

@@ -100,6 +100,11 @@
     background: var(--fourth-col);
   }
 
+  .btn:disabled {
+    background: var(--ninth-col);
+    cursor: not-allowed;
+  }
+
 .manual-link {
     display: flex;
     justify-content: flex-end;

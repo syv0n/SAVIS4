@@ -221,4 +221,47 @@ describe('template spec', () => {
             cy.get('.regression-formula-value').should('be.visible')
         })
     })
+
+    describe('Export Functionality', () => {
+        beforeEach(() => {
+            // Setup data and chart
+            cy.get('#dataPoints').type('1,3{enter}2,5{enter}3,7{enter}4,9{enter}5,11')
+            cy.get('button.btn').contains(/update chart|lr_update_chart/i).click()
+            cy.get('app-scatter-plot canvas').should('be.visible')
+            cy.wait(500)
+        })
+
+        it('should display export buttons when chart is loaded', () => {
+            cy.get('#export-pdf-btn').should('be.visible')
+            cy.get('#export-docx-btn').should('be.visible')
+        })
+
+        it('should disable export buttons when no data is available', () => {
+            cy.get('#dataPoints').clear()
+            cy.get('button.btn').contains(/update chart|lr_update_chart/i).click()
+            cy.get('#export-pdf-btn').should('be.disabled')
+            cy.get('#export-docx-btn').should('be.disabled')
+        })
+
+        it('should export PDF successfully', () => {
+            cy.get('#export-pdf-btn').click()
+            cy.task('checkFileExists', 'cypress/downloads/linear-regression-export.pdf')
+        })
+
+        it('should export DOCX successfully', () => {
+            cy.get('#export-docx-btn').click()
+            cy.task('checkFileExists', 'cypress/downloads/linear-regression-export.docx')
+        })
+
+        it('should export with different data sets', () => {
+            // Test with different data
+            cy.get('#dataPoints').clear()
+            cy.get('#dataPoints').type('2,4{enter}4,8{enter}6,12{enter}8,16')
+            cy.get('button.btn').contains(/update chart|lr_update_chart/i).click()
+            cy.wait(500)
+            
+            cy.get('#export-pdf-btn').click()
+            cy.task('checkFileExists', 'cypress/downloads/linear-regression-export.pdf')
+        })
+    })
 })
