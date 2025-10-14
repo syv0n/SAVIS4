@@ -1,32 +1,34 @@
-<app-navbar></app-navbar>
+<div class="body-box">
+  <app-navbar></app-navbar>
 
-<!--link to user manual -->
-<div class="manual-link">
-  <button
-    class="btn manual-btn"
-    type="button"
-    [routerLink]="['/correlation-manual']">
-       Correlation Component Guide
-  </button>
-</div>
-
-<!--link to practice problems-->
-<div class = "problems-link">
+  <!--link to user manual -->
+  <div class="manual-link">
     <button
-        class = "btn problems-btn"
-        type = "button"
-        [routerLink] ="['/problems-correlation']">
-          Correlation Practice Problems
+      class="btn manual-btn"
+      type="button"
+      [routerLink]="['/correlation-manual']">
+        Correlation Component Guide
     </button>
-</div>
+  </div>
+
+  <!--link to practice problems-->
+  <div class = "problems-link">
+      <button
+          class = "btn problems-btn"
+          type = "button"
+          [routerLink] ="['/problems-correlation']">
+            Correlation Practice Problems
+      </button>
+  </div>
 
 
-<div class="p-4">
-  <h1 class="text-2xl font-bold mb-2 text-center">
-    {{ "correlation_correlation_component" | translate }}
-  </h1>
-  <app-input></app-input>
-  <p></p>
+  <div class="p-4">
+    <h1 class="text-2xl font-bold mb-2 text-center">
+      {{ "correlation_correlation_component" | translate }}
+    </h1>
+    <app-input></app-input>
+    <p></p>
+  </div>
 </div>
 <footer class="static-footer">
   {{ "nav_copyright" | translate }}
