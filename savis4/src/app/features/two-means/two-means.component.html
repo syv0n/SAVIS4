@@ -1,212 +1,214 @@
-<app-navbar></app-navbar>
+<div class="body-box">
+  <app-navbar></app-navbar>
 
-<!--link to user manual -->
-<div class="manual-link">
-  <button
-    class="btn manual-btn"
-    type="button"
-    [routerLink]="['/tmht']">
-        Two Mean Hypothesis Testing Guide
-  </button>
-</div>
-
-<!--link to practice problems-->
-<div class="problems-link">
-  <button
-    class="btn problems-btn"
-    type="button"
-    [routerLink]="['/problems-tmht']">
-        Two Mean Hypothesis Testing Practice Problems
-  </button>
-</div>
-
-<div class="p-4">
-  <h1 class="text-xl font-bold text-center my-5">{{'two_mean_title' | translate }}  </h1>
-  <div class="flex justify-between">
-    <h2 class="text-xl font-bold">{{'tm_enter_data' | translate }}
-    </h2>
-    <input type="checkbox" (change)="toggleSection($event,'sectionOne')" checked>
+  <!--link to user manual -->
+  <div class="manual-link">
+    <button
+      class="btn manual-btn"
+      type="button"
+      [routerLink]="['/tmht']">
+          Two Mean Hypothesis Testing Guide
+    </button>
   </div>
-  <div class="flex gap-3"  [ngClass]="sections.sectionOne ? '' : 'hidden'">
-    <div class="w-3/12">
-      <div class="w-full">
-        <div>
-          <select (change)="sampleSelect($event)"
-            class="w-full border-t-0 border-l-0 border-r-0 border-b focus:outline-none rounded-lg p-1">
-            <option disabled selected>{{'tm_select_data' | translate }}</option>
-            <option value="sample1">{{'tm_sample1' | translate }}</option>
-            <option value="sample2">{{'tm_sample2' | translate }}</option>
-          </select>
-          <textarea 
-          (drop)="onDrop($event)"  [(ngModel)]="csvraw" class="text-sm w-full p-1.5 placeholder:text-xs focus:outline-none  " rows="5"
-            placeholder="{{ 'tm_text_box1' | translate }}"></textarea>
-        </div>
-        <button (click)="loadData()"
-          id="loadData"
-          class="mt-1 bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'tm_load' | translate }}</button>
-        <button (click)="onResetChart()"
-          class="mt-1 bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'tm_reset' | translate }}</button>
-        <label id="buttonStyle"
-          class="mt-1 block text-center bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full"
-          for="fileInput"> {{ 'tm_upload' | translate }} </label>
-        <input type="file" id="fileInput" (change)="onFileSelected($event)" style="display: none;">
-      </div>
-      <p></p>
-      <div class="flex justify-center items-center">
-        <app-save-load-buttons
-          [data]="csvraw"
-          [feature]="'twoMeans'"
-        ></app-save-load-buttons>
-      </div>
-      <div class="text-sm font-medium mb-1">
-        <div class="flex justify-between">
-          <span>{{ 'tm_size1' | translate }}</span>
-          <span>{{dataSize1}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span>{{ 'tm_mean1' | translate }} </span>
-          <span>{{datamean1}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span>{{ 'tm_size2' | translate }}</span>
-          <span> {{dataSize2}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span>{{ 'tm_mean2' | translate }}</span>
-          <span>{{datamean2}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span>{{ 'tm_difference1' | translate }}</span>
-          <span>{{mean_diff}}</span>
-        </div>
 
-        <div class="export-buttons mt-3">
-          <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDataAsPDF()" [disabled]="!activateSim">Export as PDF</button>
-          <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDataAsDOCX()" [disabled]="!activateSim">Export as DOCX</button>
-        </div>
+  <!--link to practice problems-->
+  <div class="problems-link">
+    <button
+      class="btn problems-btn"
+      type="button"
+      [routerLink]="['/problems-tmht']">
+          Two Mean Hypothesis Testing Practice Problems
+    </button>
+  </div>
 
+  <div class="p-4">
+    <h1 class="text-xl font-bold text-center my-5">{{'two_mean_title' | translate }}  </h1>
+    <div class="flex justify-between">
+      <h2 class="text-xl font-bold">{{'tm_enter_data' | translate }}
+      </h2>
+      <input type="checkbox" (change)="toggleSection($event,'sectionOne')" checked>
+    </div>
+    <div class="flex gap-3"  [ngClass]="sections.sectionOne ? '' : 'hidden'">
+      <div class="w-3/12">
+        <div class="w-full">
+          <div>
+            <select (change)="sampleSelect($event)"
+              class="w-full border-t-0 border-l-0 border-r-0 border-b focus:outline-none rounded-lg p-1">
+              <option disabled selected>{{'tm_select_data' | translate }}</option>
+              <option value="sample1">{{'tm_sample1' | translate }}</option>
+              <option value="sample2">{{'tm_sample2' | translate }}</option>
+            </select>
+            <textarea 
+            (drop)="onDrop($event)"  [(ngModel)]="csvraw" class="text-sm w-full p-1.5 placeholder:text-xs focus:outline-none  " rows="5"
+              placeholder="{{ 'tm_text_box1' | translate }}"></textarea>
+          </div>
+          <button (click)="loadData()"
+            id="loadData"
+            class="mt-1 bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'tm_load' | translate }}</button>
+          <button (click)="onResetChart()"
+            class="mt-1 bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'tm_reset' | translate }}</button>
+          <label id="buttonStyle"
+            class="mt-1 block text-center bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full"
+            for="fileInput"> {{ 'tm_upload' | translate }} </label>
+          <input type="file" id="fileInput" (change)="onFileSelected($event)" style="display: none;">
+        </div>
+        <p></p>
+        <div class="flex justify-center items-center">
+          <app-save-load-buttons
+            [data]="csvraw"
+            [feature]="'twoMeans'"
+          ></app-save-load-buttons>
+        </div>
+        <div class="text-sm font-medium mb-1">
+          <div class="flex justify-between">
+            <span>{{ 'tm_size1' | translate }}</span>
+            <span>{{dataSize1}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>{{ 'tm_mean1' | translate }} </span>
+            <span>{{datamean1}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>{{ 'tm_size2' | translate }}</span>
+            <span> {{dataSize2}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>{{ 'tm_mean2' | translate }}</span>
+            <span>{{datamean2}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>{{ 'tm_difference1' | translate }}</span>
+            <span>{{mean_diff}}</span>
+          </div>
+
+          <div class="export-buttons mt-3">
+            <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDataAsPDF()" [disabled]="!activateSim">Export as PDF</button>
+            <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDataAsDOCX()" [disabled]="!activateSim">Export as DOCX</button>
+          </div>
+
+        </div>
+      </div>
+      <div class="w-9/12">
+        <div style="display: block">
+          <div class="chart-wrap"><canvas id="data-chart-1" height="220"></canvas></div>
+
+        </div>
+        <div style="display: block">
+          <div class="chart-wrap"><canvas id="data-chart-2" height="220"></canvas></div>
+        </div>
       </div>
     </div>
-    <div class="w-9/12">
-      <div style="display: block">
-        <div class="chart-wrap"><canvas id="data-chart-1" height="220"></canvas></div>
+    <div class="green-line"></div>
 
+    <div class="flex justify-between">
+      <h2 class="text-xl font-bold">{{ 'tm_run_sim_title' | translate }}</h2>
+      <input type="checkbox" checked (change)="toggleSection($event,'sectionTwo')">
+    </div>
+    <div class="flex gap-3" [ngClass]="sections.sectionTwo ? '' : 'hidden'">
+      <div class="w-3/12">
+        <h3 class="font-bold">{{ 'tm_num_sim' | translate }}
+        </h3>
+        <input [(ngModel)]="numofSem" [disabled]="!activateSim"
+          class="w-full border border-gray-300 focus:border-gray-500 focus:outline-none p-2 rounded-lg ng-untouched ng-pristine ng-valid"
+          type="number" value="1" min="1" max="100" />
+        <button (click)="runSim()" *ngIf="activateSim"
+          class="mt-1 bg-primary disabled: text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'tm_run_sim' | translate }}
+        </button>
+        <button [disabled]="true" *ngIf="!activateSim"
+          class="mt-1 px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'tm_run_sim' | translate }}
+        </button>
+        <p></p>
+        <div class="text-sm font-medium mb-1">
+          <div class="flex justify-between">
+            <span>{{ 'tm_mean3' | translate }}</span>
+            <span summary="sampleMean1">{{simsummary.sampleMean1}} </span>
+          </div>
+          <div class="flex justify-between">
+            <span>{{ 'tm_mean4' | translate }}</span>
+            <span summary="sampleMean2">{{simsummary.sampleMean2}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>{{ 'tm_difference2' | translate }}</span>
+            <span summary="sampleMeanDiff">{{simsummary.sampleMeanDiff}}</span>
+          </div>
+
+          <div class="export-buttons mt-3">
+            <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportSimulationAsPDF()" [disabled]="!samDisActive">Export as PDF</button>
+            <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportSimulationAsDOCX()" [disabled]="!samDisActive">Export as DOCX</button>
+          </div>
+
+        </div>
       </div>
-      <div style="display: block">
-        <div class="chart-wrap"><canvas id="data-chart-2" height="220"></canvas></div>
+      <div class="rhs w-9/12">
+        <h3 class="chartTxt">{{ 'tm_most_recent' | translate }}
+        </h3>
+        <div class="chart-wrap"><canvas id="data-chart-3" height="200"></canvas></div>
+        <div class="chart-wrap"><canvas id="data-chart-4" height="200"></canvas></div>
       </div>
     </div>
-  </div>
-  <div class="green-line"></div>
+    <div class="green-line"></div>
 
-  <div class="flex justify-between">
-    <h2 class="text-xl font-bold">{{ 'tm_run_sim_title' | translate }}</h2>
-    <input type="checkbox" checked (change)="toggleSection($event,'sectionTwo')">
-  </div>
-  <div class="flex gap-3" [ngClass]="sections.sectionTwo ? '' : 'hidden'">
-    <div class="w-3/12">
-      <h3 class="font-bold">{{ 'tm_num_sim' | translate }}
-      </h3>
-      <input [(ngModel)]="numofSem" [disabled]="!activateSim"
-        class="w-full border border-gray-300 focus:border-gray-500 focus:outline-none p-2 rounded-lg ng-untouched ng-pristine ng-valid"
-        type="number" value="1" min="1" max="100" />
-      <button (click)="runSim()" *ngIf="activateSim"
-        class="mt-1 bg-primary disabled: text-white px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'tm_run_sim' | translate }}
-      </button>
-      <button [disabled]="true" *ngIf="!activateSim"
-        class="mt-1 px-7 py-1.5 text-sm font-medium rounded-lg w-full">{{ 'tm_run_sim' | translate }}
-      </button>
-      <p></p>
-      <div class="text-sm font-medium mb-1">
-        <div class="flex justify-between">
-          <span>{{ 'tm_mean3' | translate }}</span>
-          <span summary="sampleMean1">{{simsummary.sampleMean1}} </span>
-        </div>
-        <div class="flex justify-between">
-          <span>{{ 'tm_mean4' | translate }}</span>
-          <span summary="sampleMean2">{{simsummary.sampleMean2}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span>{{ 'tm_difference2' | translate }}</span>
-          <span summary="sampleMeanDiff">{{simsummary.sampleMeanDiff}}</span>
-        </div>
+    <div class="flex justify-between">
 
-        <div class="export-buttons mt-3">
-          <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportSimulationAsPDF()" [disabled]="!samDisActive">Export as PDF</button>
-          <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportSimulationAsDOCX()" [disabled]="!samDisActive">Export as DOCX</button>
-        </div>
-
-      </div>
+      <h2 class="text-xl font-bold">{{ 'tm_sampling_distribution' | translate }}
+      </h2>
+      <input type="checkbox" checked (change)="toggleSection($event,'sectionThree')">
     </div>
-    <div class="rhs w-9/12">
-      <h3 class="chartTxt">{{ 'tm_most_recent' | translate }}
-      </h3>
-      <div class="chart-wrap"><canvas id="data-chart-3" height="200"></canvas></div>
-      <div class="chart-wrap"><canvas id="data-chart-4" height="200"></canvas></div>
-    </div>
-  </div>
-  <div class="green-line"></div>
+    <div class="flex gap-3" [ngClass]="sections.sectionThree ? '' : 'hidden'">
+      <div class="w-3/12">
+        <div class="data-form">
+          <p>{{ 'tm_select' | translate }}</p>
+          <label for="min_tailValue">{{ 'tm_min' | translate }}</label>
+          <input type="number" id="min-interValue" step="0.01" [(ngModel)]="minTailValInput" (ngModelChange)="buildci()" [disabled]="CIdisabled">
+          <label for="min-tailValue">{{ 'tm_include_min' | translate }}
+            <input type="checkbox" id="includeMin" [(ngModel)]="includeValMin" (ngModelChange)="buildci()" [disabled]="CIdisabled">
+          </label>
 
-  <div class="flex justify-between">
+          <br>
 
-    <h2 class="text-xl font-bold">{{ 'tm_sampling_distribution' | translate }}
-    </h2>
-    <input type="checkbox" checked (change)="toggleSection($event,'sectionThree')">
-  </div>
-  <div class="flex gap-3" [ngClass]="sections.sectionThree ? '' : 'hidden'">
-    <div class="w-3/12">
-      <div class="data-form">
-        <p>{{ 'tm_select' | translate }}</p>
-        <label for="min_tailValue">{{ 'tm_min' | translate }}</label>
-        <input type="number" id="min-interValue" step="0.01" [(ngModel)]="minTailValInput" (ngModelChange)="buildci()" [disabled]="CIdisabled">
-        <label for="min-tailValue">{{ 'tm_include_min' | translate }}
-          <input type="checkbox" id="includeMin" [(ngModel)]="includeValMin" (ngModelChange)="buildci()" [disabled]="CIdisabled">
-        </label>
-
-        <br>
-
-        <label for="max_tailValue">{{ 'tm_max' | translate }}</label>
-        <input type="number" id="max-interValue" step="0.01" [(ngModel)]="maxTailValInput" (ngModelChange)="buildci()" [disabled]="CIdisabled">
-        <label for="max-tailValue">{{ 'tm_include_max' | translate }}
-          <input type="checkbox" id="includeMax" [(ngModel)]="includeValMax" (ngModelChange)="buildci()" [disabled]="CIdisabled">
-        </label>
-      </div>
-      
-      <div class="text-sm font-medium mb-1">
-        <div class="flex justify-between">
-          <span>{{ 'tm_original_dataset' | translate }}</span>
-          <span summary="dataMeanDiff">{{mean_diff}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span>{{ 'tm_means_sample' | translate }}</span>
-          <span summary="mean">{{simsummary.sampleMeanDiff}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span>{{ 'tm_standard' | translate }}</span>
-          <span summary="stddev">{{ stdDev }}</span>
-        </div>
-        <div class="flex justify-between">
-          <span>{{ 'tm_total' | translate }} </span>
-          <span summary="total" summaryint>{{ total }}</span>
-        </div>
-        <div class="flex justify-between">
-          <span>{{ 'tm_extreme' | translate }}</span>
-          <span summary="chosen" summaryint>{{ chosen }}</span>
-        </div>
-        <div class="flex justify-between">
-          <span>{{ 'tm_proportion' | translate }}</span>
-          <span summary="proportion">{{proportion }}</span>
-        </div>
-
-        <div class="export-buttons mt-3">
-          <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDistributionAsPDF()" [disabled]="simulations.length === 0">Export as PDF</button>
-          <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDistributionAsDOCX()" [disabled]="simulations.length === 0">Export as DOCX</button>
+          <label for="max_tailValue">{{ 'tm_max' | translate }}</label>
+          <input type="number" id="max-interValue" step="0.01" [(ngModel)]="maxTailValInput" (ngModelChange)="buildci()" [disabled]="CIdisabled">
+          <label for="max-tailValue">{{ 'tm_include_max' | translate }}
+            <input type="checkbox" id="includeMax" [(ngModel)]="includeValMax" (ngModelChange)="buildci()" [disabled]="CIdisabled">
+          </label>
         </div>
         
+        <div class="text-sm font-medium mb-1">
+          <div class="flex justify-between">
+            <span>{{ 'tm_original_dataset' | translate }}</span>
+            <span summary="dataMeanDiff">{{mean_diff}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>{{ 'tm_means_sample' | translate }}</span>
+            <span summary="mean">{{simsummary.sampleMeanDiff}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>{{ 'tm_standard' | translate }}</span>
+            <span summary="stddev">{{ stdDev }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>{{ 'tm_total' | translate }} </span>
+            <span summary="total" summaryint>{{ total }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>{{ 'tm_extreme' | translate }}</span>
+            <span summary="chosen" summaryint>{{ chosen }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>{{ 'tm_proportion' | translate }}</span>
+            <span summary="proportion">{{proportion }}</span>
+          </div>
+
+          <div class="export-buttons mt-3">
+            <button class="mb-2 w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDistributionAsPDF()" [disabled]="simulations.length === 0">Export as PDF</button>
+            <button class="w-full bg-primary text-white px-7 py-1.5 text-sm font-medium rounded-lg" (click)="exportDistributionAsDOCX()" [disabled]="simulations.length === 0">Export as DOCX</button>
+          </div>
+          
+        </div>
       </div>
-    </div>
-    <div class="rhs w-9/12">
-      <canvas #diffChart></canvas>
+      <div class="rhs w-9/12">
+        <canvas #diffChart></canvas>
+      </div>
     </div>
   </div>
 </div>
