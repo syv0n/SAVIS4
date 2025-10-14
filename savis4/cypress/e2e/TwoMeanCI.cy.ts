@@ -85,8 +85,13 @@ describe('TwoMeanCI', () => {
             cy.get('#increment').type('{selectAll}{backspace}20')
             cy.get('#incrementBtn').click()
             cy.get('#incrementButton').click()
+            // Ensure input is enabled before typing
+            cy.get('#simInput').should('be.enabled')
             cy.get('#simInput').type('{selectAll}{backspace}1000')
             cy.get('#runSim').click()
+            // Wait for simulation to complete and input to be re-enabled
+            cy.wait(1000)
+            cy.get('#simInput').should('be.enabled')
             cy.get('#confidence-level')
                 .invoke("val", 65)
                 .trigger('change')
