@@ -3,22 +3,26 @@
   <app-navbar></app-navbar>
   <!--link to user manual -->
   <div class="manual-link">
-    <button
+    <a
       class="btn manual-btn"
       type="button"
-      [routerLink]="['/tmci']">
+      [routerLink]="['/tmci']"
+      target="_blank"
+      rel="noopener norefferer">
           Two Mean Confidence Interval Guide
-    </button>
+    </a>
   </div>
 
   <!--link to practice problems-->
   <div class="problems-link">
-    <button
+    <a
       class="btn problems-btn"
       type="button"
-      [routerLink]="['/problems-tmci']">
+      [routerLink]="['/problems-tmci']"
+      target="_blank"
+      rel="noopener norefferer">
           Two Mean Confidence Interval Practice Problems
-    </button>
+    </a>
   </div>
 
   <div class="p-4">

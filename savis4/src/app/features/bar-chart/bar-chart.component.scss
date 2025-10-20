@@ -107,7 +107,7 @@ $secondary-color: #5ebe5e;
 $slider-active-color: var(--ninth-col);
 $slider-track-color: var(--ninth-col);
 
-button {
+button, .btn {
   background: var(--third-col);
   color: white;
   padding: 10px;
