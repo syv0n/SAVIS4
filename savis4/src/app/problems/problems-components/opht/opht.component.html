@@ -8,7 +8,7 @@
   <div class="content">
     <div class="text-section">
       <div class="green-box">
-        <p [innerHTML]="'Word Problem' | translate"></p>
+        <p class = "problem-text">{{ problemText }}</p>
       </div>
       <!--textbox for user to type their answer-->
       <textarea class = "textbox" rows = "1" placeholder="Type the answer here" [(ngModel)] = "inputAnswer">
@@ -29,7 +29,7 @@
     <!--left side of the page-->
     <!--add blank bar chart-->
     <div class ="chart-container">
-      <canvas #chartCanvas width="1500" height="600"></canvas>
+      <canvas #chartCanvas width="1200" height="600"></canvas>
     </div>
   </div>
 </div>

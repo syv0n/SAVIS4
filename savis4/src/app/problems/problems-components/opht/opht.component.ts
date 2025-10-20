@@ -14,10 +14,11 @@ export class OPHTProblemsComponent implements AfterViewInit {
 
   chart: Chart;
 
+  problemText: string = '';
   inputAnswer: string = '';
   answerIsCorrect: boolean = false;
   showAnswer: boolean = false;
-  correctAnswer: string = '100'; //hardcoded the correct answer
+  correctAnswer: string = ''; //hardcoded the correct answer (false)
 
 
   noOfCoin: number = 5
@@ -37,6 +38,72 @@ export class OPHTProblemsComponent implements AfterViewInit {
     private translate: TranslateService,
   ) {}
 
+  generateNewProblem(): void {
+    const sampleSize = this.randomInt(40, 100);
+    const successes = this.randomInt(Math.floor(sampleSize * 0.3), Math.floor(sampleSize * 0.7));
+    const hypothesizedP = [0.4, 0.5, 0.6][Math.floor(Math.random() * 3)];
+    const confidence = [0.90, 0.95, 0.99][Math.floor(Math.random() * 3)];
+
+    this.problemText = `A researcher believes that the proportion of success is ${hypothesizedP}.
+    In a random sample of ${sampleSize} trials, there were ${successes} successes.
+    Conduct a one-proportion hypothesis test at the ${confidence * 100}% confidence level.`;
+
+    const pHat = successes / sampleSize;
+    const se = Math.sqrt(hypothesizedP * (1 - hypothesizedP) / sampleSize);
+    const z = (pHat - hypothesizedP) / se;
+
+    this.correctAnswer = Math.abs(z) > 1.96 ? 'Reject H₀' : 'Fail to Reject H₀';
+
+    this.inputAnswer = '';
+    this.showAnswer = false;
+
+    this.updateChart(pHat, hypothesizedP)
+  }
+
+  //helper for generateNewProblem()
+  randomInt(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  updateChart(pHat: number, hypothesizedP: number): void {
+    const context = this.chartCanvas.nativeElement.getContext('2d');
+
+    if (!context) return;
+    
+    const labels = ['Hypothesized (p₀)', 'Observed (p̂)'];
+    const data = [hypothesizedP, pHat];
+
+    if (this.chart) {
+      this.chart.data.labels = labels;
+      this.chart.data.datasets[0].data = data;
+      this.chart.update();
+    } else {
+      this.chart = new Chart(context, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Proportion comparison',
+              data,
+              backgroundColor: ['rgba(0, 0, 255, 0.6)', 'rgba(255,99,132,0.6)']
+            }
+          ]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: { beginAtZero: true, max: 1}
+            }],
+            xAxes:[{
+              ticks: { autoSkip: false }
+            }]
+          }
+        }
+      });
+    }
+  }
+
   submitAnswer(){
     this.answerIsCorrect = this.inputAnswer.trim()===this.correctAnswer;
     this.showAnswer = true;
@@ -48,6 +115,7 @@ export class OPHTProblemsComponent implements AfterViewInit {
 
   ngAfterViewInit(): void{
     this.createChart();
+    this.generateNewProblem();
   }
 
   createChart(): void {

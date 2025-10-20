@@ -54,11 +54,14 @@
 
       .chart-container{
         flex: 1;
-        max-width: 50%;
+        justify-content: center;
+        overflow-x: hidden;
         canvas{
           width: 100%;
-          max-width: 500px;
+          max-width: 600px;
           height: auto;
+          border-radius: 10px;
+          background-color: var(--eighth-col);
         }
       }
     }
