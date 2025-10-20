@@ -4,22 +4,26 @@
 
     <!--link to user manual -->
     <div class="manual-link">
-    <button
+    <a
         class="btn manual-btn"
         type="button"
-        [routerLink]="['/omci']">
+        [routerLink]="['/omci']"
+        target="_blank"
+        rel="noopener norefferer">
             One Mean Confidence Interval Guide
-    </button>
+    </a>
     </div>
 
     <!--link to practice problems-->
     <div class="problems-link">
-    <button
+    <a
         class="btn problems-btn"
         type="button"
-        [routerLink]="['/problems-omci']">
+        [routerLink]="['/problems-omci']"
+        target="_blank"
+        rel="noopener norefferer">
             One Mean Confidence Interval Practice Problems
-    </button>
+    </a>
     </div>
 
     <body class="flex flex-col min-h-screen">
