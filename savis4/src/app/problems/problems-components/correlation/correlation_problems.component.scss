@@ -119,20 +119,20 @@
   max-width: 300px;
   padding: 12px 20px;
   font-size: 1.1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background-color: var(--third-col);
+  color: beige;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   margin-bottom: 25px;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    background-color: var(--fourth-col);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
 
   &:active {
@@ -223,21 +223,21 @@
   .coefficient-display {
     text-align: center;
     padding: 15px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-color: var(--third-col);
     border-radius: 8px;
     margin-bottom: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
     .coefficient-label {
       margin: 0 0 5px 0;
-      color: rgba(255, 255, 255, 0.9);
+      color: beige;
       font-size: 0.95rem;
       font-weight: 500;
     }
 
     .coefficient-value {
       margin: 0;
-      color: white;
+      color: beige;
       font-size: 1.8rem;
       font-weight: 700;
       font-family: 'Courier New', monospace;
