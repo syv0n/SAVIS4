@@ -1,6 +1,17 @@
 <app-navbar></app-navbar>
 
 <div class="tmht-container">
+  <!--link to grraph page-->
+    <div class = "graph-link">
+        <a
+            class = "btn problems-btn"
+            type = "button"
+            [routerLink] ="['/twomeans']"
+            target="_blank"
+            rel="noopener norefferer">
+                Two Means Hypothesis Graph
+        </a>
+    </div>
   <h1 class="title">{{'uman_tmht_title' | translate}}</h1>
   <div button="back" routerLink="/user-manual" class="back-button">
       &larr; {{ 'uman_back' | translate }}

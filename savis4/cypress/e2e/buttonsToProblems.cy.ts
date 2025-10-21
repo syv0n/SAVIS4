@@ -111,5 +111,123 @@ describe('Buttons Link to Practice Problems', () => {
         cy.url().should('include', 'http://localhost:4200/problems-tmci')
         cy.contains('Two Mean Confidence Interval Problems').should('be.visible')
       })   
-  
+
+    // MANUAL -> GRAPH PAGES
+
+    it('should go from /opht to oneproportion', () => {
+        cy.visit('http://localhost:4200/opht')
+        cy.contains('One Proportion Hypothesis Graph')
+        .invoke('removeAttr','target')
+        .click()
+        cy.url().should('include', 'http://localhost:4200/oneproportion')
+        cy.contains('One Proportion Hypothesis Testing').should('be.visible')
     })
+
+      it('should go from /tpht to twoproportions', () => {
+        cy.visit('http://localhost:4200/tpht')
+        cy.contains('Two Proportions Hypothesis Graph')
+        .invoke('removeAttr','target')
+        .click()
+        cy.url().should('include', 'http://localhost:4200/twoproportions')
+        cy.contains('Two Proportion Hypothesis Testing').should('be.visible')
+      })
+
+      it('should go from /omht to onemean', () => {
+        cy.visit('http://localhost:4200/omht')
+        cy.contains('One Mean Hypothesis Graph')
+        .invoke('removeAttr','target')
+        .click()
+        cy.url().should('include', 'http://localhost:4200/onemean')
+        cy.contains('One Mean Hypothesis Testing').should('be.visible')
+      })
+
+      it('should go from /tmht to twomeans', () => {
+        cy.visit('http://localhost:4200/tmht')
+        cy.contains('Two Means Hypothesis Graph')
+        .invoke('removeAttr','target')
+        .click()
+        cy.url().should('include', 'http://localhost:4200/twomeans')
+        cy.contains('Two Means Hypothesis Testing').should('be.visible')
+      })
+
+      it('should go from /bar-chart to barchart', () => {
+        cy.visit('http://localhost:4200/bar-chart')
+        cy.contains('Bar Chart Graph')
+        .invoke('removeAttr','target')
+        .click()
+        cy.url().should('include', 'http://localhost:4200/barchart')
+        cy.contains('Bar Chart').should('be.visible')
+      })
+
+      it('should go from /dot-plot to dotplot', () => {
+        cy.visit('http://localhost:4200/dot-plot')
+        cy.contains('Dot Plot Graph')
+        .invoke('removeAttr','target')
+        .click()
+        cy.url().should('include', 'http://localhost:4200/dotplot')
+        cy.contains('Dot Plot').should('be.visible')
+      })
+
+      it('should go from /omht to onemean', () => {
+        cy.visit('http://localhost:4200/omht')
+        cy.contains('One Mean Hypothesis Graph')
+        .invoke('removeAttr','target')
+        .click()
+        cy.url().should('include', 'http://localhost:4200/onemean')
+        cy.contains('One Mean Hypothesis Testing').should('be.visible')
+      })
+
+      it('should go from /regression to LR', () => {
+        cy.visit('http://localhost:4200/regression')
+        cy.contains('Regression Graph')
+        .invoke('removeAttr','target')
+        .click()
+        cy.url().should('include', 'http://localhost:4200/LR')
+        cy.contains('Regression Line and Confidence Intervals').should('be.visible')
+      })
+
+      it('should go from /correlation-manual to correlation', () => {
+        cy.visit('http://localhost:4200/correlation-manual')
+        cy.contains('Correlation Graph')
+        .invoke('removeAttr','target')
+        .click()
+        cy.url().should('include', 'http://localhost:4200/correlation')
+        cy.contains('Correlation Component').should('be.visible')
+      })
+
+      it('should go from /opci to oneproportionCI', () => {
+        cy.visit('http://localhost:4200/opci')
+        cy.contains('One Proportion Confidence Interval Graph')
+        .invoke('removeAttr','target')
+        .click()
+        cy.url().should('include', 'http://localhost:4200/oneproportionCI')
+        cy.contains('One Proportion Confidence Interval Testing').should('be.visible')
+      })
+
+      it('should go from /tpci to twoproportionsCI', () => {
+        cy.visit('http://localhost:4200/tpci')
+        cy.contains('Two Proportions Confidence Graph')
+        .invoke('removeAttr','target')
+        .click()
+        cy.url().should('include', 'http://localhost:4200/twoproportionsCI')
+        cy.contains('Two Proportions Confidence Interval').should('be.visible')
+      })
+
+      it('should go from /omci to onemeanCI', () => {
+        cy.visit('http://localhost:4200/omci')
+        cy.contains('One Mean Confidence Interval Graph')
+        .invoke('removeAttr','target')
+        .click()
+        cy.url().should('include', 'http://localhost:4200/onemeanCI')
+        cy.contains('One Mean Confidence Interval').should('be.visible')
+      })
+
+      it('should go from /tmci to twomeansCI', () => {
+        cy.visit('http://localhost:4200/tmci')
+        cy.contains('Two Means Confidence Interval Graph')
+        .invoke('removeAttr','target')
+        .click()
+        cy.url().should('include', 'http://localhost:4200/twomeansCI')
+        cy.contains('Two Means Confidence Interval').should('be.visible')
+      })
+})

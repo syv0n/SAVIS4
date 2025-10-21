@@ -1,6 +1,17 @@
 <app-navbar></app-navbar>
 
 <div class="tpci-container">
+  <!--link to grraph page-->
+    <div class = "graph-link">
+        <a
+            class = "btn problems-btn"
+            type = "button"
+            [routerLink] ="['/twoproportionsCI']"
+            target="_blank"
+            rel="noopener norefferer">
+                Two Proportions Confidence Graph
+        </a>
+    </div>
   <h1 class="title">{{'uman_tpci_title' | translate}}</h1>
   <div button="back" routerLink="/user-manual" class="back-button">
       &larr; {{ 'uman_back' | translate }}
