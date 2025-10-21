@@ -1,6 +1,17 @@
 <app-navbar></app-navbar>
 
 <div class="regression-container">
+      <!--link to grraph page-->
+    <div class = "graph-link">
+        <a
+            class = "btn problems-btn"
+            type = "button"
+            [routerLink] ="['/LR']"
+            target="_blank"
+            rel="noopener norefferer">
+                Regression Graph
+        </a>
+    </div>
   <h1 class="title">{{'uman_regression_title' | translate}}</h1>
   <div button="back" routerLink="/user-manual" class="back-button">
       &larr; {{ 'uman_back' | translate }}

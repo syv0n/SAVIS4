@@ -9,13 +9,13 @@
     margin-bottom: 30px;
   }
 
-  .back-button {
+  .back-button, .btn {
     margin-bottom: 20px;
     margin-top: 20px;
     padding: 10px 15px;
     font-size: 1.2rem;
-    border-radius: 10px;
-    color: beige;
+    border-radius: 5px;
+    color: white;
     text-decoration: none;
     cursor: pointer;
     display: inline-block;
@@ -26,6 +26,14 @@
     background-color: var(--fourth-col);
   }
 
+  .graph-link{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0.5rem 1rem 0;  
+  margin-top: 16px;
+  margin-bottom: 0.5rem;
+}
   .content {
     display: flex;
     justify-content: space-between;
@@ -109,7 +117,7 @@ h1{
     background-color: var(--third-col);
     border-radius: 2px;
     font-family: 'Poppins', sans-serif;
-    color: beige;
+    color: white;
     text-align: center;
 }
 
