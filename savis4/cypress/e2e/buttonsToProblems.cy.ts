@@ -192,7 +192,7 @@ describe('Buttons Link to Practice Problems', () => {
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/correlation')
-        cy.contains('Correlation Component').should('be.visible')
+        cy.contains('Correlation Visualization').should('be.visible')
       })
 
       it('should go from /opci to oneproportionCI', () => {

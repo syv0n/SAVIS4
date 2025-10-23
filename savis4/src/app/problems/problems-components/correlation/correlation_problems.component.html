@@ -3,34 +3,110 @@
 <div class="correlation-container">
   <h1 class="title">{{'problems_correlation_title' | translate}}</h1>
   <div button="back" routerLink="/problems" class="back-button">
-      &larr; {{ 'problems_back' | translate }}
-    </div>
+    &larr; {{ 'problems_back' | translate }}
+  </div>
+  
   <div class="content">
-    <!--left side of the page-->
+    <!-- Left side: Instructions and Input -->
     <div class="text-section">
+      <!-- Instructions box -->
       <div class="green-box">
-        <p [innerHTML]="'Word Problem' | translate"></p>
+        <h3>{{ 'problems_correlation_instructions_title' | translate }}</h3>
+        <p [innerHTML]="'problems_correlation_instructions' | translate"></p>
       </div>
-      <!--textbox for user to type their answer-->
-      <textarea class = "textbox" rows = "1" placeholder="Type the answer here" [(ngModel)] = "inputAnswer">
-      </textarea>
-      <!--submit button-->
-      <button class = "submit-button" (click)="submitAnswer()">Submit Answer</button>
-      <!--show if user answer is correct or incorrect-->
-      <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: answerIsCorrect, incorrect: !answerIsCorrect}">
-        <p>{{answerIsCorrect? 'Correct!' : 'Incorrect answer. Please try again!'}}</p>
-        <p *ngIf = "!answerIsCorrect">
-          Correct answer: {{ correctAnswer }}
-        </p>
-        <!--hide answer button-->
-        <button (click) = "hideAnswer()" class="hide-button">Hide Answer</button>
+
+      <!-- Generate New Dataset Button -->
+      <button class="generate-button" (click)="generateNewDataset()">
+        {{ 'problems_correlation_generate' | translate }}
+      </button>
+
+      <!-- User Input Section -->
+      <div class="input-section">
+        <div class="input-group">
+          <label for="correlationType">{{ 'problems_correlation_type_label' | translate }}</label>
+          <select id="correlationType" [(ngModel)]="userCorrelationType" [disabled]="submittedAnswer">
+            <option value="">-- {{ 'problems_correlation_select' | translate }} --</option>
+            <option value="positive">{{ 'problems_correlation_type_positive' | translate }}</option>
+            <option value="negative">{{ 'problems_correlation_type_negative' | translate }}</option>
+            <option value="none">{{ 'problems_correlation_type_none' | translate }}</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="correlationStrength">{{ 'problems_correlation_strength_label' | translate }}</label>
+          <select id="correlationStrength" [(ngModel)]="userStrength" [disabled]="submittedAnswer">
+            <option value="">-- {{ 'problems_correlation_select' | translate }} --</option>
+            <option value="very-strong">{{ 'problems_correlation_strength_very_strong' | translate }}</option>
+            <option value="strong">{{ 'problems_correlation_strength_strong' | translate }}</option>
+            <option value="moderate">{{ 'problems_correlation_strength_moderate' | translate }}</option>
+            <option value="weak">{{ 'problems_correlation_strength_weak' | translate }}</option>
+            <option value="very-weak">{{ 'problems_correlation_strength_very_weak' | translate }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button class="submit-button" (click)="submitAnswer()" *ngIf="!submittedAnswer">
+        {{ 'problems_correlation_submit' | translate }}
+      </button>
+
+      <!-- Feedback Section -->
+      <div *ngIf="showFeedback" class="feedback-section">
+        <!-- Correlation Coefficient Display -->
+        <div class="coefficient-display">
+          <p class="coefficient-label">{{ 'problems_correlation_coefficient_label' | translate }}</p>
+          <p class="coefficient-value">r = {{ correlationCoefficient.toFixed(3) }}</p>
+        </div>
+
+        <!-- Type Feedback -->
+        <div class="feedback-box" [ngClass]="isTypeCorrect ? 'correct' : 'incorrect'">
+          <p class="feedback-title">
+            <span *ngIf="isTypeCorrect">✓</span>
+            <span *ngIf="!isTypeCorrect">✗</span>
+            {{ 'problems_correlation_type_label' | translate }}
+          </p>
+          <p *ngIf="isTypeCorrect" class="feedback-message">
+            {{ 'problems_correlation_correct' | translate }}
+          </p>
+          <p *ngIf="!isTypeCorrect" class="feedback-message">
+            {{ 'problems_correlation_incorrect' | translate }}
+            <br>
+            <strong>{{ 'problems_correlation_correct_answer' | translate }}:</strong> {{ getTypeLabel(correctCorrelationType) }}
+          </p>
+        </div>
+
+        <!-- Strength Feedback -->
+        <div class="feedback-box" [ngClass]="isStrengthCorrect ? 'correct' : 'incorrect'">
+          <p class="feedback-title">
+            <span *ngIf="isStrengthCorrect">✓</span>
+            <span *ngIf="!isStrengthCorrect">✗</span>
+            {{ 'problems_correlation_strength_label' | translate }}
+          </p>
+          <p *ngIf="isStrengthCorrect" class="feedback-message">
+            {{ 'problems_correlation_correct' | translate }}
+          </p>
+          <p *ngIf="!isStrengthCorrect" class="feedback-message">
+            {{ 'problems_correlation_incorrect' | translate }}
+            <br>
+            <strong>{{ 'problems_correlation_correct_answer' | translate }}:</strong> {{ getStrengthLabel(correctStrength) }}
+          </p>
+        </div>
+
+        <!-- Try Again Button -->
+        <button class="try-again-button" (click)="generateNewDataset()">
+          {{ 'problems_correlation_try_again' | translate }}
+        </button>
       </div>
     </div>
 
-    <!--left side of the page-->
-    <!--add blank bar chart-->
-    <div class ="chart-container">
+    <!-- Right side: Chart -->
+    <div class="chart-container">
       <canvas #inputChart width="1500" height="600"></canvas>
+      
+      <!-- Helper Text -->
+      <div class="chart-helper" *ngIf="!submittedAnswer">
+        <p>{{ 'problems_correlation_chart_helper' | translate }}</p>
+      </div>
     </div>
   </div>
 </div>
