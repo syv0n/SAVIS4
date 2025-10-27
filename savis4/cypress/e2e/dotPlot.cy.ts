@@ -153,3 +153,41 @@ describe('template spec', () => {
     });
      
 })
+
+describe('Dot Plot Practice Problems', () => {
+    beforeEach(() => {
+        cy.viewport(1920, 1080);
+        cy.visit('localhost:4200/problems-dot-plot');
+    });
+
+    it('should display the practice problem interface', () => {
+        cy.get('.dot-plot-container').should('exist');
+        cy.get('.green-box').should('contain.text', '?');
+        cy.get('.multiple-choice').should('exist');
+        cy.get('.submit-button').should('exist');
+        cy.get('.generate-button').should('exist');
+    });
+
+    it('should generate a new problem when button is clicked', () => {
+        cy.get('.generate-button').click();
+        cy.get('.green-box').should('not.be.empty');
+    });
+
+    it('should allow selecting an answer and submitting', () => {
+        cy.get('.multiple-choice label').first().click();
+        cy.get('.submit-button').click();
+        cy.get('.answer-box').should('exist');
+    });
+
+    it('should show feedback for correct and incorrect answers', () => {
+        cy.get('.multiple-choice label').first().click();
+        cy.get('.submit-button').click();
+        cy.get('.answer-box').should('exist');
+        cy.get('.answer-box').should('contain.text', 'Correct');
+    });
+
+    it('should reset the problem when Generate New Problem is clicked', () => {
+        cy.get('.generate-button').click();
+        cy.get('.answer-box').should('not.exist');
+    });
+});
