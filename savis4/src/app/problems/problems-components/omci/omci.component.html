@@ -3,35 +3,177 @@
 <div class="omci-container">
   <h1 class="title">{{'problems_omci_title' | translate}}</h1>
   <div button="back" routerLink="/problems" class="back-button">
-      &larr; {{ 'problems_back' | translate }}
-    </div>
-  <div class="content">
+    &larr; {{ 'problems_back' | translate }}
+  </div>
+
+  <div class="content" [class.no-graph]="problemType === 'samplesize'">
+
     <div class="text-section">
       <div class="green-box">
-        <p [innerHTML]="'Word Problem' | translate"></p>
+        <h3>{{ getProblemTitle() }}</h3>
+
+        <p *ngIf="problemType === 'ci'">Using the sample stats below, what is the 95% confidence interval for μ? (Round bounds to two decimal places).</p>
+
+        <p *ngIf="problemType === 'samplesize'">Determine the minimum sample size required to estimate the population mean with a margin of error of {{E.toFixed(2)}} at <strong>95% confidence level</strong>. The population standard deviation (σ) is {{sigma.toFixed(2)}}. (Round up to the nearest whole number).</p>
+
+        <p *ngIf="problemType === 'find_xbar'">A <strong>95% confidence interval</strong> was constructed from a sample. The resulting interval is shown below. What is the <strong>point estimate (sample mean, x̄)?</strong> (Round to two decimal places).</p> 
+        <p *ngIf="problemType === 'find_e_from_ci'">A <strong>95% confidence interval</strong> was constructed from a sample. The resulting interval is shown below. What is the <strong>margin of error (E)? (Round to two decimal places).</strong></p>
+
+        <p *ngIf="problemType === 'sampling_dist'">A large population has a true mean (μ) of <strong>{{populationMean.toFixed(2)}}</strong>. If we take 1000 different random samples, each with a size of <strong>n = {{sampleSize}}</strong>, and calculate the sample mean (x̄) for all 1000 samples, what value would we expect the <strong>mean of all these sample means</strong> to be close to? (Round to two decimal places).</p>
+
+        <br>
+
+        <ul *ngIf="problemType === 'ci'">
+          <li>Sample Mean (x̄) = <strong>{{sampleMean.toFixed(2)}}</strong></li>
+          <li>Sample StdDev (s) = <strong>{{sampleStdDev.toFixed(2)}}</strong></li>
+          <li>Sample Size (N) = <strong>{{sampleSize}}</strong></li>
+          <li>Critical value (z) = <strong>{{criticalValue.toFixed(3)}}</strong></li>
+        </ul>
+        <ul *ngIf="problemType === 'samplesize'">
+          <li>Confidence level = <strong>95%</strong></li>
+          <li>Critical value (z) = <strong>{{criticalValue.toFixed(3)}}</strong></li>
+        </ul>
+        <ul *ngIf="problemType === 'find_xbar' || problemType === 'find_e_from_ci'">
+          <li>Confidence Interval = <strong>({{correctCI.lower.toFixed(2)}}, {{correctCI.upper.toFixed(2)}})</strong></li>
+        </ul>
+        <ul *ngIf="problemType === 'sampling_dist'">
+          <li>Population Mean (μ) = <strong>{{populationMean.toFixed(2)}}</strong></li>
+          <li>Sample Size (n) = <strong>{{sampleSize}}</strong></li>
+        </ul>
+
+        <br>
+
+        <p *ngIf="problemType === 'ci'"><strong>CI Formula = x̄ ± 1.96*(s / √N)</strong></p>
+        <p *ngIf="problemType === 'samplesize'"><strong>Formula: n = [1.96 * σ / E]^2 (round up)</strong></p>
+        <p *ngIf="problemType === 'find_xbar'"><strong>Formula: x̄ = (Upper Bound + Lower Bound) / 2</strong></p>
+        <p *ngIf="problemType === 'find_e_from_ci'"><strong>Formula: E = (Upper Bound - Lower Bound) / 2</strong></p>
       </div>
-      <!--textbox for user to type their answer-->
-      <textarea class = "textbox" rows = "1" placeholder="Type the answer here" [(ngModel)] = "inputAnswer">
-      </textarea>
-      <!--submit button-->
-      <button class = "submit-button" (click)="submitAnswer()">Submit Answer</button>
-      <!--show if user answer is correct or incorrect-->
-      <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: answerIsCorrect, incorrect: !answerIsCorrect}">
-        <p>{{answerIsCorrect? 'Correct!' : 'Incorrect answer. Please try again'}}</p>
-        <p *ngIf = "!answerIsCorrect">
-          Correct answer: {{ correctAnswer }}
-        </p>
-        <!--hide answer button-->
-        <button (click) = "hideAnswer()" class="hide-button">Hide Answer</button>
+
+      <button class="generate-button" (click)="generateProblem()"> New Problem </button>
+
+      <div *ngIf="problemType === 'ci'" class="input-section">
+        <div class="input-group">
+          <label for="ci-step1">Step 1: Calculate Standard Error (SE = s / √N)</label>
+          <input class="textbox" id="ci-step1" [(ngModel)]="userStdError" placeholder="e.g., 2.31" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep1Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 1:</strong> {{ correctStdError.toFixed(3) }}
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="ci-step2">Step 2: Calculate Margin of Error (ME = 1.96 * SE)</label>
+          <input class="textbox" id="ci-step2" [(ngModel)]="userMarginOfErrorCI" placeholder="e.g., 4.53" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep2Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 2:</strong> {{ correctMarginOfErrorCI.toFixed(3) }}
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="ci-step3">Step 3: Calculate Lower Bound (x̄ - ME)</label>
+          <input class="textbox" id="ci-step3" [(ngModel)]="userLowerBound" placeholder="e.g., 119.45" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep3Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 3:</strong> {{ correctLowerBound.toFixed(2) }}
+          </div>
+        </div>
+         <div class="input-group">
+          <label for="ci-step4">Step 4: Calculate Upper Bound (x̄ + ME)</label>
+          <input class="textbox" id="ci-step4" [(ngModel)]="userUpperBound" placeholder="e.g., 131.20" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep4Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 4:</strong> {{ correctUpperBound.toFixed(2) }}
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="problemType === 'samplesize'" class="input-section">
+        <div class="input-group">
+          <label for="step1-n">Step 1: Calculate (z * σ / E)</label>
+          <input class="textbox" id="step1-n" [(ngModel)]="userZ_x_Sigma_over_E" placeholder="e.g., 15.5" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep1Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 1:</strong> {{ correctZ_x_Sigma_over_E.toFixed(3) }}
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="step2-n">Step 2: Square your result from Step 1</label>
+          <input class="textbox" id="step2-n" [(ngModel)]="userSquaredValue" placeholder="e.g., 240.25" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep2Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 2:</strong> {{ correctSquaredValue.toFixed(3) }}
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="step3-n">Step 3: Round up to the nearest whole number</label>
+          <input class="textbox" id="step3-n" [(ngModel)]="userN" placeholder="e.g., 241" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep3Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 3:</strong> {{ correctN }}
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="problemType === 'find_e_from_ci'" class="input-section">
+        <div class="input-group">
+          <label for="fe-step1">Step 1: Calculate Difference (Upper - Lower)</label>
+          <input class="textbox" id="fe-step1" [(ngModel)]="userDiffBounds" placeholder="e.g., 4.90" [disabled]="showAnswer">
+           <div *ngIf="showAnswer && !isStep1Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 1:</strong> {{ correctDiffBounds.toFixed(3) }}
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="fe-step2">Step 2: Calculate Margin of Error (Difference / 2)</label>
+          <input class="textbox" id="fe-step2" [(ngModel)]="userE" placeholder="e.g., 2.45" [disabled]="showAnswer">
+           <div *ngIf="showAnswer && !isStep2Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 2:</strong> {{ correctE.toFixed(2) }}
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="problemType === 'find_xbar'" class="input-section">
+         <div class="input-group">
+          <label for="fx-step1">Step 1: Calculate Sum (Upper + Lower)</label>
+          <input class="textbox" id="fx-step1" [(ngModel)]="userSumBounds" placeholder="e.g., 314.4" [disabled]="showAnswer">
+           <div *ngIf="showAnswer && !isStep1Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 1:</strong> {{ correctSumBounds.toFixed(3) }}
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="fx-step2">Step 2: Calculate Sample Mean (Sum / 2)</label>
+          <input class="textbox" id="fx-step2" [(ngModel)]="userXBar" placeholder="e.g., 157.2" [disabled]="showAnswer">
+           <div *ngIf="showAnswer && !isStep2Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 2:</strong> {{ correctXBar.toFixed(2) }}
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="problemType === 'sampling_dist'" class="input-section">
+        <div class="input-group">
+          <label for="sd-step1">Expected Mean of Sample Means (μ):</label>
+          <input class="textbox" id="sd-step1" [(ngModel)]="userMu" placeholder="e.g., 150.00" [disabled]="showAnswer">
+           <div *ngIf="showAnswer && !isStep1Correct" class="feedback-message incorrect-step">
+            <strong>Correct Answer:</strong> {{ correctMu.toFixed(2) }}
+          </div>
+        </div>
+      </div>
+
+      <button class="submit-button" (click)="submitAnswer()" *ngIf="!showAnswer"> Submit Answer </button>
+
+      <div *ngIf="showAnswer" class="feedback-section">
+        <div class="feedback-box" [ngClass]="isCorrect ? 'correct' : 'incorrect'">
+          <p class="feedback-title">
+            <span *ngIf="isCorrect">✓</span>
+            <span *ngIf="!isCorrect">✗</span>
+            Result
+          </p>
+          <p class="feedback-message" [innerHTML]="feedback"></p>
+
+          <p *ngIf="problemType !== 'samplesize' && problemType !== 'sampling_dist'" class="feedback-message">
+            The CI is on the graph. It's <strong>blue</strong> if it 'captures' μ, <strong>red</strong> if it 'misses'.
+          </p>
+        </div>
+
+        <button class="try-again-button" (click)="hideAnswer()"> Hide Answer </button>
       </div>
     </div>
 
-    <!--left side of the page-->
-    <!--add blank bar chart-->
-    <div class ="chart container">
-      <canvas #inputChart width="950" height="400"></canvas>
+    <div class="chart-container" *ngIf="problemType !== 'samplesize'">
+      <canvas #inputChart width="1500" height="600"></canvas>
     </div>
-  </div>  
+  </div>
 </div>
 
 <footer class="static-footer">
