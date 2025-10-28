@@ -3,33 +3,169 @@
 <div class="tmci-container">
   <h1 class="title">{{'problems_tmci_title' | translate}}</h1>
   <div button="back" routerLink="/problems" class="back-button">
-      &larr; {{ 'problems_back' | translate }}
-    </div>
+    &larr; {{ 'problems_back' | translate }}
+  </div>
+
   <div class="content">
+
     <div class="text-section">
       <div class="green-box">
-        <p [innerHTML]="'Word Problem' | translate"></p>
+        <h3>{{ getProblemTitle() }}</h3>
+
+        <p *ngIf="problemType === 'ci_diff'">Two independent random samples were taken from large populations (Group 1 and Group 2). Using the sample statistics below, what is the 95% confidence interval for the <strong>difference</strong> between the population means (&mu;<sub>1</sub> - &mu;<sub>2</sub>)? (Round final bounds to two decimal places).</p>
+        <p *ngIf="problemType === 'find_point_estimate'">Two independent random samples produced the statistics below. What is the <strong>best point estimate</strong> for the difference between the population means (&mu;<sub>1</sub> - &mu;<sub>2</sub>)? (Round to two decimal places).</p>
+         <p *ngIf="problemType === 'sampling_dist_diff'">Two populations have means &mu;<sub>1</sub> = {{population1Mean.toFixed(2)}} and &mu;<sub>2</sub> = {{population2Mean.toFixed(2)}}. If we repeatedly take large samples (n<sub>1</sub>={{sample1Size}}, n<sub>2</sub>={{sample2Size}}) and calculate the difference in sample means (x̄<sub>1</sub> - x̄<sub>2</sub>) each time, what value would the center of the distribution of these differences approach? (Round to two decimal places).</p>
+         <p *ngIf="problemType === 'se_diff'">Two independent random samples produced the statistics below. What is the <strong>standard error</strong> of the difference between the sample means? (Round to two decimal places).</p>
+         <p *ngIf="problemType === 'me_diff'">Two independent random samples produced the statistics below. What is the <strong>margin of error</strong> for the 95% confidence interval of the difference between the population means (&mu;<sub>1</sub> - &mu;<sub>2</sub>)? (Round to two decimal places).</p>
+
+        <br>
+
+        <ng-container *ngIf="problemType !== 'sampling_dist_diff'">
+          <strong>Group 1 Stats:</strong>
+          <ul>
+            <li>Sample Mean (x̄<sub>1</sub>) = <strong>{{sample1Mean.toFixed(2)}}</strong></li>
+            <li>Sample StdDev (s<sub>1</sub>) = <strong>{{sample1StdDev.toFixed(2)}}</strong></li>
+            <li>Sample Size (n<sub>1</sub>) = <strong>{{sample1Size}}</strong></li>
+          </ul>
+          <strong>Group 2 Stats:</strong>
+           <ul>
+            <li>Sample Mean (x̄<sub>2</sub>) = <strong>{{sample2Mean.toFixed(2)}}</strong></li>
+            <li>Sample StdDev (s<sub>2</sub>) = <strong>{{sample2StdDev.toFixed(2)}}</strong></li>
+            <li>Sample Size (n<sub>2</sub>) = <strong>{{sample2Size}}</strong></li>
+          </ul>
+        </ng-container>
+         <ng-container *ngIf="problemType === 'ci_diff' || problemType === 'me_diff'">
+            <strong>Other Info:</strong>
+             <ul>
+               <li>Critical value (z) = <strong>{{criticalValue.toFixed(3)}}</strong></li>
+             </ul>
+         </ng-container>
+
+         <ng-container *ngIf="showAnswer && problemType !== 'sampling_dist_diff'">
+            <strong>Population Info:</strong>
+             <ul>
+               <li>Population 1 Mean (&mu;<sub>1</sub>) = <strong>{{population1Mean.toFixed(2)}}</strong></li>
+               <li>Population 2 Mean (&mu;<sub>2</sub>) = <strong>{{population2Mean.toFixed(2)}}</strong></li>
+             </ul>
+         </ng-container>
+         <br>
+
+        <p *ngIf="problemType === 'ci_diff'"><strong>CI Formula = (x̄<sub>1</sub> - x̄<sub>2</sub>) &plusmn; z&radic;(s<sub>1</sub><sup>2</sup>/n<sub>1</sub> + s<sub>2</sub><sup>2</sup>/n<sub>2</sub>)</strong></p>
+         <p *ngIf="problemType === 'find_point_estimate'"><strong>Point Estimate = x̄<sub>1</sub> - x̄<sub>2</sub></strong></p>
+          <p *ngIf="problemType === 'sampling_dist_diff'"><strong>Center of Sampling Distribution = &mu;<sub>1</sub> - &mu;<sub>2</sub></strong></p>
+          <p *ngIf="problemType === 'se_diff'"><strong>SE = &radic;(s<sub>1</sub><sup>2</sup>/n<sub>1</sub> + s<sub>2</sub><sup>2</sup>/n<sub>2</sub>)</strong></p>
+          <p *ngIf="problemType === 'me_diff'"><strong>ME = z ⋅ &radic;(s<sub>1</sub><sup>2</sup>/n<sub>1</sub> + s<sub>2</sub><sup>2</sup>/n<sub>2</sub>)</strong></p>
+
       </div>
-      <!--textbox for user to type their answer-->
-      <textarea class = "textbox" rows = "1" placeholder="Type the answer here" [(ngModel)] = "inputAnswer">
-      </textarea>
-      <!--submit button-->
-      <button class = "submit-button" (click)="submitAnswer()">Submit Answer</button>
-      <!--show if user answer is correct or incorrect-->
-      <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: answerIsCorrect, incorrect: !answerIsCorrect}">
-        <p>{{answerIsCorrect? 'Correct!' : 'Incorrect answer. Please try again!'}}</p>
-        <p *ngIf = "!answerIsCorrect">
-          Correct answer: {{ correctAnswer }}
-        </p>
-        <!--hide answer button-->
-        <button (click) = "hideAnswer()" class="hide-button">Hide Answer</button>
+
+      <button class="generate-button" (click)="generateProblem()"> New Problem </button>
+
+      <div *ngIf="problemType === 'ci_diff'" class="input-section">
+        <div class="input-group">
+          <label for="ci-step1">Step 1: Calculate Point Estimate (x̄<sub>1</sub> - x̄<sub>2</sub>)</label>
+          <input class="textbox" id="ci-step1" [(ngModel)]="userPointEstimate" placeholder="e.g., -55.20" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep1Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 1:</strong> {{ differenceInSampleMeans.toFixed(3) }}
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="ci-step2">Step 2: Calculate Standard Error &radic;(s<sub>1</sub><sup>2</sup>/n<sub>1</sub> + s<sub>2</sub><sup>2</sup>/n<sub>2</sub>)</label>
+          <input class="textbox" id="ci-step2" [(ngModel)]="userStdErrorDiff" placeholder="e.g., 3.85" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep2Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 2:</strong> {{ correctStdErrorDiff.toFixed(3) }}
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="ci-step3">Step 3: Calculate Margin of Error (z ⋅ SE)</label>
+          <input class="textbox" id="ci-step3" [(ngModel)]="userMarginOfErrorDiff" placeholder="e.g., 7.55" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep3Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 3:</strong> {{ correctMarginOfErrorDiff.toFixed(3) }}
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="ci-step4">Step 4: Calculate Lower Bound (PointEst - ME)</label>
+          <input class="textbox" id="ci-step4" [(ngModel)]="userLowerBound" placeholder="e.g., -62.75" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep4Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 4:</strong> {{ correctLowerBound.toFixed(2) }}
+          </div>
+        </div>
+         <div class="input-group">
+          <label for="ci-step5">Step 5: Calculate Upper Bound (PointEst + ME)</label>
+          <input class="textbox" id="ci-step5" [(ngModel)]="userUpperBound" placeholder="e.g., -47.65" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep5Correct" class="feedback-message incorrect-step">
+            <strong>Correct Step 5:</strong> {{ correctUpperBound.toFixed(2) }}
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="problemType === 'find_point_estimate'" class="input-section">
+        <div class="input-group">
+          <label for="fpe-step1">Point Estimate (x̄<sub>1</sub> - x̄<sub>2</sub>):</label>
+          <input class="textbox" id="fpe-step1" [(ngModel)]="userPointEstimate" placeholder="e.g., -55.20" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep1Correct" class="feedback-message incorrect-step">
+            <strong>Correct Answer:</strong> {{ differenceInSampleMeans.toFixed(2) }}
+          </div>
+        </div>
+      </div>
+
+       <div *ngIf="problemType === 'sampling_dist_diff'" class="input-section">
+        <div class="input-group">
+          <label for="sdd-step1">Center of Sampling Distribution (&mu;<sub>1</sub> - &mu;<sub>2</sub>):</label>
+          <input class="textbox" id="sdd-step1" [(ngModel)]="userMuDiff" placeholder="e.g., -60.00" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep1Correct" class="feedback-message incorrect-step">
+            <strong>Correct Answer:</strong> {{ trueDifferenceInMeans.toFixed(2) }}
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="problemType === 'se_diff'" class="input-section">
+        <div class="input-group">
+          <label for="se-step1">Standard Error &radic;(s<sub>1</sub><sup>2</sup>/n<sub>1</sub> + s<sub>2</sub><sup>2</sup>/n<sub>2</sub>):</label>
+          <input class="textbox" id="se-step1" [(ngModel)]="userStdErrorDiff" placeholder="e.g., 3.85" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep1Correct" class="feedback-message incorrect-step">
+            <strong>Correct Answer:</strong> {{ correctStdErrorDiff.toFixed(2) }}
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="problemType === 'me_diff'" class="input-section">
+        <div class="input-group">
+          <label for="me-step1">Margin of Error (z ⋅ SE):</label>
+          <input class="textbox" id="me-step1" [(ngModel)]="userMarginOfErrorDiff" placeholder="e.g., 7.55" [disabled]="showAnswer">
+          <div *ngIf="showAnswer && !isStep1Correct" class="feedback-message incorrect-step">
+            <strong>Correct Answer:</strong> {{ correctMarginOfErrorDiff.toFixed(2) }}
+          </div>
+        </div>
+      </div>
+
+      <button class="submit-button" (click)="submitAnswer()" *ngIf="!showAnswer"> Submit Answer </button>
+
+      <div *ngIf="showAnswer" class="feedback-section">
+        <div class="feedback-box" [ngClass]="isCorrect ? 'correct' : 'incorrect'">
+          <p class="feedback-title">
+            <span *ngIf="isCorrect">✓</span>
+            <span *ngIf="!isCorrect">✗</span>
+            Result
+          </p>
+          <p class="feedback-message" [innerHTML]="feedback"></p>
+
+          <p *ngIf="problemType === 'ci_diff'" class="feedback-message">
+            The CI on the graph shows the estimate for the difference (&mu;<sub>1</sub> - &mu;<sub>2</sub>). It's <strong>blue</strong> if it 'captures' the true difference, <strong>red</strong> if it 'misses'.
+          </p>
+           <p *ngIf="problemType === 'sampling_dist_diff' || problemType === 'se_diff' || problemType === 'me_diff'" class="feedback-message">
+             The graph shows the sampling distribution centered around the true difference (&mu;<sub>1</sub> - &mu;<sub>2</sub>, the red line).
+           </p>
+           <p *ngIf="problemType === 'find_point_estimate'" class="feedback-message">
+             The graph shows the sampling distribution centered around the true difference (&mu;<sub>1</sub> - &mu;<sub>2</sub>, the red line). The observed difference from your samples (x̄<sub>1</sub> - x̄<sub>2</sub>) is the green line.
+           </p>
+        </div>
+
+        <button class="try-again-button" (click)="hideAnswer()"> Hide Answer </button>
       </div>
     </div>
 
-    <!--left side of the page-->
-    <!--add blank bar chart-->
-    <div class ="chart-container">
-      <canvas #chart5 width="1500" height="600"></canvas>
+    <div class="chart-container">
+      <canvas #inputChart width="1500" height="600"></canvas>
     </div>
   </div>
 </div>
