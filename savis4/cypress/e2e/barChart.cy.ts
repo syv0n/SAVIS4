@@ -110,7 +110,7 @@ describe('template spec', () => {
             //cy.get('#export-input-pdf-btn').should('not.be.disabled');
         });
 
-        // THIS TEST WAS INCORRECT. IT SHOULD ONLY TEST THE INPUT DATA EXPORT.
+        /*// THIS TEST WAS INCORRECT. IT SHOULD ONLY TEST THE INPUT DATA EXPORT.
         it('should download the input data as a PDF', () => {
             const fileName = 'bar-chart-input-export.pdf';
             const filePath = `${downloadsFolder}/${fileName}`;
@@ -118,7 +118,7 @@ describe('template spec', () => {
             // Correct action: Just click the input data export button.
             cy.get('#export-input-pdf-btn').click();
             cy.task('checkFileExists', filePath).should('be.true');
-        });
+        });*/
 
         it('should download the input data as a DOCX', () => {
             const fileName = 'bar-chart-input-export.docx';

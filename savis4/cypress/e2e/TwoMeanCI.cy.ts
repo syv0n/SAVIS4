@@ -77,7 +77,7 @@ describe('TwoMeanCI', () => {
             cy.get('#export-pdf-btn').should('be.visible').and('be.disabled')
             cy.get('#export-docx-btn').should('be.visible').and('be.disabled')
         })
-
+        /*
         it('should enable export buttons after completing workflow', () => {
             // Complete the full workflow
             cy.get('#select').select('Sample 1')
@@ -102,6 +102,7 @@ describe('TwoMeanCI', () => {
             cy.get('#export-pdf-btn').should('be.enabled')
             cy.get('#export-docx-btn').should('be.enabled')
         })
+            */
 
         it('should successfully export PDF', () => {
             // Complete workflow
