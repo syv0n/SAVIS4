@@ -20,6 +20,25 @@ export class OPHTProblemsComponent implements AfterViewInit {
   showAnswer: boolean = false;
   correctAnswer: string = ''; //hardcoded the correct answer (false)
 
+  acceptedRejectAnswers = [
+      'reject',
+      'reject h0',
+      'reject h₀',
+      'reject the null',
+      'reject null hypothesis',
+      'reject the null hypothesis'
+    ];
+  acceptedFailAnswers = [
+    'fail',
+    'fail to reject',
+    'fail to reject h0',
+    'fail to reject h₀',
+    'do not reject',
+    'do not reject h0',
+    'do not reject the null',
+    'do not reject null hypothesis'
+    
+  ];
 
   noOfCoin: number = 5
 
@@ -44,15 +63,19 @@ export class OPHTProblemsComponent implements AfterViewInit {
     const hypothesizedP = [0.4, 0.5, 0.6][Math.floor(Math.random() * 3)];
     const confidence = [0.90, 0.95, 0.99][Math.floor(Math.random() * 3)];
 
-    this.problemText = `A researcher believes that the proportion of success is ${hypothesizedP}.
-    In a random sample of ${sampleSize} trials, there were ${successes} successes.
-    Conduct a one-proportion hypothesis test at the ${confidence * 100}% confidence level.`;
+    this.problemText = `A college professor believes that a coin is fair, meaning the probability of getting heads is ${hypothesizedP}.
+    The coin is flipped ${sampleSize} times, and it lands on heads ${successes} times.
+    Conduct a one-proportion hypothesis test at the ${confidence * 100}% confidence level to determine whether the coin is fair.`;
 
     const pHat = successes / sampleSize;
     const se = Math.sqrt(hypothesizedP * (1 - hypothesizedP) / sampleSize);
     const z = (pHat - hypothesizedP) / se;
 
-    this.correctAnswer = Math.abs(z) > 1.96 ? 'Reject H₀' : 'Fail to Reject H₀';
+    let zCritical = 1.96;
+    if (confidence === 0.90) zCritical = 1.645;
+    if (confidence === 0.99) zCritical = 2.575;
+
+    this.correctAnswer = Math.abs(z) > zCritical ? 'Reject H₀' : 'Fail to Reject H₀';
 
     this.inputAnswer = '';
     this.showAnswer = false;
@@ -72,10 +95,12 @@ export class OPHTProblemsComponent implements AfterViewInit {
     
     const labels = ['Hypothesized (p₀)', 'Observed (p̂)'];
     const data = [hypothesizedP, pHat];
+    const colors = ['rgba(13, 13, 172, 0.6)', 'rgba(255,99,132,0.6)'];
 
     if (this.chart) {
       this.chart.data.labels = labels;
       this.chart.data.datasets[0].data = data;
+      this.chart.data.datasets[0].backgroundColor = colors;
       this.chart.update();
     } else {
       this.chart = new Chart(context, {
@@ -86,7 +111,7 @@ export class OPHTProblemsComponent implements AfterViewInit {
             {
               label: 'Proportion comparison',
               data,
-              backgroundColor: ['rgba(0, 0, 255, 0.6)', 'rgba(255,99,132,0.6)']
+              backgroundColor: [colors]
             }
           ]
         },
@@ -98,14 +123,32 @@ export class OPHTProblemsComponent implements AfterViewInit {
             xAxes:[{
               ticks: { autoSkip: false }
             }]
-          }
+          },
+          legend: { display: false }
         }
       });
     }
   }
 
   submitAnswer(){
-    this.answerIsCorrect = this.inputAnswer.trim()===this.correctAnswer;
+    const normalize = (s: string) =>
+      s
+    .toLowerCase()
+    .replace(/o/g, '0')
+    .replace(/[^a-z0-9\s]/g, '')
+    .trim();
+
+    const userInput = normalize(this.inputAnswer);
+
+    const isReject = 
+    this.acceptedRejectAnswers.some(ans => userInput === normalize(ans)) &&
+    this.correctAnswer.startsWith('Reject');
+
+    const isFail =
+    this.acceptedFailAnswers.some(ans => userInput === normalize(ans)) &&
+    this.correctAnswer.startsWith('Fail');
+
+    this.answerIsCorrect = isReject || isFail;
     this.showAnswer = true;
   }
 

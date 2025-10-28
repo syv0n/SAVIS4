@@ -168,6 +168,29 @@ h1{
   }
 }
 
+.random-button {
+  display: block;
+  width: 40%;
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: var(--second-col);
+  color: beige;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+
+  &:hover {
+    background-color: var(--fourth-col);
+    transform: scale(1.03);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
 .hide-button{
   display: block;
   width: 30%;

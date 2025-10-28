@@ -10,6 +10,9 @@
       <div class="green-box">
         <p class = "problem-text">{{ problemText }}</p>
       </div>
+
+      <button class = "random-button" (click) = "generateNewProblem()">Generate</button>
+
       <!--textbox for user to type their answer-->
       <textarea class = "textbox" rows = "1" placeholder="Type the answer here" [(ngModel)] = "inputAnswer">
       </textarea>
