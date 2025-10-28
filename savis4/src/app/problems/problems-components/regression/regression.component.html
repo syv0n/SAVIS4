@@ -3,33 +3,86 @@
 <div class="regression-container">
   <h1 class="title">{{'problems_regression_title' | translate}}</h1>
   <div button="back" routerLink="/problems" class="back-button">
-      &larr; {{ 'problems_back' | translate }}
-    </div>
+    &larr; {{ 'problems_back' | translate }}
+  </div>
+  
   <div class="content">
     <div class="text-section">
       <div class="green-box">
-        <p [innerHTML]="'Word Problem' | translate"></p>
+        <p>{{ problemText }}</p>
       </div>
-      <!--textbox for user to type their answer-->
-      <textarea class = "textbox" rows = "1" placeholder="Type the answer here" [(ngModel)] = "inputAnswer">
+
+      <!-- Data Points Table -->
+      <div class="data-table-container">
+        <h3>Data Points</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>X</th>
+              <th>Y</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let point of dataPoints">
+              <td>{{ point.x }}</td>
+              <td>{{ point.y }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Textbox for user to type their answer -->
+      <textarea 
+        class="textbox" 
+        rows="1" 
+        placeholder="Type the answer here" 
+        [(ngModel)]="inputAnswer">
       </textarea>
-      <!--submit button-->
-      <button class = "submit-button" (click)="submitAnswer()">Submit Answer</button>
-      <!--show if user answer is correct or incorrect-->
-      <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: answerIsCorrect, incorrect: !answerIsCorrect}">
-        <p>{{answerIsCorrect? 'Correct!' : 'Incorrect answer. Please try again!'}}</p>
-        <p *ngIf = "!answerIsCorrect">
+      
+      <!-- Submit button -->
+      <button class="submit-button" (click)="submitAnswer()">Submit Answer</button>
+      
+      <!-- New Problem button -->
+      <button class="submit-button" (click)="generateNewProblem()" style="background-color: #4CAF50;">
+        New Problem
+      </button>
+      
+      <!-- Show if user answer is correct or incorrect -->
+      <div *ngIf="showAnswer" class="answer-box" [ngClass]="{correct: answerIsCorrect, incorrect: !answerIsCorrect}">
+        <p>{{ answerIsCorrect ? 'Correct!' : 'Incorrect answer. Please try again!' }}</p>
+        <p *ngIf="!answerIsCorrect">
           Correct answer: {{ correctAnswer }}
         </p>
-        <!--hide answer button-->
-        <button (click) = "hideAnswer()" class="hide-button">Hide Answer</button>
+        <!-- Show Solution button (only when incorrect) -->
+        <button *ngIf="!answerIsCorrect" (click)="openSolutionModal()" class="solution-button">
+          Show Step-by-Step Solution
+        </button>
+        <!-- Hide answer button -->
+        <button (click)="hideAnswer()" class="hide-button">Hide Answer</button>
       </div>
     </div>
 
-    <!--left side of the page-->
-    <!--add blank bar chart-->
-    <div class ="chart-container">
-      <canvas #inputChart width="1500" height="700"></canvas>
+    <!-- Chart container -->
+    <div class="chart-container">
+      <canvas #inputChart width="800" height="500"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Solution Modal -->
+<div class="modal-overlay" *ngIf="showSolutionModal" (click)="closeSolutionModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Step-by-Step Solution</h2>
+      <button class="close-button" (click)="closeSolutionModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div *ngFor="let step of solutionSteps" class="solution-step">
+        {{ step }}
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="close-modal-button" (click)="closeSolutionModal()">Close</button>
     </div>
   </div>
 </div>

@@ -51,3 +51,9 @@ Thumbs.db
 /savis4-darwin-x64
 /build
 guide.html
+
+#cypress
+/cypress/screenshots
+/cypress/support
+/cypress/fixtures
+/cypress/downloads
