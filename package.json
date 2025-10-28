@@ -1,6 +1,10 @@
 {
   "devDependencies": {
+    "@types/chart.js": "^2.9.41",
     "cypress": "^15.4.0",
     "html-dnd": "^1.2.1"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1"
   }
 }
