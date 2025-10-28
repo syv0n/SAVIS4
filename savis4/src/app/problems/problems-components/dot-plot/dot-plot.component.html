@@ -8,28 +8,44 @@
   <div class="content">
     <div class="text-section">
       <div class="green-box">
-        <p [innerHTML]="'Word Problem' | translate"></p>
+        <p>{{ question }}</p>
       </div>
-      <!--textbox for user to type their answer-->
-      <textarea class = "textbox" rows = "1" placeholder="Type the answer here" [(ngModel)] = "inputAnswer">
-      </textarea>
-      <!--submit button-->
-      <button class = "submit-button" (click)="submitAnswer()">Submit Answer</button>
-      <!--show if user answer is correct or incorrect-->
-      <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: answerIsCorrect, incorrect: !answerIsCorrect}">
-        <p>{{answerIsCorrect? 'Correct!' : 'Incorrect answer. Please try again'}}</p>
-        <p *ngIf = "!answerIsCorrect">
+      <!-- Multiple-choice options -->
+      <div class="multiple-choice">
+        <div *ngFor="let choice of multipleChoices; let i = index">
+          <input
+            type="radio"
+            [value]="choice"
+            [(ngModel)]="selectedAnswer"
+            name="choices"
+            [id]="'choice-' + i"
+          />
+          <label class="choice-label" [for]="'choice-' + i">{{ choice }}</label>
+        </div>
+      </div>
+      <!-- Submit button -->
+      <button class="submit-button" (click)="submitAnswer()">Submit Answer</button>
+      <!-- Show if user answer is correct or incorrect -->
+      <div
+        *ngIf="showAnswer"
+        class="answer-box"
+        [ngClass]="{ correct: answerIsCorrect, incorrect: !answerIsCorrect }"
+      >
+        <p>{{ answerIsCorrect ? 'Correct!' : 'Incorrect answer. Please try again!' }}</p>
+        <p *ngIf="!answerIsCorrect">
           Correct answer: {{ correctAnswer }}
         </p>
-        <!--hide answer button-->
-        <button (click) = "hideAnswer()" class="hide-button">Hide Answer</button>
+        <!-- Hide answer button -->
+        <button (click)="hideAnswer()" class="hide-button">Hide Answer</button>
       </div>
+      <!-- Generate new problem button -->
+      <button class="generate-button" (click)="generateNewProblem()">Generate New Problem</button>
     </div>
 
     <!--left side of the page-->
-    <!--add blank bar chart-->
-    <div class ="chart-container">
-      <canvas #inputChart width="1500" height="600"></canvas>
+    <!--dot plot chart-->
+    <div class="chart-container">
+      <canvas #inputChart width="900" height="400"></canvas>
     </div>
   </div>
 </div>

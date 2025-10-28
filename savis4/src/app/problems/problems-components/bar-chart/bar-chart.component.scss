@@ -1,14 +1,15 @@
+/* Styles for the Bar Chart Component */
 .bar-chart-container {
   min-height: 100vh;
   padding: 40px;
   background-color: var(--fifth-col);
-
+  /* Ensures the container takes full viewport height */
   .title {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 30px;
   }
-
+  /* Back button styles */
   .back-button {
     margin-bottom: 20px;
     margin-top: 20px;
@@ -21,28 +22,28 @@
     display: inline-block;
     background-color: var(--third-col);
   }
-  
+  /* Back button hover effect */
   .back-button:hover{
     background-color: var(--fourth-col);
   }
-
+  /* Main content layout */
   .content {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
     gap: 40px;
-
+    /* Text and chart sections */
     .text-section {
       flex: 1;
       max-width: 50%;
-
+      /* Headings styles */
       h2, h3 {
         margin: 0;
         padding-bottom: 10px;
         color:var(--second-col);
       }
-
+      /* Description box styles */
       .green-box {
         background-color: #e1f3dc;
         padding: 20px;
@@ -52,7 +53,7 @@
         line-height: 1.6;
       }
     }
-
+    /* Chart container styles */
     .chart-container{
       flex: 1;
       max-width: 50%;
@@ -62,12 +63,12 @@
         height: auto;
       }
     }
-
+    /* Chart canvas styles */
     canvas{
       background-color: var(--eighth-col);
       border-radius: 10px;
     }
-
+    /* Image section styles */
     .image-section {
       display: flex;
       flex-direction: column;
@@ -76,7 +77,7 @@
       margin-top: 18px;
       flex: 1;
       transform: translateX(-150px);
-
+      /*  Screenshot image styles */
       .screenshot {
         width: 900px;
         max-width: none;
@@ -92,7 +93,7 @@ h1{
   color:var(--second-col);
   font-weight: bold;
 }
-
+/*  Static footer styles */
 .static-footer {
   position: fixed;
   bottom: 0;
@@ -135,7 +136,7 @@ h1{
     background-color: var(--fourth-col);
     cursor: pointer;
 }
-
+/* Textbox for user input */
 .textbox {
   width: 500px;
   height: 100px;
@@ -147,7 +148,7 @@ h1{
   border-radius: 10px;
   margin-top: 10px;
 }
-
+/* Buttons */
 .submit-button{
   display: block;
   width: 30%;
@@ -163,7 +164,7 @@ h1{
     background-color: var(--fourth-col);
   }
 }
-
+/* Buttons */
 .hide-button{
   display: block;
   width: 30%;
@@ -179,11 +180,76 @@ h1{
     background-color: var(--fourth-col);
   }
 }
-
-answer-box{
+/* Answer box */
+.answer-box{
   padding: 10px;
   border-radius: 6px;
   font-weight: bold;
   font-size: 1.1rem;
+}
+/* Generate Button */
+.generate-button {
+  display: block;
+  width: 30%;
+  padding: 10px;
+  font-size: 1rem;
+  background-color: var(--third-col);
+  color: beige;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 10px;
+
+  &:hover {
+    background-color: var(--fourth-col);
+  }
+}
+/* Answer correctness styles */
+.correct {
+  background-color: #d4edda;
+  color: #155724;
+}
+/* Answer incorrectness styles */
+.incorrect {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+/* Feedback Box */
+.choice-label {
+  font-size: 1.2rem;
+  margin-left: 10px;
+  color: var(--second-col);
+}
+/* Feedback Box */
+.multiple-choice {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.multiple-choice input[type='radio'] {
+  display: none;
+}
+
+.multiple-choice label {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid var(--third-col);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  font-size: 1rem;
+  color: var(--second-col);
+}
+
+.multiple-choice label:hover {
+  background-color: var(--fourth-col);
+}
+
+.multiple-choice input[type='radio']:checked + label {
+  background-color: var(--third-col);
+  color: beige;
+  border-color: var(--second-col);
 }
 
