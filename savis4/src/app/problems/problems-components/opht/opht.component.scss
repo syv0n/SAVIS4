@@ -173,8 +173,7 @@ h1{
   width: 40%;
   padding: 10px;
   font-size: 1rem;
-  font-weight: bold;
-  background-color: var(--second-col);
+  background-color: var(--third-col);
   color: beige;
   border-radius: 6px;
   cursor: pointer;
@@ -190,6 +189,100 @@ h1{
     transform: scale(0.97);
   }
 }
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr, 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .content {
+    grid-template-columns: 1fr, 1fr;
+  }
+}
+
+// Chart
+.chart-container { margin-top: 0.75rem; }
+.chart-caption {
+  margin-top: .5rem;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+// Answers
+.answers {
+  display: grid;
+  gap: 1rem; /* bigger gap between fields */
+  max-width: 520px;
+  margin-top: .75rem;
+}
+
+.answers .field {
+  background: #fff;
+  border: 1px solid #e5e7eb; /* light gray border */
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+}
+
+.answers .field label {
+  font-weight: 600;
+  margin-bottom: .4rem;
+}
+
+/* Inputs look boxy and roomy */
+.answers input,
+.answers select {
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.answers input:focus,
+.answers select:focus {
+  border-color: #60a5fa; /* blue focus */
+  box-shadow: 0 0 0 3px rgba(96,165,250,0.25);
+}
+
+.correct { border-color: #2e7d32 !important; }
+.incorrect { border-color: #c62828 !important; }
+
+/* Buttons row */
+.buttons { display: flex; gap: .6rem; margin-top: .5rem; }
+.buttons.top { margin-top: .5rem; }
+
+/* Feedback box spacing */
+.answer-box {
+  margin-top: 1rem;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.answer-box.correct { border: 1px solid #2e7d32; background: #f1faf2; }
+.answer-box.incorrect { border: 1px solid #c62828; background: #fff4f4; }
+
+.truths {
+  list-style: none;
+  padding-left: 0;
+  margin: .5rem 0 0;
+}
+.truths li { margin: .35rem 0; }
+
+.ok { color: #2e7d32; font-weight: 600; }
+.nope { color: #c62828; font-weight: 600; }
+
+/* Problem card */
+.green-box {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.problem-text { margin: 0; }
 
 .hide-button{
   display: block;

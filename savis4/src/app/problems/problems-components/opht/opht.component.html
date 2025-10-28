@@ -1,42 +1,129 @@
 <app-navbar></app-navbar>
 
 <div class="opht-container">
-  <h1 class="title">{{'problems_opht_title' | translate}}</h1>
+  <h1 class="title">{{ 'problems_opht_title' | translate }}</h1>
+
   <div button="back" routerLink="/problems" class="back-button">
-      &larr; {{ 'problems_back' | translate }}
-    </div>
+    &larr; {{ 'problems_back' | translate }}
+  </div>
+
   <div class="content">
     <div class="text-section">
       <div class="green-box">
-        <p class = "problem-text">{{ problemText }}</p>
+        <p class="problem-text">{{ problemText }}</p>
       </div>
 
-      <button class = "random-button" (click) = "generateNewProblem()">Generate</button>
+      <div class="buttons top">
+        <button class="random-button" (click)="generateProblem()">New Problem</button>
+        <button class="reset-button" (click)="hideAnswer()">Reset</button>
+      </div>
 
-      <!--textbox for user to type their answer-->
-      <textarea class = "textbox" rows = "1" placeholder="Type the answer here" [(ngModel)] = "inputAnswer">
-      </textarea>
-      <!--submit button-->
-      <button class = "submit-button" (click)="submitAnswer()">Submit Answer</button>
-      <!--show if user answer is correct or incorrect-->
-      <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: answerIsCorrect, incorrect: !answerIsCorrect}">
-        <p>{{answerIsCorrect? 'Correct!' : 'Incorrect answer. Please try again!'}}</p>
-        <p *ngIf = "!answerIsCorrect">
-          Correct answer: {{ correctAnswer }}
-        </p>
-        <!--hide answer button-->
-        <button (click) = "hideAnswer()" class="hide-button">Hide Answer</button>
+      <!-- Multi-step answers (OMCI-style) -->
+      <form (ngSubmit)="submitAnswer()" class="answers">
+        <div class="field">
+          <label>Standard Error (SE = √[p₀(1−p₀)/n])</label>
+          <input
+            type="number"
+            step="0.001"
+            placeholder="e.g., 0.045"
+            [(ngModel)]="userSE"
+            name="se"
+            required
+            [class.correct]="isStep1Correct && showAnswer"
+            [class.incorrect]="!isStep1Correct && showAnswer"
+          />
+        </div>
+
+        <div class="field">
+          <label>z-statistic (z = (p̂ − p₀) / SE)</label>
+          <input
+            type="number"
+            step="0.01"
+            placeholder="e.g., 1.96"
+            [(ngModel)]="userZ"
+            name="z"
+            required
+            [class.correct]="isStep2Correct && showAnswer"
+            [class.incorrect]="!isStep2Correct && showAnswer"
+          />
+        </div>
+
+        <div class="field">
+          <label>Two-sided p-value <small>(optional)</small></label>
+          <input
+            type="number"
+            step="0.001"
+            placeholder="e.g., 0.048"
+            [(ngModel)]="userPValue"
+            name="pval"
+            [class.correct]="isStep3Correct && showAnswer"
+            [class.incorrect]="!isStep3Correct && showAnswer"
+          />
+        </div>
+
+        <div class="field">
+          <label>Decision (α = {{ (100 - confidence) / 100 | number:'1.2-2' }}, z<sub>crit</sub> = {{ zCritical }})</label>
+          <select
+            [(ngModel)]="userDecision"
+            name="decision"
+            required
+            [class.correct]="isStep4Correct && showAnswer"
+            [class.incorrect]="!isStep4Correct && showAnswer"
+          >
+            <option value="" disabled>Select…</option>
+            <option value="Reject H₀">Reject H₀</option>
+            <option value="Fail to Reject H₀">Fail to Reject H₀</option>
+          </select>
+        </div>
+
+        <div class="buttons">
+          <button type="submit" class="submit-button">Check Answers</button>
+        </div>
+      </form>
+
+      <!-- Feedback like OMCI -->
+      <div *ngIf="showAnswer" class="answer-box" [ngClass]="{correct: isCorrect, incorrect: !isCorrect}">
+        <p [innerHTML]="feedback"></p>
+
+        <ul class="truths">
+          <li>
+            <strong>SE:</strong> {{ se | number:'1.3-3' }} —
+            <span [class.ok]="isStep1Correct" [class.nope]="!isStep1Correct">
+              {{ isStep1Correct ? '✓' : '✗' }}
+            </span>
+          </li>
+          <li>
+            <strong>z:</strong> {{ z | number:'1.2-2' }} —
+            <span [class.ok]="isStep2Correct" [class.nope]="!isStep2Correct">
+              {{ isStep2Correct ? '✓' : '✗' }}
+            </span>
+          </li>
+          <li>
+            <strong>p-value:</strong> {{ pValue | number:'1.3-3' }} —
+            <span [class.ok]="isStep3Correct" [class.nope]="!isStep3Correct">
+              {{ isStep3Correct ? '✓' : '✗' }}
+            </span>
+          </li>
+          <li>
+            <strong>Decision:</strong> {{ correctDecision }} —
+            <span [class.ok]="isStep4Correct" [class.nope]="!isStep4Correct">
+              {{ isStep4Correct ? '✓' : '✗' }}
+            </span>
+          </li>
+        </ul>
+
+        <button (click)="hideAnswer()" class="hide-button">Hide Answer</button>
       </div>
     </div>
 
-    <!--left side of the page-->
-    <!--add blank bar chart-->
-    <div class ="chart-container">
-      <canvas #chartCanvas width="1200" height="600"></canvas>
+    <!-- Chart (standard normal with critical regions) -->
+    <div class="chart-container">
+      <!-- Note: template ref name changed to #zChart to match the TS -->
+      <canvas #zChart width="1200" height="600"></canvas>
     </div>
   </div>
 </div>
 
 <footer class="static-footer">
-  {{ "nav_copyright" | translate }}
+  {{ 'nav_copyright' | translate }}
 </footer>
