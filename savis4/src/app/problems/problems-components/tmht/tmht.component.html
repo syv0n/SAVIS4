@@ -8,18 +8,39 @@
   <div class="content">
     <div class="text-section">
       <div class="green-box">
-        <p [innerHTML]="'Word Problem' | translate"></p>
+        <p [innerHTML]="problems[currProblemIndex].question"></p>
       </div>
       <!--textbox for user to type their answer-->
-      <textarea class = "textbox" rows = "1" placeholder="Type the answer here" [(ngModel)] = "inputAnswer">
-      </textarea>
+      <p>Null Hypothesis:</p>
+      <textarea class = "textResp" rows = "1" placeholder="e.g., 100" [(ngModel)] = "nullHypResp"></textarea>
+
+      <p>p-value: (to 4 decimal places)</p>
+      <textarea class = "textResp" rows = "1" placeholder="e.g., 0.0094" [(ngModel)] = "pValResp"></textarea>
+
+      <p>Test type:</p>
+      <input type="radio" id="zTest" name="testType" value="z-test" [(ngModel)] ='testTypeResp'>
+      <label for="zTest">z-test</label><br>
+      <input type="radio" id="tTest" name="testType" value="t-test"[(ngModel)] ='testTypeResp'>
+      <label for="tTest">t-test</label>
+
+      <p>Conclusion:</p>
+      <input type="radio" id="rejectHyp" name="conclusion" value="Reject null hypothesis" [(ngModel)] ='conclResp'>
+      <label for="rejectHyp">Reject null hypothesis</label><br>
+      <input type="radio" id="acceptHyp" name="conclusion" value="Fail to reject null hypothesis" [(ngModel)] ='conclResp'>
+      <label for="acceptHyp">Fail to reject null hypothesis</label>
       <!--submit button-->
       <button class = "submit-button" (click)="submitAnswer()">Submit Answer</button>
+      <!--change question-->
+      <button class="submit-button" (click)="nextQuestion()">Change Problem</button>
       <!--show if user answer is correct or incorrect-->
-      <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: answerIsCorrect, incorrect: !answerIsCorrect}">
-        <p>{{answerIsCorrect? 'Correct!' : 'Incorrect answer. Please try again'}}</p>
-        <p *ngIf = "!answerIsCorrect">
-          Correct answer: {{ correctAnswer }}
+      <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: problemCorrect, incorrect: !problemCorrect}">
+        <p>{{problemCorrect? 'Correct!' : 'Incorrect answer. Please try again'}}</p>
+        <p *ngIf = "!problemCorrect">
+          Correct answer:<br><br>
+          Null Hypothesis: {{ correctAnswer }}<br>
+          p-value: {{correctAnswer2}}<br>
+          Test Type: {{correctAnswer3}}<br>
+          Conclusion: {{correctAnswer4}}
         </p>
         <!--hide answer button-->
         <button (click) = "hideAnswer()" class="hide-button">Hide Answer</button>
