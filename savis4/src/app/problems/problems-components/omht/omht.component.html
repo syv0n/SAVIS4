@@ -13,7 +13,8 @@
       <!--textbox for user to type their answer-->
       <textarea class="textbox" rows="1" placeholder="Type the answer here" [(ngModel)]="inputAnswer"></textarea>
       <!--submit button-->
-      <button class = "submit-button" (click)="submitAnswer()">Submit Answer</button>
+      <button class="submit-button" (click)="submitAnswer()">Submit Answer</button>
+      <button class="submit-button" (click)="nextQuestion()">Change Problem</button>
       <!--show if user answer is correct or incorrect-->
       <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: answerIsCorrect, incorrect: !answerIsCorrect}">
         <p>{{answerIsCorrect? 'Correct!' : 'Incorrect answer. Please try again'}}</p>

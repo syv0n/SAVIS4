@@ -87,6 +87,20 @@ export class OMHTProblemsComponent implements AfterViewInit, OnDestroy {
     this.showAnswer = !this.showAnswer;
   }
 
+  nextQuestion(){
+    // Reset the form state
+    this.inputAnswer = '';
+    this.answerIsCorrect = false;
+    this.showAnswer = false;
+
+    this.currentProblemIndex = (this.currentProblemIndex + 1) % this.problems.length;
+    this.correctAnswer = this.problems[this.currentProblemIndex].answer;
+
+    // Reset the chart
+    if(this.inputChart) {
+      this.createInputChart();
+    }
+  }
 
   ngAfterViewInit() {
     this.createInputChart()
