@@ -8,11 +8,10 @@
   <div class="content">
     <div class="text-section">
       <div class="green-box">
-        <p [innerHTML]="'Word Problem' | translate"></p>
+        <p [innerHTML]="problems[currentProblemIndex].question"></p>
       </div>
       <!--textbox for user to type their answer-->
-      <textarea class = "textbox" rows = "1" placeholder="Type the answer here" [(ngModel)] = "inputAnswer">
-      </textarea>
+      <textarea class="textbox" rows="1" placeholder="Type the answer here" [(ngModel)]="inputAnswer"></textarea>
       <!--submit button-->
       <button class = "submit-button" (click)="submitAnswer()">Submit Answer</button>
       <!--show if user answer is correct or incorrect-->
