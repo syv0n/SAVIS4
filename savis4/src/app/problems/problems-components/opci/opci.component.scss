@@ -40,7 +40,7 @@
       h2, h3 {
         margin: 0;
         padding-bottom: 10px;
-        color:var(--second-col);
+        color: var(--second-col);
       }
 
       .green-box {
@@ -48,17 +48,19 @@
         padding: 20px;
         margin-bottom: 20px;
         border-radius: 8px;
-        font-size: 1.5rem;
+        font-size: 1.1rem;
         line-height: 1.6;
-      }
-
-      .chart-container{
-        flex: 1;
-        max-width: 50%;
-        canvas{
-          width: 100%;
-          max-width: 500px;
-          height: auto;
+      
+  
+        h3{
+          margin-top: 0;
+          margin-bottom: 10px;
+          font-size: 1.3rem;
+          color: #2d5016;
+        }
+        p{
+          margin: 0;
+          color: #333;
         }
       }
     }
@@ -102,53 +104,36 @@ h1{
   text-align: center;
   padding: 10px 0; 
 }
-
-/* Top level container */
-.box-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
-/* Styling for each column */
-.column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 1vh;
-}
-
-/* Individual box styling */
-.box, .box2, .box3 {
-    width: 310px;
-    padding: 2vh;
-    margin: 1vh auto;
-    background-color: var(--third-col);
-    border-radius: 2px;
-    font-family: 'Poppins', sans-serif;
-    color: beige;
-    text-align: center;
-}
-
-/* Box hovering effects */
-.box:hover, .box2:hover, .box3:hover {
-    background-color: var(--fourth-col);
-    cursor: pointer;
-}
-
+ 
 .textbox {
-  width: 500px;
-  height: 100px;
+  width: 200px;
+  height: 30px;
   padding: 20px;
-  font-size: 1rem;
-  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-family: 'Arial','Poppins', sans-serif;
   border: 2px solid #938f8f;
   resize: none;
   margin-top: 10px;
   border-radius: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+  overflow: hidden;
 }
 
-.submit-button{
+.textbox2 {
+  width: 500px;
+  height: 30px;
+  padding: 20px;
+  font-size: 20px;
+  font-family: 'Arial','Poppins', sans-serif;
+  border: 2px solid #938f8f;
+  resize: none;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 40px;
+}
+
+.submit-button, .generate-button{
   display: block;
   width: 30%;
   padding: 10px;
@@ -157,7 +142,9 @@ h1{
   color: beige;
   border-radius: 6px;
   cursor: pointer;
-  margin-bottom: 10px;
+  margin-bottom: 25px;
+  margin-top: 25px;
+  //display: flex;
 
   &:hover{
     background-color: var(--fourth-col);
@@ -184,5 +171,101 @@ answer-box{
   padding: 10px;
   border-radius: 6px;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 25px;
+  gap: 10px;
+  display: flex;
+  //align-items: center;
+  margin-bottom: 10px;
 }
+
+.text{
+  padding: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000; 
+}
+
+.comma, .parenthesis{
+  font-size: 40px;
+  color: #000;
+  font-weight: 500;
+}
+
+.buttons{
+  display: flex;
+  gap: 50px;
+}
+
+//code from correlation problem
+// Feedback Section
+.feedback-section {
+  margin-top: 25px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  border: 2px solid #dee2e6;
+}
+
+.feedback-box {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 2px solid;
+    transition: all 0.3s ease;
+
+    &.correct {
+      background-color: #d4edda;
+      border-color: #28a745;
+      
+      .feedback-title {
+        color: #155724;
+        
+        span {
+          color: #28a745;
+          font-size: 1.3rem;
+          margin-right: 8px;
+        }
+      }
+      
+      .feedback-message {
+        color: #155724;
+      }
+    }
+
+    &.incorrect {
+      background-color: #f8d7da;
+      border-color: #dc3545;
+      
+      .feedback-title {
+        color: #721c24;
+        
+        span {
+          color: #dc3545;
+          font-size: 1.3rem;
+          margin-right: 8px;
+        }
+      }
+      
+      .feedback-message {
+        color: #721c24;
+      }
+    }
+
+    .feedback-title {
+      margin: 0 0 8px 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+    }
+
+    .feedback-message {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.5;
+
+      strong {
+        font-weight: 600;
+      }
+    }
+  }      

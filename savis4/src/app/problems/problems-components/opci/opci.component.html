@@ -7,29 +7,108 @@
     </div>
   <div class="content">
     <div class="text-section">
+
       <div class="green-box">
-        <p [innerHTML]="'Word Problem' | translate"></p>
+        <h3>Calculate the Confidence Interval</h3>
+        <p>{{wordProblem}}</p>
       </div>
-      <!--textbox for user to type their answer-->
-      <textarea class = "textbox" rows = "1" placeholder="Type the answer here" [(ngModel)] = "inputAnswer">
-      </textarea>
-      <!--submit button-->
-      <button class = "submit-button" (click)="submitAnswer()">Submit Answer</button>
-      <!--show if user answer is correct or incorrect-->
-      <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: answerIsCorrect, incorrect: !answerIsCorrect}">
-        <p>{{answerIsCorrect? 'Correct!' : 'Incorrect answer. Please try again!'}}</p>
-        <p *ngIf = "!answerIsCorrect">
-          Correct answer: {{ correctAnswer }}
-        </p>
+
+      <!--button to generate new problem-->
+      <button class = "generate-button" (click)="generateNewProblem()">New Problem</button>
+
+      <!--user input for sample proportion question-->
+      <div class = "text">
+        <p>1. Calculate the sample proportion</p>
+      </div>
+      <div class = "answer-box">
+        <input type="text" class = "textbox2" placeholder = "sample proportion" [(ngModel)] = "userSampleProportion">
+      </div>
+
+      <!--user input for margin error question-->
+      <div class = "text">
+        <p>2. Calculate the margin error</p>
+      </div>
+      <div class = "answer-box">
+        <input type="text" class = "textbox2" placeholder = "margin error" [(ngModel)] = "userMarginError">
+      </div>
+
+      <!--user input for confidence interval-->
+      <div class = "text">
+        <p>3. Calculate the confidence interval</p>
+      </div>
+      <div class = "answer-box">
+        <span class = "parenthesis">(</span>
+        <input type="text" class = "textbox" placeholder = "Lower bound" [(ngModel)] = "userAnswerLower">
+        <span class = "comma">,</span>
+        <input type="text" class = "textbox" placeholder = "Upper bound" [(ngModel)] = "userAnswerUpper">
+        <span class = "parenthesis">)</span>
+      </div>
+
+
+      <!--submit button to check answer-->
+      <button class = "submit-button" (click)="submitAnswer()">Check Answer</button>
+
+
+      <!--follow the same structure as correlation problem-->
+      <div *ngIf = "showAnswer" class = "feedback-section">
+
+        <!--check sample proportion answer-->
+        <div class = "feedback-box" [ngClass] = "isSamplePropCorrect? 'correct' : 'incorrect'">
+          <p class = "feedback-title">
+            <span *ngIf = "isSamplePropCorrect">✓ 1. Calculate the Sample Proportion</span>
+            <span *ngIf = "!isSamplePropCorrect">✗ 1. Calculate the Sample Proportion</span>
+          </p>
+          <p *ngIf = "isSamplePropCorrect" class="feedback-message">
+            Correct!
+          </p>
+          <p *ngIf = "!isSamplePropCorrect" class="feedback-message">
+            Incorrect! Try again!
+            <br>
+            <strong>Correct Sample Proportion:</strong> {{ correctSampleProportion }}
+          </p>
+        </div>
+
+        <!--check margin error answer-->
+        <div class = "feedback-box" [ngClass] = "isMarginErrorCorrect? 'correct' : 'incorrect'">
+          <p class = "feedback-title">
+            <span *ngIf = "isMarginErrorCorrect">✓ 2. Calculate the Margin Error</span>
+            <span *ngIf = "!isMarginErrorCorrect">✗ 2. Calculate the Margin Error</span>
+          </p>
+          <p *ngIf = "isMarginErrorCorrect" class="feedback-message">
+            Correct!
+          </p>
+          <p *ngIf = "!isMarginErrorCorrect" class="feedback-message">
+            Incorrect! Try again!
+            <br>
+            <strong>Correct Margin Error:</strong> {{ correctMarginError }}
+          </p>
+        </div>
+
+        <!--check confidence interval answer-->
+        <div class = "feedback-box" [ngClass] = "(isLowerCorrect && isUpperCorrect)? 'correct' : 'incorrect'">
+          <p class = "feedback-title">
+            <span *ngIf = "isLowerCorrect && isUpperCorrect">✓ 3. Calculate the Confidence Interval</span>
+            <span *ngIf = "!(isLowerCorrect && isUpperCorrect)">✗ 3. Calculate the Confidence Interval</span>
+          </p>
+          <p *ngIf = "isLowerCorrect && isUpperCorrect" class="feedback-message">
+            Correct!
+          </p>
+          <p *ngIf = "!(isLowerCorrect && isUpperCorrect)" class="feedback-message">
+            Incorrect! Try again!
+            <br>
+            <strong>Correct Confidence Interval:</strong> ({{ correctAnswerLower}}, {{ correctAnswerUpper }})
+          </p>
+        </div>
+
+      </div> 
         <!--hide answer button-->
-        <button (click) = "hideAnswer()" class="hide-button">Hide Answer</button>
+        <button *ngIf = "showAnswer" (click) = "hideAnswer()" class="hide-button">Hide Answer</button>
       </div>
-    </div>
 
     <!--left side of the page-->
     <!--add blank bar chart-->
     <div class ="chart-container">
-      <canvas #chart3 width="1500" height="600"></canvas>
+      <canvas #chart3 width="1100" height="600"></canvas>
     </div>
   </div>
 </div>
