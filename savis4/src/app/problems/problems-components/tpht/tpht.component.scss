@@ -1,3 +1,7 @@
+/* ===========================
+   Two-Proportion HT (TPHT)
+   =========================== */
+
 .tpht-container {
   min-height: 100vh;
   padding: 40px;
@@ -7,150 +11,99 @@
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 30px;
+    color: var(--second-col);
+    font-weight: bold;
   }
 
   .back-button {
-    margin-bottom: 20px;
-    margin-top: 20px;
+    margin: 20px 0;
     padding: 10px 15px;
     font-size: 1.2rem;
-    color: var(--second-col);
     border-radius: 10px;
     color: beige;
     text-decoration: none;
     cursor: pointer;
     display: inline-block;
     background-color: var(--third-col);
-  }
-  
-  .back-button:hover{
-    background-color: var(--fourth-col);
+
+    &:hover {
+      background-color: var(--fourth-col);
+    }
   }
 
+  /* ====== layout: left | right ====== */
   .content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 40px;
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr; /* left slightly wider (NO commas here) */
+    gap: 1.25rem;
+    align-items: start;
 
-    .text-section {
-      flex: 1;
-      max-width: 50%;
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+    }
+  }
 
-      h2, h3 {
-        margin: 0;
-        padding-bottom: 10px;
-        color:var(--second-col);
-      }
+  /* ====== left side ====== */
+  .text-section {
+    width: 100%;
+    max-width: 680px;
 
-      .green-box {
-        background-color: #e1f3dc;
+    h2, h3 {
+      margin: 0;
+      padding-bottom: 10px;
+      color: var(--second-col);
+    }
+
+    /* Problem card */
+    .green-box {
+      background-color: #e1f3dc;
         padding: 20px;
         margin-bottom: 20px;
         border-radius: 8px;
         font-size: 1.5rem;
         line-height: 1.6;
-      }
-
-      .chart-container{
-        flex: 1;
-        max-width: 50%;
-        canvas{
-          width: 100%;
-          max-width: 500px;
-          height: auto;
-        }
-      }
     }
+    .problem-text { margin: 0; }
 
-    canvas{
-      background-color: var(--eighth-col);
-      border-radius: 10px;
-    }
-
-    .image-section {
+    /* Button row inside a soft box */
+    .button-box {
+      background: #f8fafc; /* light gray */
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin: 0 0 1rem 0;
       display: flex;
-      flex-direction: column;
-      gap: 20px;
-      align-items: flex-end;
-      margin-top: 18px;
-      flex: 1;
-      transform: translateX(-150px);
-
-      .screenshot {
-        width: 900px;
-        max-width: none;
-        height: auto;
-        border: 1px solid var(--ninth-col);
-        border-radius: 8px;
-        margin-left: auto;
-      }
+      gap: 0.75rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
-  }
-}
-h1{
-  color:var(--second-col);
-  font-weight: bold;
-}
 
-.static-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background-color: #000000; 
-  color: #ffffff;
-  text-align: center;
-  padding: 10px 0; 
-}
+    .random-button,
+    .reset-button,
+    .submit-button,
+    .hide-button {
+      border-radius: 8px;
+      padding: 0.55rem 1.2rem;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color .2s, transform .1s;
+    }
 
-/* Top level container */
-.box-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
+    .random-button {
+      background-color: var(--third-col);
+      color: beige;
 
-/* Styling for each column */
-.column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 1vh;
-}
+      &:hover { background-color: var(--fourth-col); transform: scale(1.03); }
+      &:active { transform: scale(0.98); }
+    }
 
-/* Individual box styling */
-.box, .box2, .box3 {
-    width: 310px;
-    padding: 2vh;
-    margin: 1vh auto;
-    background-color: var(--third-col);
-    border-radius: 2px;
-    font-family: 'Poppins', sans-serif;
-    color: beige;
-    text-align: center;
-}
+    .reset-button {
+      background-color: #e5e7eb;
 
-/* Box hovering effects */
-.box:hover, .box2:hover, .box3:hover {
-    background-color: var(--fourth-col);
-    cursor: pointer;
-}
+      &:hover { background-color: #d1d5db; }
+    }
 
-.textbox {
-  width: 500px;
-  height: 100px;
-  padding: 20px;
-  font-size: 1rem;
-  font-weight: bold;
-  font-family: 'Poppins', sans-serif;
-  border: 2px solid #938f8f;
-  resize: none;
-  margin-top: 10px;
-  border-radius: 10px;
-}
-
-.submit-button{
+    .submit-button{
   display: block;
   width: 30%;
   padding: 10px;
@@ -166,25 +119,156 @@ h1{
   }
 }
 
-.hide-button{
-  display: block;
-  width: 30%;
-  padding: 10px;
-  font-size: 1rem;
-  background-color: var(--third-col);
-  color: beige;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-bottom: 12px;
+    .hide-button {
+      background-color: var(--third-col);
+      color: beige;
 
-  &:hover{
-    background-color: var(--fourth-col);
+      &:hover { background-color: var(--fourth-col); }
+    }
+
+    /* Box around the entire answer area */
+    .answer-container {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    /* Answers grid + fields */
+    .answers {
+      display: grid;
+      gap: 1rem;        /* more breathing room */
+      max-width: 560px; /* keep a readable line length */
+      margin-top: .25rem;
+    }
+
+    .answers .field {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+    }
+
+    .answers .field label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: .45rem;
+    }
+
+    .answers input,
+    .answers select {
+      width: 100%;
+      padding: .65rem .75rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+      background: #fff;
+    }
+
+    .answers input:focus,
+    .answers select:focus {
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 3px rgba(96,165,250,.25);
+    }
+
+    .correct   { border-color: #2e7d32 !important; }
+    .incorrect { border-color: #c62828 !important; }
+
+    /* Buttons under form */
+    .buttons { display: flex; gap: .6rem; margin-top: .5rem; }
+    .buttons.top { margin-top: .5rem; }
+
+    /* Feedback card */
+    .answer-box {
+      margin-top: 1rem;
+      border-radius: 12px;
+      padding: 12px 14px;
+
+      &.correct { border: 1px solid #2e7d32; background: #f1faf2; }
+      &.incorrect { border: 1px solid #c62828; background: #fff4f4; }
+    }
+
+    .truths {
+      list-style: none;
+      padding-left: 0;
+      margin: .5rem 0 0;
+    }
+    .truths li { margin: .35rem 0; }
+    .ok { color: #2e7d32; font-weight: 600; }
+    .nope { color: #c62828; font-weight: 600; }
   }
+
+  /* ====== right side (chart) ====== */
+  .chart-section {
+    width: 100%;
+  }
+
+  /* Card wrapper for the chart (use .chart-section > .chart-card if you renamed) */
+  .chart-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 10px;
+    height: 520px; /* nice fixed panel height */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chart-container{
+    flex: 1;
+        justify-content: center;
+        overflow-x: hidden;
+        canvas{
+          width: 100%;
+          height: auto;
+          border-radius: 10px;
+          background-color: var(--eighth-col);
+        }
+      }
+
+  .chart-caption {
+    margin-top: .5rem;
+    font-size: 0.9rem;
+    color: #475569;
+  }
+
+  .chart-legend {
+    margin-top: .5rem;
+    font-size: .9rem;
+    color: #475569;
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: .35rem .75rem;
+  }
+  .chart-legend .dot {
+    display: inline-block;
+    width: 10px; height: 10px; border-radius: 50%;
+    margin-right: .35rem;
+    vertical-align: middle;
+  }
+  .chart-legend .dot.black { background: #000; }
+  .chart-legend .dot.blue  { background: #2563eb; }
+  .chart-legend .dot.red   { background: #ef4444; }
+  .chart-legend .swatch {
+    display: inline-block;
+    width: 12px; height: 8px; border-radius: 3px;
+    margin-right: .35rem; vertical-align: middle;
+  }
+  .chart-legend .swatch.blue { background: rgba(37,99,235,.15); border: 1px solid rgba(37,99,235,.35); }
+  .chart-legend .swatch.red  { background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.35); }
 }
 
-answer-box{
-  padding: 10px;
-  border-radius: 6px;
-  font-weight: bold;
-  font-size: 1.1rem;
+/* Keep your footer the same style as OPHT if desired */
+.static-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #000000;
+  color: #ffffff;
+  text-align: center;
+  padding: 10px 0;
 }

@@ -20,7 +20,7 @@
 
       <!-- Multi-step answers (OMCI-style) -->
       <form (ngSubmit)="submitAnswer()" class="answers">
-        <div class="field">
+        <div class="field1">
           <label>Standard Error (SE = √[p₀(1−p₀)/n])</label>
           <input
             type="number"
@@ -34,7 +34,7 @@
           />
         </div>
 
-        <div class="field">
+        <div class="field2">
           <label>z-statistic (z = (p̂ − p₀) / SE)</label>
           <input
             type="number"
@@ -48,7 +48,7 @@
           />
         </div>
 
-        <div class="field">
+        <div class="field3">
           <label>Two-sided p-value <small>(optional)</small></label>
           <input
             type="number"
@@ -61,7 +61,7 @@
           />
         </div>
 
-        <div class="field">
+        <div class="field4">
           <label>Decision (α = {{ (100 - confidence) / 100 | number:'1.2-2' }}, z<sub>crit</sub> = {{ zCritical }})</label>
           <select
             [(ngModel)]="userDecision"
