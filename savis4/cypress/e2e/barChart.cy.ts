@@ -125,6 +125,7 @@ describe('template spec', () => {
             const filePath = `${downloadsFolder}/${fileName}`;
 
             cy.get('#export-input-docx-btn').click();
+            cy.wait(5000); // Wait 5 seconds for browser to finish writing the file
             cy.task('checkFileExists', filePath).should('be.true');
         });
 
@@ -140,7 +141,7 @@ describe('template spec', () => {
             cy.get('#get-sample-btn').should('not.be.disabled').click();
             // 3. Now that data exists, click the export button.
             cy.get('#export-sample-pdf-btn').should('not.be.disabled').click();
-
+            cy.wait(5000); // Wait 5 seconds for browser to finish writing the file
             cy.task('checkFileExists', filePath).should('be.true');
         });
 
@@ -152,7 +153,7 @@ describe('template spec', () => {
             cy.get('#sampleInput').clear().type('5');
             cy.get('#get-sample-btn').should('not.be.disabled').click();
             cy.get('#export-sample-docx-btn').should('not.be.disabled').click();
-
+            cy.wait(5000); // Wait 5 seconds for browser to finish writing the file
             cy.task('checkFileExists', filePath).should('be.true');
         });
     });
