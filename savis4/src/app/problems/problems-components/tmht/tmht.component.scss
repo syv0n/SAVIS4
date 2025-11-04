@@ -15,7 +15,7 @@
     padding: 10px 15px;
     font-size: 1.2rem;
     border-radius: 10px;
-    color: beige;
+    color: white;
     text-decoration: none;
     cursor: pointer;
     display: inline-block;
@@ -35,7 +35,7 @@
 
     .text-section {
       flex: 1;
-      max-width: 50%;
+      max-width: 40%;
 
       h2, h3 {
         margin: 0;
@@ -51,13 +51,13 @@
         font-size: 1.5rem;
         line-height: 1.6;
       }
-
+    }
       .chart-container{
         flex: 1;
-        max-width: 50%;
+        max-width: 80%;
         canvas{
           width: 100%;
-          max-width: 500px;
+          max-width: 100%;
           height: auto;
         }
       }
@@ -65,7 +65,7 @@
 
     canvas{
       background-color: var(--eighth-col);
-      border-radius: 10px;
+      border-radius: 8px;
     }
 
     .image-section {
@@ -87,7 +87,7 @@
       }
     }
   }
-}
+
 h1{
   color:var(--second-col);
   font-weight: bold;
@@ -126,7 +126,7 @@ h1{
     background-color: var(--third-col);
     border-radius: 2px;
     font-family: 'Poppins', sans-serif;
-    color: beige;
+    color: white;
     text-align: center;
 }
 
@@ -136,26 +136,26 @@ h1{
     cursor: pointer;
 }
 
-.textbox {
-  width: 500px;
-  height: 100px;
-  padding: 20px;
+.textResp {
+  min-width: 300px;
+  height:50px;
+  padding: 10px;
   font-size: 1rem;
   font-weight: bold;
   font-family: 'Poppins', sans-serif;
-  border: 2px solid #938f8f;
+  border: 2px solid var(--seventh-col);
   resize: none;
   margin-top: 10px;
   border-radius: 10px;
 }
 
-.submit-button{
+.submit-button, .qchange-button{
   display: block;
   width: 30%;
   padding: 10px;
   font-size: 1rem;
   background-color:var(--third-col);
-  color: beige;
+  color: white;
   border-radius: 6px;
   cursor: pointer;
   margin-bottom: 10px;
@@ -171,7 +171,7 @@ h1{
   padding: 10px;
   font-size: 1rem;
   background-color: var(--third-col);
-  color: beige;
+  color: white;
   border-radius: 6px;
   cursor: pointer;
   margin-bottom: 12px;
@@ -181,9 +181,17 @@ h1{
   }
 }
 
-answer-box{
-  padding: 10px;
-  border-radius: 6px;
-  font-weight: bold;
-  font-size: 1.1rem;
+.responseSection{
+  color: black;
+  font-size: 1rem;
+}
+
+.qBox, .responseSection{
+  background-color: #E1F3DC;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+input[type='radio']{
+  accent-color: var(--seventh-col);
 }
