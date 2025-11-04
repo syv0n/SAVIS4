@@ -1,8 +1,7 @@
-//import { Component, OnInit } from '@angular/core';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ChartDataSets, ChartType, Chart } from 'chart.js';
 import { TranslateService } from '@ngx-translate/core';
-import { standardDeviation } from 'simple-statistics';
+import { max, standardDeviation } from 'simple-statistics';
 
 
 @Component({
@@ -123,7 +122,10 @@ export class TMHTProblemsComponent implements AfterViewInit {
     this.showAnswer=false;
 
     this.currProblemIndex=(this.currProblemIndex+1)%this.problems.length;
-    this.correctAnswer=this.problems[this.currProblemIndex].answer;
+    this.correctAnswer=this.problems[this.currProblemIndex].nullHyp;
+    this.correctAnswer2=this.problems[this.currProblemIndex].pval
+    this.correctAnswer3=this.problems[this.currProblemIndex].testType;
+    this.correctAnswer4=this.problems[this.currProblemIndex].answer;
 
     //Reset chart
     if(this.chart5){
@@ -138,34 +140,67 @@ export class TMHTProblemsComponent implements AfterViewInit {
   updateChartWithData():void{
     if(this.chart5){
       const problem=this.problems[this.currProblemIndex];
-      const{nullHyp,testType,pval,answer,sampleMean,alpha}=problem;
+      const{nullHyp,sampleMean,alpha,answer}=problem;
 
       const h0=parseFloat(nullHyp);
       const sampMean=parseFloat(String(sampleMean));
-      const pValue=parseFloat(pval);
+      const failToReject=answer.toLowerCase().includes("fail")
 
-      //clear prev data
-      this.chart5.data.datasets.forEach(dataset=>(dataset.data=[]));
+      const minX=Math.min(h0,sampMean)-Math.abs(h0-sampMean)*2;
+      const maxX=Math.max(h0,sampMean)+Math.abs(h0-sampMean)*2;
 
-      const correctCol=this.problemCorrect ? 'green':'red';
-      const rejectCol=pValue<alpha ? 'red' : 'green';
-      const regionLabel=pValue<alpha ? 'Reject Null Hypothsis' : 'Fail to Reject Null Hypothsis';
+      const se=Math.abs((maxX-minX)/10);
+      const xVals:number[]=[];
+      const yVals:number[]=[];
+      for(let x=minX;x<=maxX;x+=(maxX-minX)/50){
+        const pdf=Math.exp(-0.5*((x-h0)/se)**2);
+        xVals.push(x);
+        yVals.push(pdf);
+      }
 
-      this.chart5.data.datasets[0].data.push(h0,0);
-      this.chart5.data.datasets[1].data.push(sampMean,0);
+      const tail=sampMean < h0 ? 'left' : 'right';
+      const critBound=tail ==='left' ? h0-1.645*se : h0+1.645*se;
 
-      this.chart5.data.datasets[2]={
-        label:regionLabel,
-        backgroundColor:rejectCol,
-        showLine:false,
-        pointRadius:0,
-        data:Array.from({length:100},(__dirname,i)=>({
-          x:h0+(pValue<alpha ? i-10:1-50),
-          y:Math.random()*0.05-0.025,
-        }))
-      };
-      this.chart5.data.datasets[0].backgroundColor='blue';
-      this.chart5.data.datasets[1].backgroundColor=correctCol;
+      const rejectRegion=xVals.map((x,i)=>{
+        if(tail==='left' && x<=critBound){return{x,y:yVals[i]};}
+        if(tail==='right' && x>=critBound){return{x,y:yVals[i]};}
+        return null;
+      }).filter(Boolean);
+
+      this.chart5.data.datasets=[
+        {
+          label:"Null Distribution",
+          data:xVals.map((x,i)=>({x,y:yVals[i]})),
+          borderColor:'orange',
+          fill:false,
+          showLine:true,
+          pointRadius:0,
+        },
+        {
+          label:"Rejection Region",
+          data:rejectRegion,
+          borderColor:'rgba(255, 0, 0, 0.3)',
+          backgroundColor:'rgba(255, 0, 0, 0.3)',
+          fill:true,
+          showLine:true,
+          pointRadius:0,
+        },
+        {
+          label:"Null Mean",
+          data:[{x:h0,y:Math.exp(-0.5*((h0-h0)/se)**2)}],
+          backgroundColor:'blue',
+          pointRadius:6,
+        },
+        {
+          label:'Sample Mean',
+          data:[{x:sampMean,y:Math.exp(-0.5*((sampMean-h0)/se)**2)}],
+          backgroundColor: failToReject ? 'green' : 'red',
+          pointRadius:8,
+        },
+      ];
+
+      this.chart5.options.scales.xAxes[0].ticks.min=minX;
+      this.chart5.options.scales.xAxes[0].ticks.max=maxX;
       this.chart5.update();
     }
   }
@@ -174,76 +209,36 @@ export class TMHTProblemsComponent implements AfterViewInit {
     const ctx = this.chart5Ref.nativeElement.getContext('2d')
     if (ctx) {
       this.chart5 = new Chart(ctx, {
-        type: 'scatter',
-        data: {
-          datasets: [
-            {
-              label: 'Null Mean',
-              backgroundColor: 'blue',
-              pointRadius:8,
-              data: []
-            },
-            {
-              label: `Sample Mean`,
-              backgroundColor: 'green',
-              pointRadius:8,
-              data: []
-            },
-            {
-              label: `Decision Region`,
-              backgroundColor: 'black',
-              pointRadius:8,
-              data: []
-            },
-          ]
+        type:'scatter',
+        data:{datasets:[]},
+        options:{
+          responsive:true,
+          maintainAspectRatio:false,
+          scales:{
+            xAxes:[{
+              ticks:{
+                fontColor:'black',
+                fontSize:14,
+                padding:5,
+                min:0,
+                max:10,
+              },
+              scaleLabel:{
+                display:true,
+                labelString:'Mean Value',
+                fontSize:16,
+              },
+            }],
+            yAxes:[{
+              ticks:{display:false, min:0},
+              scaleLabel:{display:false},
+            }],
+          },
+          legend:{labels:{fontSize:12}},
+          tooltips:{enabled:false},
+          animation:{duration:500},
         },
-        options: {
-          scales: {
-            xAxes: [
-              {
-                ticks: {
-                  fontColor: 'black',
-                  fontSize: 16,
-                  padding: 0,
-                  min: -5.4,
-                  max: 75,
-                  stepSize: 10,
-                },
-                scaleLabel: {
-                  display: true,
-                  labelString: this.translate.instant('tm_diff_mean'),
-                }
-              }
-            ],
-            yAxes: [
-              {
-                ticks: {
-                  fontColor: 'black',
-                  fontSize: 16,
-                  padding: 0,
-                  min: 1,
-                  max: 7,
-                  //stepSize: 1,
-                },
-                scaleLabel: {
-                  display: true,
-                  labelString: this.translate.instant('tm_freq'),
-                }
-              }
-            ]
-          },
-          responsive: true,
-          maintainAspectRatio: false,
-          tooltips: {
-            backgroundColor: 'rgba(0, 0, 0, 1.0)',
-            bodyFontSize: 16,
-          },
-          animation: {
-            duration: 0,
-          }
-        }
-      })
+      });
     }
   }
-
 }

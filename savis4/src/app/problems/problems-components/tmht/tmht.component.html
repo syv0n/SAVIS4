@@ -10,40 +10,44 @@
       <div class="green-box">
         <p [innerHTML]="problems[currProblemIndex].question"></p>
       </div>
-      <!--textbox for user to type their answer-->
-      <p>Null Hypothesis:</p>
-      <textarea class = "textResp" rows = "1" placeholder="e.g., 100" [(ngModel)] = "nullHypResp"></textarea>
+      <div class="responseSection">
+        <!--textbox for user to type their answer-->
+        <p><b>Null Hypothesis:</b></p>
+        <textarea class = "textResp" rows = "1" placeholder="e.g., 100" [(ngModel)] = "nullHypResp"></textarea>
 
-      <p>p-value: (to 4 decimal places)</p>
-      <textarea class = "textResp" rows = "1" placeholder="e.g., 0.0094" [(ngModel)] = "pValResp"></textarea>
+        <p><b>p-value: (to 4 decimal places)</b></p>
+        <textarea class = "textResp" rows = "1" placeholder="e.g., 0.0094" [(ngModel)] = "pValResp"></textarea>
 
-      <p>Test type:</p>
-      <input type="radio" id="zTest" name="testType" value="z-test" [(ngModel)] ='testTypeResp'>
-      <label for="zTest">z-test</label><br>
-      <input type="radio" id="tTest" name="testType" value="t-test"[(ngModel)] ='testTypeResp'>
-      <label for="tTest">t-test</label>
+        <div class="qBox">
+          <p><b>Test type:</b></p>
+          <input type="radio" id="zTest" name="testType" value="z-test" [(ngModel)] ='testTypeResp'>
+          <label for="zTest">z-test</label><br>
+          <input type="radio" id="tTest" name="testType" value="t-test"[(ngModel)] ='testTypeResp'>
+          <label for="tTest">t-test</label>
 
-      <p>Conclusion:</p>
-      <input type="radio" id="rejectHyp" name="conclusion" value="Reject null hypothesis" [(ngModel)] ='conclResp'>
-      <label for="rejectHyp">Reject null hypothesis</label><br>
-      <input type="radio" id="acceptHyp" name="conclusion" value="Fail to reject null hypothesis" [(ngModel)] ='conclResp'>
-      <label for="acceptHyp">Fail to reject null hypothesis</label>
-      <!--submit button-->
-      <button class = "submit-button" (click)="submitAnswer()">Submit Answer</button>
-      <!--change question-->
-      <button class="qchange-button" (click)="nextQuestion()">Change Problem</button>
-      <!--show if user answer is correct or incorrect-->
-      <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: problemCorrect, incorrect: !problemCorrect}">
-        <p>{{problemCorrect? 'Correct!' : 'Incorrect answer. Please try again'}}</p>
-        <p *ngIf = "!problemCorrect">
-          Correct answer:<br><br>
-          Null Hypothesis: {{ correctAnswer }}<br>
-          p-value: {{correctAnswer2}}<br>
-          Test Type: {{correctAnswer3}}<br>
-          Conclusion: {{correctAnswer4}}
-        </p>
-        <!--hide answer button-->
-        <button (click) = "hideAnswer()" class="hide-button">Hide Answer</button>
+          <p><b>Conclusion:</b></p>
+          <input type="radio" id="rejectHyp" name="conclusion" value="Reject null hypothesis" [(ngModel)] ='conclResp'>
+          <label for="rejectHyp">Reject null hypothesis</label><br>
+          <input type="radio" id="acceptHyp" name="conclusion" value="Fail to reject null hypothesis" [(ngModel)] ='conclResp'>
+          <label for="acceptHyp">Fail to reject null hypothesis</label>
+        </div>
+        <!--submit button-->
+        <button class = "submit-button" (click)="submitAnswer()">Submit Answer</button>
+        <!--change question-->
+        <button class="qchange-button" (click)="nextQuestion()">Change Problem</button>
+        <!--show if user answer is correct or incorrect-->
+        <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: problemCorrect, incorrect: !problemCorrect}">
+          <p><b>{{problemCorrect? 'Correct!' : 'Incorrect answer. Please try again'}}</b></p>
+          <p *ngIf = "!problemCorrect">
+            <b>Correct answer:</b><br><br>
+            <b>Null Hypothesis:</b> {{ correctAnswer }}<br>
+            <b>p-value:</b> {{correctAnswer2}}<br>
+            <b>Test Type:</b> {{correctAnswer3}}<br>
+            <b>Conclusion:</b> {{correctAnswer4}}
+          </p>
+          <!--hide answer button-->
+          <button (click) = "hideAnswer()" class="hide-button">Hide Answer</button>
+        </div>
       </div>
     </div>
 
