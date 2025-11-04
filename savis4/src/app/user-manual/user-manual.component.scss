@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap');
 
 .user-manual-container {
-  padding: 40px;
+  padding: 20px;
   background-color: var(--fifth-col);
   min-height: 100vh;
 
@@ -13,10 +13,10 @@
   }
 
   .content {
+    width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-start;
-    gap: 40px;
 
     .text-section {
       flex: 0.6;
@@ -49,6 +49,8 @@ h1{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+    width: 100%;
+    max-width: none;
 }
 
 /* Styling for each column */
