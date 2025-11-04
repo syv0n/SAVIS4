@@ -19,6 +19,10 @@ export class CorrelationProblemsComponent implements AfterViewInit, OnDestroy {
   correlationCoefficient: number = 0;
   correctCorrelationType: 'positive' | 'negative' | 'none' = 'none';
   correctStrength: 'very-strong' | 'strong' | 'moderate' | 'weak' | 'very-weak' | 'none' = 'none';
+  
+  // Track recent patterns to ensure variety
+  private recentPatterns: string[] = [];
+  private readonly maxRecentPatterns = 5;
 
   // User input state
   userCorrelationType: string = '';
@@ -30,11 +34,83 @@ export class CorrelationProblemsComponent implements AfterViewInit, OnDestroy {
   isTypeCorrect: boolean = false;
   isStrengthCorrect: boolean = false;
 
+  // Question type state
+  currentQuestionType: 'analyze' | 'match' | 'calculate' = 'analyze';
+  questionTypes = [
+    { value: 'analyze', label: 'Analyze the Correlation' },
+    { value: 'match', label: 'Match Coefficient to Plot' },
+    { value: 'calculate', label: 'Calculate Correlation' }
+  ];
+
+  // Question 2 (Match Coefficient) state
+  matchCoefficientOptions: number[] = [];
+  correctCoefficientIndex: number = -1;
+  userSelectedCoefficient: string = '';
+  isMatchCorrect: boolean = false;
+  
+  // Question 5 (Calculate) state
+  calculateDataset: { x: number, y: number }[] = [];
+  userMeanX: string = '';
+  userMeanY: string = '';
+  userCalculatedCoefficient: string = '';
+  isMeanXCorrect: boolean = false;
+  isMeanYCorrect: boolean = false;
+  isCalculateCorrect: boolean = false;
+  calculateTolerance: number = 0.1; // Allow ±0.1 tolerance for rounding
+  calculatedMeanX: number = 0;
+  calculatedMeanY: number = 0;
+
   constructor(private translate: TranslateService) { }
 
   ngAfterViewInit() {
     this.createInputChart();
-    this.generateNewDataset();
+    this.initializeQuestion();
+  }
+
+  /**
+   * Initialize the current question type
+   */
+  initializeQuestion(): void {
+    switch (this.currentQuestionType) {
+      case 'analyze':
+        this.generateNewDataset();
+        break;
+      case 'match':
+        this.generateMatchQuestion();
+        break;
+      case 'calculate':
+        this.generateCalculateQuestion();
+        break;
+    }
+  }
+
+  /**
+   * Change question type
+   */
+  changeQuestionType(type: 'analyze' | 'match' | 'calculate'): void {
+    this.currentQuestionType = type;
+    this.resetAllState();
+    this.initializeQuestion();
+  }
+
+  /**
+   * Reset all state variables
+   */
+  resetAllState(): void {
+    this.submittedAnswer = false;
+    this.showFeedback = false;
+    this.userCorrelationType = '';
+    this.userStrength = '';
+    this.userSelectedCoefficient = '';
+    this.userCalculatedCoefficient = '';
+    this.userMeanX = '';
+    this.userMeanY = '';
+    this.isTypeCorrect = false;
+    this.isStrengthCorrect = false;
+    this.isMatchCorrect = false;
+    this.isCalculateCorrect = false;
+    this.isMeanXCorrect = false;
+    this.isMeanYCorrect = false;
   }
 
   ngOnDestroy(): void {
@@ -47,9 +123,30 @@ export class CorrelationProblemsComponent implements AfterViewInit, OnDestroy {
    * Generate a new random dataset with correlation
    */
   generateNewDataset(): void {
-    // Randomly select a correlation pattern
     const patterns = ['strongPositive', 'strongNegative', 'moderate', 'weak', 'none'];
-    const selectedPattern = patterns[Math.floor(Math.random() * patterns.length)];
+    let selectedPattern: string;
+    
+    // Count how many times each pattern appeared recently
+    const patternCounts: { [key: string]: number } = {};
+    patterns.forEach(p => patternCounts[p] = 0);
+    this.recentPatterns.forEach(p => patternCounts[p] = (patternCounts[p] || 0) + 1);
+    
+    // Find patterns that haven't appeared recently or appeared least
+    const minCount = Math.min(...patterns.map(p => patternCounts[p]));
+    const leastUsedPatterns = patterns.filter(p => patternCounts[p] === minCount);
+    
+    // 70% chance to pick from least used, 30% chance to pick randomly
+    if (Math.random() < 0.7 && leastUsedPatterns.length > 0) {
+      selectedPattern = leastUsedPatterns[Math.floor(Math.random() * leastUsedPatterns.length)];
+    } else {
+      selectedPattern = patterns[Math.floor(Math.random() * patterns.length)];
+    }
+    
+    // Track this pattern
+    this.recentPatterns.push(selectedPattern);
+    if (this.recentPatterns.length > this.maxRecentPatterns) {
+      this.recentPatterns.shift(); // Remove oldest
+    }
 
     switch (selectedPattern) {
       case 'strongPositive':
@@ -87,7 +184,7 @@ export class CorrelationProblemsComponent implements AfterViewInit, OnDestroy {
    */
   generateStrongPositive(): Array<{ x: number, y: number }> {
     const points: Array<{ x: number, y: number }> = [];
-    const numPoints = 15 + Math.floor(Math.random() * 11); // 15-25 points
+    const numPoints = 20 + Math.floor(Math.random() * 11); // 20-30 points for consistency
     const slope = 0.8 + Math.random() * 0.4; // 0.8-1.2
     const intercept = 10 + Math.random() * 20; // 10-30
 
@@ -105,7 +202,7 @@ export class CorrelationProblemsComponent implements AfterViewInit, OnDestroy {
    */
   generateStrongNegative(): Array<{ x: number, y: number }> {
     const points: Array<{ x: number, y: number }> = [];
-    const numPoints = 15 + Math.floor(Math.random() * 11);
+    const numPoints = 20 + Math.floor(Math.random() * 11); // 20-30 points for consistency
     const slope = -(0.8 + Math.random() * 0.4); // -0.8 to -1.2
     const intercept = 70 + Math.random() * 20; // 70-90
 
@@ -123,14 +220,14 @@ export class CorrelationProblemsComponent implements AfterViewInit, OnDestroy {
    */
   generateModerate(): Array<{ x: number, y: number }> {
     const points: Array<{ x: number, y: number }> = [];
-    const numPoints = 15 + Math.floor(Math.random() * 11);
+    const numPoints = 20 + Math.floor(Math.random() * 11); // 20-30 points for better stability
     const isPositive = Math.random() > 0.5;
-    const slope = (isPositive ? 1 : -1) * (0.6 + Math.random() * 0.3);
+    const slope = (isPositive ? 1 : -1) * (0.5 + Math.random() * 0.2); // More controlled slope
     const intercept = isPositive ? 20 : 70;
 
     for (let i = 0; i < numPoints; i++) {
       const x = 10 + Math.random() * 80;
-      const y = slope * x + intercept + (Math.random() - 0.5) * 25; // medium noise
+      const y = slope * x + intercept + (Math.random() - 0.5) * 30; // Increased noise for moderate
       points.push({ x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 });
     }
 
@@ -142,14 +239,14 @@ export class CorrelationProblemsComponent implements AfterViewInit, OnDestroy {
    */
   generateWeak(): Array<{ x: number, y: number }> {
     const points: Array<{ x: number, y: number }> = [];
-    const numPoints = 15 + Math.floor(Math.random() * 11);
+    const numPoints = 20 + Math.floor(Math.random() * 11); // 20-30 points for better stability
     const isPositive = Math.random() > 0.5;
-    const slope = (isPositive ? 1 : -1) * (0.3 + Math.random() * 0.3);
+    const slope = (isPositive ? 1 : -1) * (0.25 + Math.random() * 0.25); // Smaller slope
     const intercept = 40;
 
     for (let i = 0; i < numPoints; i++) {
       const x = 10 + Math.random() * 80;
-      const y = slope * x + intercept + (Math.random() - 0.5) * 40; // high noise
+      const y = slope * x + intercept + (Math.random() - 0.5) * 45; // high noise
       points.push({ x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 });
     }
 
@@ -161,7 +258,7 @@ export class CorrelationProblemsComponent implements AfterViewInit, OnDestroy {
    */
   generateNone(): Array<{ x: number, y: number }> {
     const points: Array<{ x: number, y: number }> = [];
-    const numPoints = 15 + Math.floor(Math.random() * 11);
+    const numPoints = 20 + Math.floor(Math.random() * 11); // 20-30 points for better stability
 
     for (let i = 0; i < numPoints; i++) {
       const x = 10 + Math.random() * 80;
@@ -416,5 +513,229 @@ export class CorrelationProblemsComponent implements AfterViewInit, OnDestroy {
       'none': 'None/Very Weak'
     };
     return labels[type] || type;
+  }
+
+  /**
+   * Get question title based on current question type
+   */
+  getQuestionTitle(): string {
+    switch (this.currentQuestionType) {
+      case 'analyze':
+        return this.translate.instant('problems_correlation_instructions_title');
+      case 'match':
+        return 'Match Coefficient to Plot';
+      case 'calculate':
+        return 'Calculate Correlation';
+      default:
+        return this.translate.instant('problems_correlation_instructions_title');
+    }
+  }
+
+  /**
+   * Get question description based on current question type
+   */
+  getQuestionDescription(): string {
+    switch (this.currentQuestionType) {
+      case 'analyze':
+        return this.translate.instant('problems_correlation_instructions');
+      case 'match':
+        return 'Look at the scatter plot below and select the correlation coefficient (r) that best matches the pattern you see. The scatter plot shows the relationship between two variables.';
+      case 'calculate':
+        return 'Follow the step-by-step calculation guide below. First calculate the means of X and Y, then use those to find the correlation coefficient (r).';
+      default:
+        return this.translate.instant('problems_correlation_instructions');
+    }
+  }
+
+  /**
+   * Question 2: Generate match coefficient to plot question
+   */
+  generateMatchQuestion(): void {
+    // Generate a dataset
+    const patterns = ['strongPositive', 'strongNegative', 'moderate', 'weak', 'none'];
+    const selectedPattern = patterns[Math.floor(Math.random() * patterns.length)];
+    
+    switch (selectedPattern) {
+      case 'strongPositive':
+        this.randomDataset = this.generateStrongPositive();
+        break;
+      case 'strongNegative':
+        this.randomDataset = this.generateStrongNegative();
+        break;
+      case 'moderate':
+        this.randomDataset = this.generateModerate();
+        break;
+      case 'weak':
+        this.randomDataset = this.generateWeak();
+        break;
+      case 'none':
+        this.randomDataset = this.generateNone();
+        break;
+    }
+
+    // Calculate the actual correlation
+    this.calculateCorrelation();
+    
+    // Generate 4 options: correct answer + 3 distractors
+    const correctR = this.correlationCoefficient;
+    this.matchCoefficientOptions = [];
+    
+    // Add correct answer
+    this.matchCoefficientOptions.push(correctR);
+    
+    // Generate distractors
+    const distractors = new Set<number>();
+    while (distractors.size < 3) {
+      let distractor: number;
+      if (Math.abs(correctR) >= 0.7) {
+        // Strong correlation - use moderate/weak options
+        distractor = (Math.random() > 0.5 ? 1 : -1) * (0.3 + Math.random() * 0.4);
+      } else if (Math.abs(correctR) >= 0.5) {
+        // Moderate - use strong/weak
+        distractor = (Math.random() > 0.5 ? 1 : -1) * (Math.random() > 0.5 ? 0.8 : 0.2 + Math.random() * 0.2);
+      } else {
+        // Weak/none - use strong/moderate
+        distractor = (Math.random() > 0.5 ? 1 : -1) * (0.5 + Math.random() * 0.4);
+      }
+      
+      // Round to 3 decimals and ensure it's different from correct answer
+      const roundedDistractor = Math.round(distractor * 1000) / 1000;
+      if (Math.abs(roundedDistractor - correctR) > 0.1) {
+        distractors.add(roundedDistractor);
+      }
+    }
+    
+    this.matchCoefficientOptions.push(...Array.from(distractors));
+    
+    // Shuffle options
+    for (let i = this.matchCoefficientOptions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.matchCoefficientOptions[i], this.matchCoefficientOptions[j]] = 
+        [this.matchCoefficientOptions[j], this.matchCoefficientOptions[i]];
+    }
+    
+    // Find correct index after shuffle
+    this.correctCoefficientIndex = this.matchCoefficientOptions.findIndex(
+      opt => Math.abs(opt - correctR) < 0.001
+    );
+    
+    // Update chart
+    this.updateChartWithData();
+    
+    // Reset state
+    this.userSelectedCoefficient = '';
+    this.submittedAnswer = false;
+    this.showFeedback = false;
+  }
+
+  /**
+   * Question 2: Submit match answer
+   */
+  submitMatchAnswer(): void {
+    if (!this.userSelectedCoefficient) {
+      alert('Please select a correlation coefficient.');
+      return;
+    }
+    
+    const selectedIndex = parseInt(this.userSelectedCoefficient);
+    this.isMatchCorrect = selectedIndex === this.correctCoefficientIndex;
+    this.submittedAnswer = true;
+    this.showFeedback = true;
+    this.addRegressionLine();
+  }
+
+  /**
+   * Question 5: Generate calculate correlation question
+   * Generate a very simple, introductory dataset (3-4 points) with whole numbers
+   */
+  generateCalculateQuestion(): void {
+    // Generate a very simple dataset for introductory calculation
+    const numPoints = 3 + Math.floor(Math.random() * 2); // 3-4 points
+    const isPositive = Math.random() > 0.5;
+    
+    // Simple linear relationship with whole numbers and better spacing
+    this.calculateDataset = [];
+    if (isPositive) {
+      // Positive correlation examples with better spacing
+      const examples = [
+        [{ x: 5, y: 10 }, { x: 15, y: 20 }, { x: 25, y: 30 }],
+        [{ x: 5, y: 12 }, { x: 15, y: 22 }, { x: 25, y: 32 }, { x: 35, y: 42 }],
+        [{ x: 10, y: 20 }, { x: 25, y: 35 }, { x: 40, y: 50 }],
+        [{ x: 5, y: 25 }, { x: 20, y: 35 }, { x: 35, y: 45 }, { x: 50, y: 55 }],
+        [{ x: 10, y: 15 }, { x: 30, y: 25 }, { x: 50, y: 35 }],
+        [{ x: 5, y: 20 }, { x: 25, y: 30 }, { x: 45, y: 40 }, { x: 65, y: 50 }]
+      ];
+      const selected = examples[Math.floor(Math.random() * examples.length)];
+      this.calculateDataset = selected.slice(0, numPoints);
+    } else {
+      // Negative correlation examples with better spacing
+      const examples = [
+        [{ x: 5, y: 30 }, { x: 15, y: 20 }, { x: 25, y: 10 }],
+        [{ x: 5, y: 45 }, { x: 15, y: 35 }, { x: 25, y: 25 }, { x: 35, y: 15 }],
+        [{ x: 10, y: 60 }, { x: 25, y: 40 }, { x: 40, y: 20 }],
+        [{ x: 5, y: 55 }, { x: 20, y: 45 }, { x: 35, y: 35 }, { x: 50, y: 25 }],
+        [{ x: 10, y: 50 }, { x: 30, y: 30 }, { x: 50, y: 10 }],
+        [{ x: 5, y: 60 }, { x: 25, y: 50 }, { x: 45, y: 40 }, { x: 65, y: 30 }]
+      ];
+      const selected = examples[Math.floor(Math.random() * examples.length)];
+      this.calculateDataset = selected.slice(0, numPoints);
+    }
+
+    // Also set randomDataset for chart display
+    this.randomDataset = [...this.calculateDataset];
+
+    // Calculate actual correlation
+    const xValues = this.calculateDataset.map(point => point.x);
+    const yValues = this.calculateDataset.map(point => point.y);
+    this.correlationCoefficient = sampleCorrelation(xValues, yValues);
+    
+    // Calculate means for guidance
+    this.calculatedMeanX = xValues.reduce((a, b) => a + b, 0) / xValues.length;
+    this.calculatedMeanY = yValues.reduce((a, b) => a + b, 0) / yValues.length;
+    
+    // Update chart
+    this.updateChartWithData();
+    
+    // Reset state
+    this.userMeanX = '';
+    this.userMeanY = '';
+    this.userCalculatedCoefficient = '';
+    this.submittedAnswer = false;
+    this.showFeedback = false;
+  }
+
+  /**
+   * Question 5: Submit calculate answer
+   */
+  submitCalculateAnswer(): void {
+    // Check all required fields
+    if (!this.userMeanX || !this.userMeanY || !this.userCalculatedCoefficient) {
+      alert('Please complete all steps: calculate the means and the correlation coefficient.');
+      return;
+    }
+    
+    const userMeanXVal = parseFloat(this.userMeanX);
+    const userMeanYVal = parseFloat(this.userMeanY);
+    const userRValue = parseFloat(this.userCalculatedCoefficient);
+    
+    if (isNaN(userMeanXVal) || isNaN(userMeanYVal) || isNaN(userRValue)) {
+      alert('Please enter valid numbers for all fields.');
+      return;
+    }
+    
+    // Check mean X (allow ±0.1 tolerance)
+    this.isMeanXCorrect = Math.abs(userMeanXVal - this.calculatedMeanX) <= this.calculateTolerance;
+    
+    // Check mean Y (allow ±0.1 tolerance)
+    this.isMeanYCorrect = Math.abs(userMeanYVal - this.calculatedMeanY) <= this.calculateTolerance;
+    
+    // Check correlation coefficient (allow ±0.1 tolerance)
+    const roundedCorrect = Math.round(this.correlationCoefficient * 10) / 10;
+    const roundedUser = Math.round(userRValue * 10) / 10;
+    this.isCalculateCorrect = Math.abs(roundedUser - roundedCorrect) <= this.calculateTolerance;
+    
+    this.submittedAnswer = true;
+    this.showFeedback = true;
+    this.addRegressionLine();
   }
 }

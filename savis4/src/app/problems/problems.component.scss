@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap');
+
 .problems-container {
   min-height: 100vh;
-  padding: 40px;
+  padding: 20px;
   background-color: var(--fifth-col);
 
   .title {
@@ -10,10 +13,10 @@
   }
 
   .content {
+    width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-start;
-    gap: 40px;
 
     .text-section {
       flex: 0.6;
@@ -46,7 +49,8 @@ h1{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    margin: auto;
+    width: 100%;
+    max-width: none;
 }
 
 /* Styling for each column */
@@ -54,35 +58,41 @@ h1{
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 3vh;
+    margin: 1vh;
 }
 
 /* Tool title styling */
-.tool1, .tool2, .tool3, .tool4 {
-    font-size: 1.6rem;
-    font-weight: bold;
-    margin-bottom: 2vh;
-    color: black;
+.tool1, .tool2, .tool3 {
+    margin: 2em auto 1em;
+    color: var(--second-col);
     text-align: center;
-    font-family: 'Poppins', sans-serif;
-    text-decoration: underline;
+    font-family: 'Roboto Slab', serif;
+    font-size: 1.5em;
+    width: 100%;
+    max-width: 310px;
 }
 
 /* Individual box styling */
-.box, .box2, .box3, .box4 {
-    width: 410px;
+.box, .box2, .box3 {
+    width: 310px;
     padding: 2vh;
     margin: 1vh auto;
     background-color: var(--third-col);
     border-radius: 2px;
     font-family: 'Poppins', sans-serif;
     color: beige;
-    font-weight: bolder;
     text-align: center;
 }
 
 /* Box hovering effects */
-.box:hover, .box2:hover, .box3:hover, .box4:hover {
+.box:hover, .box2:hover, .box3:hover {
     background-color: var(--fourth-col);
     cursor: pointer;
+}
+
+/* Styling size based on user's display size */
+@media(max-width: 600px) {
+    .box-container{
+        flex-direction: column;
+    }
 }

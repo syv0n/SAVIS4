@@ -170,6 +170,46 @@ export class InputComponent implements OnInit, OnDestroy {
   fileData: any[] = [];
   select1 = new FormControl();
   select2 = new FormControl();
+  
+  // Watch for column selection changes to auto-populate manual input
+  private setupColumnWatchers() {
+    // Watch for both selections to be made
+    this.select1.valueChanges.subscribe(() => {
+      if (this.select1.value && this.select2.value) {
+        this.autoLoadDataToManualInput();
+      }
+    });
+    
+    this.select2.valueChanges.subscribe(() => {
+      if (this.select1.value && this.select2.value) {
+        this.autoLoadDataToManualInput();
+      }
+    });
+  }
+  
+  // Automatically load selected columns into manual input textareas
+  private autoLoadDataToManualInput() {
+    if (!this.select1.value || !this.select2.value || !this.fileData || this.fileData.length === 0) {
+      return;
+    }
+    
+    const selected1 = this.select1.value;
+    const selected2 = this.select2.value;
+    const xValuesArray: number[] = [];
+    const yValuesArray: number[] = [];
+    
+    for (let i = 0; i < this.fileData.length; i++) {
+      const data = this.fileData[i];
+      if (data[selected1] !== undefined && data[selected2] !== undefined) {
+        xValuesArray.push(data[selected1]);
+        yValuesArray.push(data[selected2]);
+      }
+    }
+    
+    // Convert arrays to comma-separated strings and populate form controls
+    this.xValues?.setValue(xValuesArray.join(','));
+    this.yValues?.setValue(yValuesArray.join(','));
+  }
 
   chart1: any;
   demodata1: any[] = [
@@ -802,6 +842,9 @@ export class InputComponent implements OnInit, OnDestroy {
         this.yValues?.clearValidators();
       },
     });
+    
+    // Setup watchers for automatic column selection -> manual input population
+    this.setupColumnWatchers();
     
   }
 

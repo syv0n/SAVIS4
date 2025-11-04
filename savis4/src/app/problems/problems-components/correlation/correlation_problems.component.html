@@ -3,97 +3,264 @@
 <div class="correlation-container">
   <h1 class="title">{{'problems_correlation_title' | translate}}</h1>
   <div button="back" routerLink="/problems" class="back-button">
-    &larr; {{ 'problems_back' | translate }}
-  </div>
+      &larr; {{ 'problems_back' | translate }}
+    </div>
   
   <div class="content">
     <!-- Left side: Instructions and Input -->
     <div class="text-section">
       <!-- Instructions box -->
       <div class="green-box">
-        <h3>{{ 'problems_correlation_instructions_title' | translate }}</h3>
-        <p [innerHTML]="'problems_correlation_instructions' | translate"></p>
+        <div class="instructions-header">
+          <h3>{{ getQuestionTitle() }}</h3>
+          <div class="question-type-selector">
+            <select [(ngModel)]="currentQuestionType" (change)="changeQuestionType(currentQuestionType)" class="question-type-dropdown">
+              <option *ngFor="let qType of questionTypes" [value]="qType.value">{{ qType.label }}</option>
+            </select>
+          </div>
+        </div>
+        <div [innerHTML]="getQuestionDescription()"></div>
       </div>
 
-      <!-- Generate New Dataset Button -->
-      <button class="generate-button" (click)="generateNewDataset()">
-        {{ 'problems_correlation_generate' | translate }}
-      </button>
+      <!-- Question Type 1: Analyze the Correlation -->
+      <div *ngIf="currentQuestionType === 'analyze'">
+        <!-- Generate New Dataset Button -->
+        <button class="generate-button" (click)="generateNewDataset()">
+          {{ 'problems_correlation_generate' | translate }}
+        </button>
 
-      <!-- User Input Section -->
-      <div class="input-section">
-        <div class="input-group">
-          <label for="correlationType">{{ 'problems_correlation_type_label' | translate }}</label>
-          <select id="correlationType" [(ngModel)]="userCorrelationType" [disabled]="submittedAnswer">
-            <option value="">-- {{ 'problems_correlation_select' | translate }} --</option>
-            <option value="positive">{{ 'problems_correlation_type_positive' | translate }}</option>
-            <option value="negative">{{ 'problems_correlation_type_negative' | translate }}</option>
-            <option value="none">{{ 'problems_correlation_type_none' | translate }}</option>
-          </select>
+        <!-- User Input Section -->
+        <div class="input-section">
+          <div class="input-group">
+            <label for="correlationType">{{ 'problems_correlation_type_label' | translate }}</label>
+            <select id="correlationType" [(ngModel)]="userCorrelationType" [disabled]="submittedAnswer">
+              <option value="">-- {{ 'problems_correlation_select' | translate }} --</option>
+              <option value="positive">{{ 'problems_correlation_type_positive' | translate }}</option>
+              <option value="negative">{{ 'problems_correlation_type_negative' | translate }}</option>
+              <option value="none">{{ 'problems_correlation_type_none' | translate }}</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="correlationStrength">{{ 'problems_correlation_strength_label' | translate }}</label>
+            <select id="correlationStrength" [(ngModel)]="userStrength" [disabled]="submittedAnswer">
+              <option value="">-- {{ 'problems_correlation_select' | translate }} --</option>
+              <option value="very-strong">{{ 'problems_correlation_strength_very_strong' | translate }}</option>
+              <option value="strong">{{ 'problems_correlation_strength_strong' | translate }}</option>
+              <option value="moderate">{{ 'problems_correlation_strength_moderate' | translate }}</option>
+              <option value="weak">{{ 'problems_correlation_strength_weak' | translate }}</option>
+              <option value="very-weak">{{ 'problems_correlation_strength_very_weak' | translate }}</option>
+            </select>
+          </div>
         </div>
 
-        <div class="input-group">
-          <label for="correlationStrength">{{ 'problems_correlation_strength_label' | translate }}</label>
-          <select id="correlationStrength" [(ngModel)]="userStrength" [disabled]="submittedAnswer">
-            <option value="">-- {{ 'problems_correlation_select' | translate }} --</option>
-            <option value="very-strong">{{ 'problems_correlation_strength_very_strong' | translate }}</option>
-            <option value="strong">{{ 'problems_correlation_strength_strong' | translate }}</option>
-            <option value="moderate">{{ 'problems_correlation_strength_moderate' | translate }}</option>
-            <option value="weak">{{ 'problems_correlation_strength_weak' | translate }}</option>
-            <option value="very-weak">{{ 'problems_correlation_strength_very_weak' | translate }}</option>
-          </select>
-        </div>
+        <!-- Submit Button -->
+        <button class="submit-button" (click)="submitAnswer()" *ngIf="!submittedAnswer">
+          {{ 'problems_correlation_submit' | translate }}
+        </button>
       </div>
 
-      <!-- Submit Button -->
-      <button class="submit-button" (click)="submitAnswer()" *ngIf="!submittedAnswer">
-        {{ 'problems_correlation_submit' | translate }}
-      </button>
+      <!-- Question Type 2: Match Coefficient to Plot -->
+      <div *ngIf="currentQuestionType === 'match'">
+        <button class="generate-button" (click)="generateMatchQuestion()">
+          {{ 'problems_correlation_generate' | translate }}
+        </button>
+
+        <div class="input-section">
+          <div class="input-group">
+            <label>Select the correlation coefficient (r) that best matches the scatter plot:</label>
+            <select [(ngModel)]="userSelectedCoefficient" [disabled]="submittedAnswer">
+              <option value="">-- Select Coefficient --</option>
+              <option *ngFor="let option of matchCoefficientOptions; let i = index" [value]="i">
+                r = {{ option.toFixed(3) }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <button class="submit-button" (click)="submitMatchAnswer()" *ngIf="!submittedAnswer">
+          {{ 'problems_correlation_submit' | translate }}
+        </button>
+      </div>
+
+      <!-- Question Type 5: Calculate Correlation -->
+      <div *ngIf="currentQuestionType === 'calculate'">
+        <button class="generate-button" (click)="generateCalculateQuestion()">
+          {{ 'problems_correlation_generate' | translate }}
+        </button>
+
+        <div class="input-section">
+          <div class="input-group">
+            <p class="instruction-text">Follow these steps to calculate the correlation coefficient (r). Round each answer to 1 decimal place.</p>
+
+            <div class="simple-dataset-display" *ngIf="calculateDataset.length > 0">
+              <table class="simple-data-table">
+                <thead>
+                  <tr>
+                    <th>X</th>
+                    <th>Y</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let point of calculateDataset">
+                    <td>{{ point.x }}</td>
+                    <td>{{ point.y }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="calculation-steps">
+              <div class="step-box">
+                <p class="step-label"><strong>Step 1:</strong> Calculate the mean of X (x̄)</p>
+                <p class="step-hint">Add all X values and divide by the number of data points</p>
+                <input type="number" step="0.1" placeholder="e.g., 15.0" [(ngModel)]="userMeanX" [disabled]="submittedAnswer" 
+                       class="step-input" [ngClass]="{'correct': isMeanXCorrect && submittedAnswer, 'incorrect': !isMeanXCorrect && submittedAnswer}">
+              </div>
+
+              <div class="step-box">
+                <p class="step-label"><strong>Step 2:</strong> Calculate the mean of Y (ȳ)</p>
+                <p class="step-hint">Add all Y values and divide by the number of data points</p>
+                <input type="number" step="0.1" placeholder="e.g., 25.0" [(ngModel)]="userMeanY" [disabled]="submittedAnswer"
+                       class="step-input" [ngClass]="{'correct': isMeanYCorrect && submittedAnswer, 'incorrect': !isMeanYCorrect && submittedAnswer}">
+              </div>
+
+              <div class="step-box">
+                <p class="step-label"><strong>Step 3:</strong> Calculate the correlation coefficient (r)</p>
+                <p class="step-hint">Use the formula: r = Σ[(x - x̄)(y - ȳ)] / √[Σ(x - x̄)² × Σ(y - ȳ)²]</p>
+                <p class="step-hint-small">Hint: For simple datasets, you can estimate r ≈ +1 if X and Y both increase together, r ≈ -1 if one increases while the other decreases, or r ≈ 0 if there's no clear pattern.</p>
+                <input type="number" step="0.1" placeholder="e.g., 0.8" [(ngModel)]="userCalculatedCoefficient" [disabled]="submittedAnswer"
+                       class="step-input" [ngClass]="{'correct': isCalculateCorrect && submittedAnswer, 'incorrect': !isCalculateCorrect && submittedAnswer}">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="submit-button" (click)="submitCalculateAnswer()" *ngIf="!submittedAnswer">
+          {{ 'problems_correlation_submit' | translate }}
+        </button>
+      </div>
 
       <!-- Feedback Section -->
       <div *ngIf="showFeedback" class="feedback-section">
         <!-- Correlation Coefficient Display -->
         <div class="coefficient-display">
           <p class="coefficient-label">{{ 'problems_correlation_coefficient_label' | translate }}</p>
-          <p class="coefficient-value">r = {{ correlationCoefficient.toFixed(3) }}</p>
+          <p class="coefficient-value">r = {{ currentQuestionType === 'calculate' ? correlationCoefficient.toFixed(2) : correlationCoefficient.toFixed(3) }}</p>
         </div>
 
-        <!-- Type Feedback -->
-        <div class="feedback-box" [ngClass]="isTypeCorrect ? 'correct' : 'incorrect'">
-          <p class="feedback-title">
-            <span *ngIf="isTypeCorrect">✓</span>
-            <span *ngIf="!isTypeCorrect">✗</span>
-            {{ 'problems_correlation_type_label' | translate }}
-          </p>
-          <p *ngIf="isTypeCorrect" class="feedback-message">
-            {{ 'problems_correlation_correct' | translate }}
-          </p>
-          <p *ngIf="!isTypeCorrect" class="feedback-message">
-            {{ 'problems_correlation_incorrect' | translate }}
-            <br>
-            <strong>{{ 'problems_correlation_correct_answer' | translate }}:</strong> {{ getTypeLabel(correctCorrelationType) }}
-          </p>
+        <!-- Question Type 1 Feedback -->
+        <div *ngIf="currentQuestionType === 'analyze'">
+          <!-- Type Feedback -->
+          <div class="feedback-box" [ngClass]="isTypeCorrect ? 'correct' : 'incorrect'">
+            <p class="feedback-title">
+              <span *ngIf="isTypeCorrect">✓</span>
+              <span *ngIf="!isTypeCorrect">✗</span>
+              {{ 'problems_correlation_type_label' | translate }}
+            </p>
+            <p *ngIf="isTypeCorrect" class="feedback-message">
+              {{ 'problems_correlation_correct' | translate }}
+            </p>
+            <p *ngIf="!isTypeCorrect" class="feedback-message">
+              {{ 'problems_correlation_incorrect' | translate }}
+              <br>
+              <strong>{{ 'problems_correlation_correct_answer' | translate }}:</strong> {{ getTypeLabel(correctCorrelationType) }}
+            </p>
+          </div>
+
+          <!-- Strength Feedback -->
+          <div class="feedback-box" [ngClass]="isStrengthCorrect ? 'correct' : 'incorrect'">
+            <p class="feedback-title">
+              <span *ngIf="isStrengthCorrect">✓</span>
+              <span *ngIf="!isStrengthCorrect">✗</span>
+              {{ 'problems_correlation_strength_label' | translate }}
+            </p>
+            <p *ngIf="isStrengthCorrect" class="feedback-message">
+              {{ 'problems_correlation_correct' | translate }}
+            </p>
+            <p *ngIf="!isStrengthCorrect" class="feedback-message">
+              {{ 'problems_correlation_incorrect' | translate }}
+              <br>
+              <strong>{{ 'problems_correlation_correct_answer' | translate }}:</strong> {{ getStrengthLabel(correctStrength) }}
+            </p>
+          </div>
         </div>
 
-        <!-- Strength Feedback -->
-        <div class="feedback-box" [ngClass]="isStrengthCorrect ? 'correct' : 'incorrect'">
-          <p class="feedback-title">
-            <span *ngIf="isStrengthCorrect">✓</span>
-            <span *ngIf="!isStrengthCorrect">✗</span>
-            {{ 'problems_correlation_strength_label' | translate }}
-          </p>
-          <p *ngIf="isStrengthCorrect" class="feedback-message">
-            {{ 'problems_correlation_correct' | translate }}
-          </p>
-          <p *ngIf="!isStrengthCorrect" class="feedback-message">
-            {{ 'problems_correlation_incorrect' | translate }}
-            <br>
-            <strong>{{ 'problems_correlation_correct_answer' | translate }}:</strong> {{ getStrengthLabel(correctStrength) }}
-          </p>
+        <!-- Question Type 2 Feedback -->
+        <div *ngIf="currentQuestionType === 'match'">
+          <div class="feedback-box" [ngClass]="isMatchCorrect ? 'correct' : 'incorrect'">
+            <p class="feedback-title">
+              <span *ngIf="isMatchCorrect">✓</span>
+              <span *ngIf="!isMatchCorrect">✗</span>
+              Your Answer
+            </p>
+            <p *ngIf="isMatchCorrect" class="feedback-message">
+              {{ 'problems_correlation_correct' | translate }}
+            </p>
+            <p *ngIf="!isMatchCorrect" class="feedback-message">
+              {{ 'problems_correlation_incorrect' | translate }}
+              <br>
+              <strong>{{ 'problems_correlation_correct_answer' | translate }}:</strong> r = {{ correlationCoefficient.toFixed(3) }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Question Type 5 Feedback -->
+        <div *ngIf="currentQuestionType === 'calculate'">
+          <!-- Mean X Feedback -->
+          <div class="feedback-box" [ngClass]="isMeanXCorrect ? 'correct' : 'incorrect'">
+            <p class="feedback-title">
+              <span *ngIf="isMeanXCorrect">✓</span>
+              <span *ngIf="!isMeanXCorrect">✗</span>
+              Step 1: Mean of X (x̄)
+            </p>
+            <p *ngIf="isMeanXCorrect" class="feedback-message">
+              {{ 'problems_correlation_correct' | translate }}
+            </p>
+            <p *ngIf="!isMeanXCorrect" class="feedback-message">
+              {{ 'problems_correlation_incorrect' | translate }}
+              <br>
+              <strong>{{ 'problems_correlation_correct_answer' | translate }}:</strong> x̄ = {{ calculatedMeanX.toFixed(1) }}
+            </p>
+          </div>
+
+          <!-- Mean Y Feedback -->
+          <div class="feedback-box" [ngClass]="isMeanYCorrect ? 'correct' : 'incorrect'">
+            <p class="feedback-title">
+              <span *ngIf="isMeanYCorrect">✓</span>
+              <span *ngIf="!isMeanYCorrect">✗</span>
+              Step 2: Mean of Y (ȳ)
+            </p>
+            <p *ngIf="isMeanYCorrect" class="feedback-message">
+              {{ 'problems_correlation_correct' | translate }}
+            </p>
+            <p *ngIf="!isMeanYCorrect" class="feedback-message">
+              {{ 'problems_correlation_incorrect' | translate }}
+              <br>
+              <strong>{{ 'problems_correlation_correct_answer' | translate }}:</strong> ȳ = {{ calculatedMeanY.toFixed(1) }}
+            </p>
+          </div>
+
+          <!-- Correlation Coefficient Feedback -->
+          <div class="feedback-box" [ngClass]="isCalculateCorrect ? 'correct' : 'incorrect'">
+            <p class="feedback-title">
+              <span *ngIf="isCalculateCorrect">✓</span>
+              <span *ngIf="!isCalculateCorrect">✗</span>
+              Step 3: Correlation Coefficient (r)
+            </p>
+            <p *ngIf="isCalculateCorrect" class="feedback-message">
+              {{ 'problems_correlation_correct' | translate }}
+            </p>
+            <p *ngIf="!isCalculateCorrect" class="feedback-message">
+              {{ 'problems_correlation_incorrect' | translate }}
+              <br>
+              <strong>{{ 'problems_correlation_correct_answer' | translate }}:</strong> r = {{ correlationCoefficient.toFixed(1) }}
+            </p>
+          </div>
         </div>
 
         <!-- Try Again Button -->
-        <button class="try-again-button" (click)="generateNewDataset()">
+        <button class="try-again-button" (click)="initializeQuestion()">
           {{ 'problems_correlation_try_again' | translate }}
         </button>
       </div>
@@ -101,7 +268,7 @@
 
     <!-- Right side: Chart -->
     <div class="chart-container">
-      <canvas #inputChart width="1500" height="600"></canvas>
+      <canvas #inputChart></canvas>
       
       <!-- Helper Text -->
       <div class="chart-helper" *ngIf="!submittedAnswer">
