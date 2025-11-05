@@ -13,9 +13,10 @@ describe('User Manual E2E Tests', () => {
 
     it('should display all four main categories', () => {
         cy.get('.tool1').should('be.visible')
-        cy.get('.tool2').should('be.visible')
+        cy.get('.tool2').should('have.length', 2).each(($el) => {
+            cy.wrap($el).should('be.visible')
+        })
         cy.get('.tool3').should('be.visible')
-        cy.get('.tool4').should('be.visible')
     })
     
     describe('Hypothesis Testing Section', () => {
@@ -68,48 +69,48 @@ describe('User Manual E2E Tests', () => {
 
     describe('Regression Section', () => {
         it('should display all regression boxes', () => {
-            cy.get('.tool3').should('contain.text', 'Regression')
-            cy.get('.box3[routerLink="/regression"]').should('be.visible')
-            cy.get('.box3[routerLink="/correlation-manual"]').should('be.visible')
+            cy.contains('.tool2', 'Regression').should('be.visible')
+            cy.get('.box2[routerLink="/regression"]').should('be.visible')
+            cy.get('.box2[routerLink="/correlation-manual"]').should('be.visible')
         })
 
         it('should navigate to Regression', () => {
-            cy.get('.box3[routerLink="/regression"]').click()
+            cy.get('.box2[routerLink="/regression"]').click()
             cy.url().should('include', '/regression')
         })
 
         it('should navigate to Correlation Manual', () => {
-            cy.get('.box3[routerLink="/correlation-manual"]').click()
+            cy.get('.box2[routerLink="/correlation-manual"]').click()
             cy.url().should('include', '/correlation-manual')
         })
     })
 
     describe('Confidence Interval Section', () => {
         it('should display all confidence interval boxes', () => {
-            cy.get('.tool4').should('contain.text', 'Confidence Interval')
-            cy.get('.box4[routerLink="/opci"]').should('be.visible')
-            cy.get('.box4[routerLink="/tpci"]').should('be.visible')
-            cy.get('.box4[routerLink="/omci"]').should('be.visible')
-            cy.get('.box4[routerLink="/tmci"]').should('be.visible')
+            cy.get('.tool3').should('contain.text', 'Confidence Interval')
+            cy.get('.box3[routerLink="/opci"]').should('be.visible')
+            cy.get('.box3[routerLink="/tpci"]').should('be.visible')
+            cy.get('.box3[routerLink="/omci"]').should('be.visible')
+            cy.get('.box3[routerLink="/tmci"]').should('be.visible')
         })
 
         it('should navigate to One Proportion Confidence Interval', () => {
-            cy.get('.box4[routerLink="/opci"]').click()
+            cy.get('.box3[routerLink="/opci"]').click()
             cy.url().should('include', '/opci')
         })
 
         it('should navigate to Two Proportion Confidence Interval', () => {
-            cy.get('.box4[routerLink="/tpci"]').click()
+            cy.get('.box3[routerLink="/tpci"]').click()
             cy.url().should('include', '/tpci')
         })
 
         it('should navigate to One Mean Confidence Interval', () => {
-            cy.get('.box4[routerLink="/omci"]').click()
+            cy.get('.box3[routerLink="/omci"]').click()
             cy.url().should('include', '/omci')
         })
 
         it('should navigate to Two Mean Confidence Interval', () => {
-            cy.get('.box4[routerLink="/tmci"]').click()
+            cy.get('.box3[routerLink="/tmci"]').click()
             cy.url().should('include', '/tmci')
         })
     })
@@ -124,7 +125,7 @@ describe('User Manual E2E Tests', () => {
             cy.get('.box2[routerLink="/bar-chart"]').click()
             cy.url().should('include', '/bar-chart')
             cy.visit('localhost:4200/user-manual')
-            cy.get('.box3[routerLink="/regression"]').click()
+            cy.get('.box2[routerLink="/regression"]').click()
             cy.url().should('include', '/regression')
         })
 
@@ -149,9 +150,8 @@ describe('User Manual E2E Tests', () => {
 
         it('should have consistent styling across all boxes', () => {
             cy.get('.box').should('have.length', 4)
-            cy.get('.box2').should('have.length', 2)
-            cy.get('.box3').should('have.length', 2)
-            cy.get('.box4').should('have.length', 4)
+            cy.get('.box2').should('have.length', 4)
+            cy.get('.box3').should('have.length', 4)
         })
     })
 
