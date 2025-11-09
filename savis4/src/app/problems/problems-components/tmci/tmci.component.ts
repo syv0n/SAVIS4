@@ -193,13 +193,13 @@ export class TMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
         this.isCorrect = this.isStep4Correct && this.isStep5Correct;
 
         if (this.isCorrect) {
-          feedbackMessages.push(`✅ Correct! The 95% CI is (${this.correctLowerBound.toFixed(2)}, ${this.correctUpperBound.toFixed(2)}).`);
+          feedbackMessages.push(`Correct! The 95% CI is (${this.correctLowerBound.toFixed(2)}, ${this.correctUpperBound.toFixed(2)}).`);
           // Add a note if intermediate steps were slightly off (e.g., due to rounding)
           if (!this.isStep1Correct || !this.isStep2Correct || !this.isStep3Correct) {
             feedbackMessages.push(`Your final interval is right, but check the steps below for rounding differences.`);
           }
         } else {
-          feedbackMessages.push(`❌ Incorrect. The correct interval is (${this.correctLowerBound.toFixed(2)}, ${this.correctUpperBound.toFixed(2)}).`);
+          feedbackMessages.push(`Incorrect. The correct interval is (${this.correctLowerBound.toFixed(2)}, ${this.correctUpperBound.toFixed(2)}).`);
           feedbackMessages.push(`Check your steps against the correct values shown below.`);
         }
         break;
@@ -209,7 +209,7 @@ export class TMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
         const ansPointEst = parseFloat(this.userPointEstimate);
         this.isCorrect = this.isCloseEnough(ansPointEst, this.differenceInSampleMeans, 0.1);
         this.isStep1Correct = this.isCorrect;
-        feedbackMessages.push(this.isCorrect ? `✅ Correct! The point estimate is ${this.differenceInSampleMeans.toFixed(2)}.` : `❌ Incorrect. The correct point estimate is ${this.differenceInSampleMeans.toFixed(2)}.`);
+        feedbackMessages.push(this.isCorrect ? `Correct! The point estimate is ${this.differenceInSampleMeans.toFixed(2)}.` : `Incorrect. The correct point estimate is ${this.differenceInSampleMeans.toFixed(2)}.`);
         break;
 
       case 'sampling_dist_diff':
@@ -217,7 +217,7 @@ export class TMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
         const ansMuDiff = parseFloat(this.userMuDiff);
         this.isCorrect = this.isCloseEnough(ansMuDiff, this.trueDifferenceInMeans, 0.1);
         this.isStep1Correct = this.isCorrect;
-        feedbackMessages.push(this.isCorrect ? `✅ Correct! The center is ${this.trueDifferenceInMeans.toFixed(2)}.` : `❌ Incorrect. The correct center is ${this.trueDifferenceInMeans.toFixed(2)}.`);
+        feedbackMessages.push(this.isCorrect ? `Correct! The center is ${this.trueDifferenceInMeans.toFixed(2)}.` : `Incorrect. The correct center is ${this.trueDifferenceInMeans.toFixed(2)}.`);
         break;
 
       case 'se_diff':
@@ -225,7 +225,7 @@ export class TMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
         const ansSEDiff = parseFloat(this.userStdErrorDiff);
         this.isCorrect = this.isCloseEnough(ansSEDiff, this.correctStdErrorDiff, 0.01);
         this.isStep1Correct = this.isCorrect;
-        feedbackMessages.push(this.isCorrect ? `✅ Correct! The standard error is ${this.correctStdErrorDiff.toFixed(2)}.` : `❌ Incorrect. The correct standard error is ${this.correctStdErrorDiff.toFixed(2)}.`);
+        feedbackMessages.push(this.isCorrect ? `Correct! The standard error is ${this.correctStdErrorDiff.toFixed(2)}.` : `Incorrect. The correct standard error is ${this.correctStdErrorDiff.toFixed(2)}.`);
         feedbackMessages.push(`The blue line on the graph shows the interval <strong style='color:red;'>μ<sub>diff</sub> &plusmn; SE</strong>.`);
         break;
 
@@ -238,12 +238,12 @@ export class TMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
         this.isCorrect = this.isStep2Correct; // Final answer is the margin of error
 
         if (this.isCorrect) {
-          feedbackMessages.push(`✅ Correct! The margin of error is ${this.correctMarginOfErrorDiff.toFixed(2)}.`);
+          feedbackMessages.push(`Correct! The margin of error is ${this.correctMarginOfErrorDiff.toFixed(2)}.`);
           if (!this.isStep1Correct) {
             feedbackMessages.push(`Your final answer is right, but check the Standard Error step below.`);
           }
         } else {
-          feedbackMessages.push(`❌ Incorrect. The correct margin of error is ${this.correctMarginOfErrorDiff.toFixed(2)}.`);
+          feedbackMessages.push(`Incorrect. The correct margin of error is ${this.correctMarginOfErrorDiff.toFixed(2)}.`);
           feedbackMessages.push(`Check your steps against the correct values shown below.`);
         }
         feedbackMessages.push(`The blue line on the graph shows the interval <strong style='color:green;'>x̄<sub>diff</sub> &plusmn; ME</strong>.`);
@@ -373,13 +373,28 @@ export class TMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     // 4. Calculate Axis Bounds
-    // Collect all relevant x-values to determine the min/max for the x-axis
-    let bounds = [...scatterData.map(p => p.x as number)];
-    if (showSolutionElements || this.problemType !== 'sampling_dist_diff') {
-      bounds.push(this.trueDifferenceInMeans);
-    }
+    
+    // 4a. Calculate the theoretical Standard Error for the difference in means
+    const theoreticalSE = Math.sqrt((this.population1StdDev ** 2 / this.sample1Size) + (this.population2StdDev ** 2 / this.sample2Size));
+
+    // 4b. Define a base range around the true mean difference (4 SEs)
+    const baseMin = this.trueDifferenceInMeans - (4 * theoreticalSE);
+    const baseMax = this.trueDifferenceInMeans + (4 * theoreticalSE);
+
+    // 4c. Collect all relevant x-values to determine the final min/max
+    let bounds = [
+      ...scatterData.map(p => p.x as number),
+      baseMin,
+      baseMax
+    ];
+    
     if (curvePoints.length > 0) {
       bounds.push(...curvePoints.map(p => p.x as number));
+    }
+    
+    // Add solution lines to bounds if they are visible
+    if (showSolutionElements || this.problemType !== 'sampling_dist_diff') {
+      bounds.push(this.trueDifferenceInMeans);
     }
     if (showSolutionElements) {
       if (this.problemType !== 'sampling_dist_diff' && this.problemType !== 'se_diff') {
@@ -395,23 +410,31 @@ export class TMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
         bounds.push(this.differenceInSampleMeans - this.correctMarginOfErrorDiff, this.differenceInSampleMeans + this.correctMarginOfErrorDiff);
       }
     }
-    // Filter out any non-finite numbers
+    
+    // 4d. Filter, find min/max, and handle edge cases
     const finiteBounds = bounds.filter(isFinite);
-    let absoluteMinX = finiteBounds.length > 0 ? Math.min(...finiteBounds) : -10;
-    let absoluteMaxX = finiteBounds.length > 0 ? Math.max(...finiteBounds) : 10;
-    // Handle case where all points are the same
-    if (absoluteMinX === absoluteMaxX) {
-      absoluteMinX -= 5;
-      absoluteMaxX += 5;
+    let min = finiteBounds.length > 0 ? Math.min(...finiteBounds) : -10;
+    let max = finiteBounds.length > 0 ? Math.max(...finiteBounds) : 10;
+
+    if (min === max) {
+      min -= 5;
+      max += 5;
     }
 
     // 5. Update Chart Axes
-    const padding = (absoluteMaxX - absoluteMinX) * 0.05 || 1;
+    // Add 5% padding
+    const padding = (max - min) * 0.05 || 1;
     const scales = this.problemChart.options?.scales;
+    
     if (scales?.xAxes?.[0]?.ticks) {
-      scales.xAxes[0].ticks.min = Math.floor(absoluteMinX - padding);
-      scales.xAxes[0].ticks.max = Math.ceil(absoluteMaxX + padding);
+      // *Suggest* the min/max to Chart.js to get "nice" numbers
+      scales.xAxes[0].ticks.min = undefined; // Clear old forced min
+      scales.xAxes[0].ticks.max = undefined; // Clear old forced max
+      scales.xAxes[0].ticks.suggestedMin = min - padding;
+      scales.xAxes[0].ticks.suggestedMax = max + padding;
     }
+
+    // 5. Update Chart Axes
     if (scales?.xAxes?.[0]?.scaleLabel) {
       scales.xAxes[0].scaleLabel.labelString = xAxisLabel;
     }
@@ -468,7 +491,11 @@ export class TMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
     if (!this.problemChart) return;
     // Check if the CI captured the true parameter
     const didCapture = (this.correctLowerBound <= this.trueDifferenceInMeans) && (this.correctUpperBound >= this.trueDifferenceInMeans);
-    const color = didCapture ? 'rgba(0, 0, 255, 0.7)' : 'rgba(255, 0, 0, 0.7)'; // Blue if captured, Red if missed
+    
+    // Main color for line and points (more opaque)
+    const mainColor = didCapture ? 'rgba(0, 0, 255, 0.7)' : 'rgba(255, 0, 0, 0.7)';
+    // Fill color (much more transparent)
+    const fillColor = didCapture ? 'rgba(0, 0, 255, 0.2)' : 'rgba(255, 0, 0, 0.2)'; 
     
     this.problemChart.data.datasets.push({
       label: `95% CI (${didCapture ? 'captured' : 'missed'} μ₁-μ₂)`,
@@ -477,12 +504,12 @@ export class TMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
         { x: this.correctUpperBound, y: yPosition }
       ],
       type: 'line',
-      borderColor: color,
-      backgroundColor: color,
+      borderColor: mainColor,      // Use main color for border
+      backgroundColor: fillColor, // Use transparent color for fill
       borderWidth: 3,
       pointRadius: 6,
-      pointBackgroundColor: color,
-      fill: false,
+      pointBackgroundColor: mainColor, // Use main color for points
+      fill: 'origin', 
     });
   }
 
@@ -491,6 +518,21 @@ export class TMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   private addMetricIntervalLine(label: string, lowerBound: number, upperBound: number, yPosition: number, color: string): void {
     if (!this.problemChart) return;
+
+    // Use a transparent version of the passed-in color for the fill
+    // This is a simple way to get a fill color; 'blue' becomes 'rgba(0, 0, 255, 0.2)'
+    // We'll default to a light gray if the color name is unknown
+    let fillColor = 'rgba(128, 128, 128, 0.2)';
+    let mainColor = color; // The original color for the line/points
+    
+    if (color === 'blue') {
+      fillColor = 'rgba(0, 0, 255, 0.2)';
+      mainColor = 'rgba(0, 0, 255, 0.7)';
+    } else if (color === 'green') {
+      fillColor = 'rgba(0, 128, 0, 0.2)';
+      mainColor = 'rgba(0, 128, 0, 0.7)';
+    }
+
     this.problemChart.data.datasets.push({
       label: label,
       data: [
@@ -498,12 +540,12 @@ export class TMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
         { x: upperBound, y: yPosition }
       ],
       type: 'line',
-      borderColor: color,
-      backgroundColor: color,
+      borderColor: mainColor,
+      backgroundColor: fillColor, // Use transparent color for fill
       borderWidth: 3,
       pointRadius: 6,
-      pointBackgroundColor: color,
-      fill: false,
+      pointBackgroundColor: mainColor,
+      fill: 'origin', // <-- This is the key change to create the shading
     });
   }
 
