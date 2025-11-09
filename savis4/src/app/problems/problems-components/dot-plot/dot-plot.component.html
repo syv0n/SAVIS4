@@ -1,5 +1,5 @@
 <app-navbar></app-navbar>
-
+<!--Dot Plot Problem Component-->
 <div class="dot-plot-container">
   <h1 class="title">{{'problems_dot_plot_title' | translate}}</h1>
   <div button="back" routerLink="/problems" class="back-button">
@@ -42,14 +42,37 @@
       <button class="generate-button" (click)="generateNewProblem()">{{ 'problems_generator' | translate }}</button>
     </div>
 
-    <!--left side of the page-->
-    <!--dot plot chart-->
+    <!-- Right side: Dot Plot -->
     <div class="chart-container">
       <canvas #inputChart width="900" height="400"></canvas>
     </div>
   </div>
-</div>
 
+  <!-- Drawing workspace -->
+  <div class="workspace-container">
+    <h2>Workspace</h2>
+    <div class="canvas-wrapper">
+      <canvas id="drawingCanvas" width="800" height="320" style="border:1px solid #000000;"></canvas>
+      <textarea id="textOverlay" class="text-overlay" placeholder="Click to type..." aria-label="Workspace text overlay"></textarea>
+    </div>
+    <div class="workspace-controls">
+      <div class="color-buttons">
+        <button class="color-button black" data-color="#000000"></button>
+        <button class="color-button red" data-color="#FF0000"></button>
+        <button class="color-button green" data-color="#00FF00"></button>
+        <button class="color-button blue" data-color="#0000FF"></button>
+        <button class="color-button yellow" data-color="#FFFF00"></button>
+      </div>
+      <div class="mode-buttons">
+        <button id="drawButton" class="workspace-button active">Draw</button>
+        <button id="textButton" class="workspace-button">Text</button>
+        <button id="eraserButton" class="workspace-button">Eraser</button>
+        <button id="clearButton" class="workspace-button">Clear All</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
 <footer class="static-footer">
   {{ "nav_copyright" | translate }}
 </footer>
