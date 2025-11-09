@@ -14,7 +14,7 @@
       </div>
 
       <div class="buttons top">
-        <button class="random-button" (click)="generateProblem()">New Problem</button>
+        <button class="random-button" (click)="generateProblem()">{{ 'problems_generator' | translate }}</button>
         <button class="reset-button" (click)="hideAnswer()">Reset</button>
       </div>
 
@@ -91,7 +91,7 @@
         </div>
 
         <div class="buttons">
-          <button type="submit" class="submit-button">Check Answers</button>
+          <button type="submit" class="submit-button">{{ 'problems_submit' | translate }}</button>
         </div>
       </form>
 
@@ -132,7 +132,7 @@
           </li>
         </ul>
 
-        <button (click)="hideAnswer()" class="hide-button">Hide Answer</button>
+        <button (click)="hideAnswer()" class="hide-button">{{ 'problems_hide' | translate }}</button>
       </div>
     </div>
 

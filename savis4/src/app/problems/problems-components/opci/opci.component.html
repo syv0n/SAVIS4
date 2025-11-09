@@ -14,7 +14,7 @@
       </div>
 
       <!--button to generate new problem-->
-      <button class = "generate-button" (click)="generateNewProblem()">New Problem</button>
+      <button class = "generate-button" (click)="generateNewProblem()">{{ 'problems_generator' | translate }}</button>
 
       <!--user input for sample proportion question-->
       <div class = "text">
@@ -46,7 +46,7 @@
 
 
       <!--submit button to check answer-->
-      <button class = "submit-button" (click)="submitAnswer()">Check Answer</button>
+      <button class = "submit-button" (click)="submitAnswer()">{{ 'problems_submit' | translate }}</button>
 
 
       <!--follow the same structure as correlation problem-->
@@ -102,7 +102,7 @@
 
       </div> 
         <!--hide answer button-->
-        <button *ngIf = "showAnswer" (click) = "hideAnswer()" class="hide-button">Hide Answer</button>
+        <button *ngIf = "showAnswer" (click) = "hideAnswer()" class="hide-button">{{ 'problems_hide' | translate }}</button>
       </div>
 
     <!--left side of the page-->

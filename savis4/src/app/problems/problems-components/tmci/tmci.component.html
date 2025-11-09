@@ -58,7 +58,7 @@
 
       </div>
 
-      <button class="generate-button" (click)="generateProblem()"> New Problem </button>
+      <button class="generate-button" (click)="generateProblem()"> {{ 'problems_generator' | translate }} </button>
 
       <div *ngIf="problemType === 'ci_diff'" class="input-section">
         <div class="input-group">
@@ -138,7 +138,7 @@
         </div>
       </div>
 
-      <button class="submit-button" (click)="submitAnswer()" *ngIf="!showAnswer"> Submit Answer </button>
+      <button class="submit-button" (click)="submitAnswer()" *ngIf="!showAnswer"> {{ 'problems_submit' | translate }} </button>
 
       <div *ngIf="showAnswer" class="feedback-section">
         <div class="feedback-box" [ngClass]="isCorrect ? 'correct' : 'incorrect'">
@@ -160,7 +160,7 @@
            </p>
         </div>
 
-        <button class="try-again-button" (click)="hideAnswer()"> Hide Answer </button>
+        <button class="try-again-button" (click)="hideAnswer()"> {{ 'problems_hide' | translate }} </button>
       </div>
     </div>
 

@@ -135,7 +135,7 @@ describe('template spec', () => {
     // Homework Feature Tests
     describe('Homework Feature - Correlation Practice Problems', () => {
         it('should navigate to correlation practice problems page', () => {
-            cy.contains('Correlation Practice Problems')
+            cy.contains('Practice Problems for Correlation Visualization')
                 .invoke('removeAttr', 'target')
                 .click()
             cy.url().should('include', '/problems-correlation')

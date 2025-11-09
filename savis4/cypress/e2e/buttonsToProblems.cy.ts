@@ -6,7 +6,7 @@ describe('Buttons Link to Practice Problems', () => {
 
     it('should go from /barchart to /problems-bar-chart', () => {
         cy.visit('http://localhost:4200/barchart')
-        cy.contains('Bar Chart Practice Problems')
+        cy.contains('Practice Problems for Bar Chart')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/problems-bar-chart')
@@ -15,7 +15,7 @@ describe('Buttons Link to Practice Problems', () => {
 
     it('should go from /dotplot to /problems-dot-plot', () => {
         cy.visit('http://localhost:4200/dotplot')
-        cy.contains('Dot Plot Practice Problems')
+        cy.contains('Practice Problems for Dot Plot')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/problems-dot-plot')
@@ -24,7 +24,7 @@ describe('Buttons Link to Practice Problems', () => {
 
     it('should go from /oneproportion to /problems-opht', () => {
         cy.visit('http://localhost:4200/oneproportion')
-        cy.contains('One Proportion Hypothesis Testing Practice Problems')
+        cy.contains('Practice Problems for One Proportion Hypothesis Testing')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/problems-opht')
@@ -33,7 +33,7 @@ describe('Buttons Link to Practice Problems', () => {
 
     it('should go from /twoproportions to /problems-tpht', () => {
         cy.visit('http://localhost:4200/twoproportions')
-        cy.contains('Two Proportion Hypothesis Testing Practice Problems')
+        cy.contains('Practice Problems for Two Proportion Hypothesis Testing')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/problems-tpht')
@@ -42,7 +42,7 @@ describe('Buttons Link to Practice Problems', () => {
 
     it('should go from /onemean to /problems-omht', () => {
         cy.visit('http://localhost:4200/onemean')
-        cy.contains('One Mean Hypothesis Testing Practice Problems')
+        cy.contains('Practice Problems for One Mean Hypothesis Testing')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/problems-omht')
@@ -51,7 +51,7 @@ describe('Buttons Link to Practice Problems', () => {
 
     it('should go from /twomeans to problems-tmht', () => {
         cy.visit('http://localhost:4200/twomeans')
-        cy.contains('Two Mean Hypothesis Testing Practice Problems')
+        cy.contains('Practice Problems for Two Mean Hypothesis Testing')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/problems-tmht')
@@ -60,7 +60,7 @@ describe('Buttons Link to Practice Problems', () => {
 
     it('should go from /LR to problems-regression', () => {
         cy.visit('http://localhost:4200/LR')
-        cy.contains('Linear Regression Practice Problems')
+        cy.contains('Practice Problems for Linear Regression Visualization')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/problems-regression')
@@ -69,7 +69,7 @@ describe('Buttons Link to Practice Problems', () => {
 
     it('should go from /correlation to problems-correlation', () => {
         cy.visit('http://localhost:4200/correlation')
-        cy.contains('Correlation Practice Problems')
+        cy.contains('Practice Problems for Correlation Visualization')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/problems-correlation')
@@ -78,7 +78,7 @@ describe('Buttons Link to Practice Problems', () => {
       
     it('should go from /oneproportionCI to problems-opci', () => {
         cy.visit('http://localhost:4200/oneproportionCI')
-        cy.contains('One Proportion Confidence Interval Practice Problems')
+        cy.contains('Practice Problems for One Proportions Confidence Interval')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/problems-opci')
@@ -87,7 +87,7 @@ describe('Buttons Link to Practice Problems', () => {
 
     it('should go from /twoproportionsCI to problems-tpci', () => {
         cy.visit('http://localhost:4200/twoproportionsCI')
-        cy.contains('Two Proportion Confidence Interval Practice Problems')
+        cy.contains('Practice Problems for Two Proportions Confidence Interval')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/problems-tpci')
@@ -96,7 +96,7 @@ describe('Buttons Link to Practice Problems', () => {
 
     it('should go from /onemeanCI to problems-omci', () => {
         cy.visit('http://localhost:4200/onemeanCI')
-        cy.contains('One Mean Confidence Interval Practice Problems')
+        cy.contains('Practice Problems for One Mean Confidence Interval')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/problems-omci')
@@ -105,7 +105,7 @@ describe('Buttons Link to Practice Problems', () => {
 
     it('should go from /twomeansCI to problems-tmci', () => {
         cy.visit('http://localhost:4200/twomeansCI')
-        cy.contains('Two Mean Confidence Interval Practice Problems')
+        cy.contains('Practice Problems for Two Mean Confidence Interval')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/problems-tmci')
@@ -116,7 +116,7 @@ describe('Buttons Link to Practice Problems', () => {
 
     it('should go from /opht to oneproportion', () => {
         cy.visit('http://localhost:4200/opht')
-        cy.contains('One Proportion Hypothesis Graph')
+        cy.contains('Graph for One Proportion Hypothesis Testing')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/oneproportion')
@@ -125,7 +125,7 @@ describe('Buttons Link to Practice Problems', () => {
 
       it('should go from /tpht to twoproportions', () => {
         cy.visit('http://localhost:4200/tpht')
-        cy.contains('Two Proportions Hypothesis Graph')
+        cy.contains('Graph for Two Proportion Hypothesis Testing')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/twoproportions')
@@ -134,7 +134,7 @@ describe('Buttons Link to Practice Problems', () => {
 
       it('should go from /omht to onemean', () => {
         cy.visit('http://localhost:4200/omht')
-        cy.contains('One Mean Hypothesis Graph')
+        cy.contains('Graph for One Mean Hypothesis Testing')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/onemean')
@@ -143,7 +143,7 @@ describe('Buttons Link to Practice Problems', () => {
 
       it('should go from /tmht to twomeans', () => {
         cy.visit('http://localhost:4200/tmht')
-        cy.contains('Two Means Hypothesis Graph')
+        cy.contains('Graph for Two Mean Hypothesis Testing')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/twomeans')
@@ -152,7 +152,7 @@ describe('Buttons Link to Practice Problems', () => {
 
       it('should go from /bar-chart to barchart', () => {
         cy.visit('http://localhost:4200/bar-chart')
-        cy.contains('Bar Chart Graph')
+        cy.contains('Graph for Bar Chart')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/barchart')
@@ -161,7 +161,7 @@ describe('Buttons Link to Practice Problems', () => {
 
       it('should go from /dot-plot to dotplot', () => {
         cy.visit('http://localhost:4200/dot-plot')
-        cy.contains('Dot Plot Graph')
+        cy.contains('Graph for Dot Plot')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/dotplot')
@@ -170,7 +170,7 @@ describe('Buttons Link to Practice Problems', () => {
 
       it('should go from /omht to onemean', () => {
         cy.visit('http://localhost:4200/omht')
-        cy.contains('One Mean Hypothesis Graph')
+        cy.contains('Graph for One Mean Hypothesis Testing')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/onemean')
@@ -179,7 +179,7 @@ describe('Buttons Link to Practice Problems', () => {
 
       it('should go from /regression to LR', () => {
         cy.visit('http://localhost:4200/regression')
-        cy.contains('Regression Graph')
+        cy.contains('Graph for Linear Regression Visualization')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/LR')
@@ -188,7 +188,7 @@ describe('Buttons Link to Practice Problems', () => {
 
       it('should go from /correlation-manual to correlation', () => {
         cy.visit('http://localhost:4200/correlation-manual')
-        cy.contains('Correlation Graph')
+        cy.contains('Graph for Correlation Visualization')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/correlation')
@@ -197,7 +197,7 @@ describe('Buttons Link to Practice Problems', () => {
 
       it('should go from /opci to oneproportionCI', () => {
         cy.visit('http://localhost:4200/opci')
-        cy.contains('One Proportion Confidence Interval Graph')
+        cy.contains('Graph for One Proportions Confidence Interval')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/oneproportionCI')
@@ -206,7 +206,7 @@ describe('Buttons Link to Practice Problems', () => {
 
       it('should go from /tpci to twoproportionsCI', () => {
         cy.visit('http://localhost:4200/tpci')
-        cy.contains('Two Proportions Confidence Graph')
+        cy.contains('Graph for Two Proportions Confidence Interval')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/twoproportionsCI')
@@ -215,7 +215,7 @@ describe('Buttons Link to Practice Problems', () => {
 
       it('should go from /omci to onemeanCI', () => {
         cy.visit('http://localhost:4200/omci')
-        cy.contains('One Mean Confidence Interval Graph')
+        cy.contains('Graph for One Mean Confidence Interval')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/onemeanCI')
@@ -224,7 +224,7 @@ describe('Buttons Link to Practice Problems', () => {
 
       it('should go from /tmci to twomeansCI', () => {
         cy.visit('http://localhost:4200/tmci')
-        cy.contains('Two Means Confidence Interval Graph')
+        cy.contains('Graph for Two Mean Confidence Interval')
         .invoke('removeAttr','target')
         .click()
         cy.url().should('include', 'http://localhost:4200/twomeansCI')

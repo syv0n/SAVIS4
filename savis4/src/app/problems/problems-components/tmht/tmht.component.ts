@@ -3,7 +3,6 @@ import { ChartDataSets, ChartType, Chart } from 'chart.js';
 import { TranslateService } from '@ngx-translate/core';
 import { max, standardDeviation } from 'simple-statistics';
 
-
 @Component({
   selector: 'app-user-manual',
   templateUrl: './tmht.component.html',
@@ -33,7 +32,8 @@ export class TMHTProblemsComponent implements AfterViewInit {
 
   problems=[
     {
-      question: "A coffee shop claims that their coffee is served at an average temperature of <b>175°F</b>. A health inspector suspects it’s lower. She samples <b>n = 25 cups</b> and finds: <br><br> <b>Sample mean = </b>172°F<br><b>Sample standard deviation = </b>6°F <br><br>At the <b>0.05 significance level</b>, test whether the coffee is served cooler than claimed.",
+      enQuestion: "A coffee shop claims that their coffee is served at an average temperature of <b>175°F</b>. A health inspector suspects it’s lower. She samples <b>n = 25 cups</b> and finds: <br><br> <b>Sample mean = </b>172°F<br><b>Sample standard deviation = </b>6°F <br><br>At the <b>0.05 significance level</b>, test whether the coffee is served cooler than claimed.",
+      esQuestion:"Una cafetería afirma que su café se sirve a una temperatura promedio de <b>175°F</b>. Una inspectora sanitaria sospecha que es más baja. Toma una muestra de <b>n = 25 tazas</b> y encuentra: <br><br> <b>Media muestral =</b> 172 °F <br><b> Desviación estándar muestral =</b> 6 °F <br><br> Con un <b>nivel de significancia de 0.05</b>, realice una prueba para determinar si el café se sirve a una temperatura menor a la declarada.",
       nullHyp: '175',
       testType: 't-test',
       pval:'0.0098',
@@ -42,7 +42,8 @@ export class TMHTProblemsComponent implements AfterViewInit {
       alpha:0.05
     },
     {
-      question:"A company advertises that their phone’s battery lasts an average of <b>10 hours</b> on a full charge. A consumer agency tests <b>40 phones</b> and finds: <br><br><b>Sample mean =</b> 9.6 hours<br><b>Population standard deviation = </b>1.2 hours<br><br>At <b>α = 0.01,</b> is there evidence that the mean battery life is less than advertised?",
+      enQuestion:"A company advertises that their phone’s battery lasts an average of <b>10 hours</b> on a full charge. A consumer agency tests <b>40 phones</b> and finds: <br><br><b>Sample mean =</b> 9.6 hours<br><b>Population standard deviation = </b>1.2 hours<br><br>At <b>α = 0.01,</b> is there evidence that the mean battery life is less than advertised?",
+      esQuestion:"Una empresa anuncia que la batería de su teléfono dura un promedio de <b>10 horas</b> con una carga completa. Una agencia de consumidores prueba <b>40 teléfonos</b> y encuentra: <br><br><b>Media muestral =</b> 9.6 horas<br><b>Desviación estándar poblacional =</b> 1.2 horas<br><br>Con un nivel de significancia de <b>α = 0.01</b>, ¿existe evidencia de que la duración promedio de la batería sea menor a la anunciada?",
       nullHyp:'10',
       testType:'z-test',
       pval:'0.0175',
@@ -51,7 +52,8 @@ export class TMHTProblemsComponent implements AfterViewInit {
       alpha:0.01
     },
     {
-      question:"A city planner believes that the average commute time for residents is <b>more than 30 minutes</b>. A random sample of <b>36 residents</b> has:<br><br><b>Sample mean =</b> 32 minutes<br><b>Sample standard deviation =</b> 5 minutes <br><br>Test the claim at the <b>0.05 significance level</b>.",
+      enQuestion:"A city planner believes that the average commute time for residents is <b>more than 30 minutes</b>. A random sample of <b>36 residents</b> has:<br><br><b>Sample mean =</b> 32 minutes<br><b>Sample standard deviation =</b> 5 minutes <br><br>Test the claim at the <b>0.05 significance level</b>.",
+      esQuestion:"Un planificador urbano cree que el tiempo promedio de viaje al trabajo de los residentes es <b>más de 30 minutos</b>. Una muestra aleatoria de <b>36 residentes</b> tiene:<br><br><b>Media muestral =</b> 32 minutos<br><b>Desviación estándar muestral =</b> 5 minutos <br><br>Pruebe la afirmación con un nivel de significancia de <b>0.05</b>.",
       nullHyp:'30',
       testType:'t-test',
       pval:'0.0109',
@@ -60,7 +62,8 @@ export class TMHTProblemsComponent implements AfterViewInit {
       alpha:0.05
     },
     {
-      question:"A university claims its students have an <b>average GPA of 3.2</b>. A sample of <b>16 students</b> shows a <b>mean GPA of 3.05</b> with a <b>sample standard deviation of 0.4</b>. At <b>α = 0.10</b>, test whether the average GPA is different from the university’s claim.",
+      enQuestion:"A university claims its students have an <b>average GPA of 3.2</b>. A sample of <b>16 students</b> shows a <b>mean GPA of 3.05</b> with a <b>sample standard deviation of 0.4</b>. At <b>α = 0.10</b>, test whether the average GPA is different from the university’s claim.",
+      esQuestion:"Una universidad afirma que sus estudiantes tienen un <b>promedio de calificaciones (GPA) de 3.2</b>. Una muestra de <b>16 estudiantes</b> muestra un <b>GPA promedio de 3.05</b> con una <b>desviación estándar muestral de 0.4.</b> Con un <b>nivel de significancia de α = 0.10</b>, determine si el GPA promedio difiere del que afirma la universidad.",
       nullHyp:'3.2',
       testType:'t-test',
       pval:'0.1544',
@@ -69,7 +72,8 @@ export class TMHTProblemsComponent implements AfterViewInit {
       alpha:0.10
     },
     {
-      question:"A delivery company states that their small boxes weigh on average <b>2.5 lbs</b>. A customer suspects the boxes are lighter than advertised. They weigh <b>50 boxes</b> and find: <br><br><b>Mean weight =</b> 2.45 lbs<br><b>Population standard deviation =</b> 0.2 lbs<br><br>At the <b>0.05 significance level</b>, test if the boxes are lighter than claimed.",
+      enQuestion:"A delivery company states that their small boxes weigh on average <b>2.5 lbs</b>. A customer suspects the boxes are lighter than advertised. They weigh <b>50 boxes</b> and find: <br><br><b>Mean weight =</b> 2.45 lbs<br><b>Population standard deviation =</b> 0.2 lbs<br><br>At the <b>0.05 significance level</b>, test if the boxes are lighter than claimed.",
+      esQuestion:"Una empresa de reparto afirma que sus cajas pequeñas pesan en promedio <b>2.5 libras</b>. Un cliente sospecha que las cajas son más ligeras de lo anunciado. Pesa <b>50 cajas</b> y encuentra: <br><br><b>Peso medio =</b> 2.45 libras<br><b>Desviación estándar de la población =</b> 0.2 libras<br><br> Con un <b>nivel de significancia de 0.05</b>, realice una prueba para determinar si las cajas son más ligeras de lo que se afirma.",
       nullHyp:'2.5',
       testType:'z-test',
       pval:'0.0386',

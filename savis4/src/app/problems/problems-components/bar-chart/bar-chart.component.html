@@ -25,7 +25,7 @@
         </div>
       </div>
       <!-- Submit button -->
-      <button class="submit-button" (click)="submitAnswer()">Submit Answer</button>
+      <button class="submit-button" (click)="submitAnswer()">{{ 'problems_submit' | translate }}</button>
       <!-- Show if user answer is correct or incorrect -->
       <div
         *ngIf="showAnswer"
@@ -37,10 +37,10 @@
           Correct answer: {{ correctAnswer }}
         </p>
         <!-- Hide answer button -->
-        <button (click)="hideAnswer()" class="hide-button">Hide Answer</button>
+        <button (click)="hideAnswer()" class="hide-button">{{ 'problems_hide' | translate }}</button>
       </div>
       <!-- Generate new problem button -->
-      <button class="generate-button" (click)="generateNewProblem()">Generate New Problem</button>
+      <button class="generate-button" (click)="generateNewProblem()">{{ 'problems_generator' | translate }}</button>
     </div>
 
     <!-- Right side: Bar Chart -->
