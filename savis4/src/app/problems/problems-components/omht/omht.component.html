@@ -13,8 +13,8 @@
       <!--textbox for user to type their answer-->
       <textarea class="textbox" rows="1" placeholder="Type the answer here" [(ngModel)]="inputAnswer"></textarea>
       <!--submit button-->
-      <button class="submit-button" (click)="submitAnswer()">Submit Answer</button>
-      <button class="submit-button" (click)="nextQuestion()">Change Problem</button>
+      <button class="submit-button" (click)="submitAnswer()">{{ 'problems_submit' | translate }}</button>
+      <button class="submit-button" (click)="nextQuestion()">{{ 'problems_generator' | translate }}</button>
       <!--show if user answer is correct or incorrect-->
       <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: answerIsCorrect, incorrect: !answerIsCorrect}">
         <p>{{answerIsCorrect? 'Correct!' : 'Incorrect answer. Please try again'}}</p>
@@ -22,7 +22,7 @@
           Correct answer: {{ correctAnswer }}
         </p>
         <!--hide answer button-->
-        <button (click) = "hideAnswer()" class="hide-button">Hide Answer</button>
+        <button (click) = "hideAnswer()" class="hide-button">{{ 'problems_hide' | translate }}</button>
       </div>
     </div>
 

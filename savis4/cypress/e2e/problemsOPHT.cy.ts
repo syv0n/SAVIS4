@@ -7,8 +7,8 @@ describe('OPHT Problems Homework Features', () => {
     it('should have opht homework features', () => {
         cy.contains('One Proportion Hypothesis Testing Problems').should('be.visible')
         cy.get('.green-box').should('contains.text', '.')
-        cy.contains('button', 'New Problem').should('be.visible')
-        cy.contains('button', 'Check Answers').should('be.visible')
+        cy.contains('button', 'Generate New Problem').should('be.visible')
+        cy.contains('button', 'Submit Answer').should('be.visible')
         cy.get('.chart-container').should('be.visible')
         cy.get('.chart-container canvas').should('exist')
     })

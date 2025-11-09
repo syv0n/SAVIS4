@@ -7,8 +7,8 @@ describe('TPCI Problems Homework Features', () => {
     it('should have tpci homework features', () => {
         cy.contains('Two Proportion Confidence Interval Problems').should('be.visible')
         cy.get('.green-box').should('contains.text', '.')
-        cy.contains('button', 'New Problem').should('be.visible')
-        cy.contains('button', 'Check Answer').should('be.visible')
+        cy.contains('button', 'Generate New Problem').should('be.visible')
+        cy.contains('button', 'Submit Answer').should('be.visible')
         cy.get('.chart-container').should('be.visible')
     })
 

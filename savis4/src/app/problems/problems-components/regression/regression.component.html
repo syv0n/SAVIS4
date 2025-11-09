@@ -40,11 +40,11 @@
       </textarea>
       
       <!-- Submit button -->
-      <button class="submit-button" (click)="submitAnswer()">Submit Answer</button>
+      <button class="submit-button" (click)="submitAnswer()">{{ 'problems_submit' | translate }}</button>
       
       <!-- New Problem button -->
-      <button class="submit-button" (click)="generateNewProblem()" style="background-color: #4CAF50;">
-        New Problem
+      <button class="submit-button" (click)="generateNewProblem()">
+        {{ 'problems_generator' | translate }}
       </button>
       
       <!-- Show if user answer is correct or incorrect -->
@@ -58,7 +58,7 @@
           Show Step-by-Step Solution
         </button>
         <!-- Hide answer button -->
-        <button (click)="hideAnswer()" class="hide-button">Hide Answer</button>
+        <button (click)="hideAnswer()" class="hide-button">{{ 'problems_hide' | translate }}</button>
       </div>
     </div>
 
