@@ -57,46 +57,111 @@ export class ScatterPlotComponent implements OnChanges {
     const defaultLegendClick = Chart.defaults.global.legend.onClick;
 
     this.scatterChartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
-        xAxes: [{ type: 'linear', position: 'bottom', id: 'x-axis-0' }],
-        yAxes: [{ type: 'linear', position: 'left', id: 'y-axis-0' }]
-    },
-    referenceLineSlop: 0,
-    referenceLineIntercept: 0,
-    legend: {
-      onClick: (e: MouseEvent, legendItem: ChartLegendLabelItem) => {
-        const label = legendItem.text;
+        xAxes: [{
+          type: 'linear',
+          position: 'bottom',
+          id: 'x-axis-0',
+          gridLines: {
+            color: 'rgba(200, 200, 200, 0.2)',
+            lineWidth: 1,
+            drawBorder: true,
+            drawOnChartArea: true,
+            drawTicks: true
+          },
+          scaleLabel: {
+            display: true,
+            labelString: 'X Axis',
+            fontSize: 14,
+            fontStyle: 'bold'
+          }
+        }],
+        yAxes: [{
+          type: 'linear',
+          position: 'left',
+          id: 'y-axis-0',
+          gridLines: {
+            color: 'rgba(200, 200, 200, 0.2)',
+            lineWidth: 1,
+            drawBorder: true,
+            drawOnChartArea: true,
+            drawTicks: true
+          },
+          scaleLabel: {
+            display: true,
+            labelString: 'Y Axis',
+            fontSize: 14,
+            fontStyle: 'bold'
+          }
+        }]
+      },
+      tooltips: {
+        enabled: true,
+        mode: 'point',
+        intersect: false,
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleFontSize: 13,
+        bodyFontSize: 12,
+        displayColors: false,
+        callbacks: {
+          title: (tooltipItems: any[]) => {
+            return `Data Point`;
+          },
+          label: (tooltipItem: any, data: any) => {
+            const datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+            if (datasetLabel === this.translate.instant('lr_scatter_plot')) {
+              return [
+                `X: ${tooltipItem.xLabel.toFixed(3)}`,
+                `Y: ${tooltipItem.yLabel.toFixed(3)}`,
+                `Point #${tooltipItem.index + 1}`
+              ];
+            }
+            return `${datasetLabel}: (${tooltipItem.xLabel.toFixed(2)}, ${tooltipItem.yLabel.toFixed(2)})`;
+          }
+        }
+      },
+      hover: {
+        mode: 'nearest',
+        intersect: true,
+        animationDuration: 200
+      },
+      animation: {
+        duration: 500,
+        easing: 'easeInOutQuart'
+      },
+      referenceLineSlope: 0,
+      referenceLineIntercept: 0,
+      legend: {
+        display: true,
+        position: 'top',
+        labels: {
+          fontSize: 12,
+          padding: 15,
+          usePointStyle: true,
+          boxWidth: 8
+        },
+        onClick: (e: MouseEvent, legendItem: ChartLegendLabelItem) => {
+          const label = legendItem.text;
 
-        if (label === this.translate.instant('lr_regression_line') ||
-          label === 'Reference Line'
-        ) {
-          this.activeLine = label === 'Reference Line' ? 'reference' : 'regression';
+          if (label === this.translate.instant('lr_regression_line') ||
+            label === 'Reference Line'
+          ) {
+            this.activeLine = label === 'Reference Line' ? 'reference' : 'regression';
+            this.updateActiveLineVisibility();
+            this.updateDependentData();
+            this.chart.update();
+          } else {
+            defaultLegendClick.call(this.chart.chart, e, legendItem);
+          }
+
           this.updateActiveLineVisibility();
           this.updateDependentData();
           this.chart.update();
-        } else {
-          defaultLegendClick.call(this.chart.chart, e, legendItem);
         }
-
-        this.updateActiveLineVisibility();
-        this.updateDependentData();
-        this.chart.update();
       }
-    }
-  } as ChartOptions & any;   // 👈 allow scales without TS error
-
-
-    /*this.scatterChartOptions = {
-      referenceLinePosition: 0,
-      scales: {
-        yAxes: [
-          { id: 'y-axis-0', type: 'linear', position: 'left' }
-        ],
-        xAxes: [
-          { id: 'x-axis-0', type: 'linear', position: 'bottom' }
-        ]
-      }
-    } as any;*/
+    } as ChartOptions & any;
   }
 
   ngAfterViewInit(): void {
@@ -151,22 +216,38 @@ export class ScatterPlotComponent implements OnChanges {
     const m = this.scatterChartOptions.referenceLineSlope!;
     const b = this.scatterChartOptions.referenceLineIntercept!;
 
+    // Calculate dynamic point size
+    const pointRadius = this.calculatePointRadius();
+    const hoverRadius = this.calculateHoverRadius();
+
     // Create dataset for the reference line
     const referenceLineDataset: ChartDataSets = {        
       type: 'line',
       label: 'Reference Line',
       data: this.dataPoints.map(p => ({ x: p.x, y: m * p.x + b})),
-      borderColor: 'rgb(99, 255,120)',
-      borderWidth: 2,
+      borderColor: 'rgb(99, 255, 120)',
+      backgroundColor: 'rgb(99, 255, 120)',
+      borderWidth: 3,
       borderDash: [5, 5],
       fill: false,
-      pointRadius: 0
+      pointRadius: 0,
+      pointHoverRadius: 0
     };
-  
+
     this.scatterChartData = [
       {
         data: this.dataPoints,
-        label: this.translate.instant('lr_scatter_plot')
+        label: this.translate.instant('lr_scatter_plot'),
+        // Dynamic point sizing
+        pointRadius: this.dataPoints.map((_, i) => this.calculatePointRadiusWithDensity(i)),
+        pointHoverRadius: this.dataPoints.map((_, i) => this.calculatePointRadiusWithDensity(i) + 3),
+        pointBackgroundColor: 'rgba(54, 162, 235, 0.8)',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        pointHoverBackgroundColor: 'rgba(255, 99, 132, 0.9)',
+        pointHoverBorderColor: '#ffffff',
+        pointHoverBorderWidth: 3,
+        showLine: false
       },
       // Regression line dataset
       {
@@ -175,7 +256,11 @@ export class ScatterPlotComponent implements OnChanges {
         data: regressionPoints,
         fill: false,
         borderColor: 'rgba(255, 0, 0, 0.7)',
-        cubicInterpolationMode: 'monotone'
+        backgroundColor: 'rgba(255, 0, 0, 0.7)',
+        borderWidth: 3,
+        cubicInterpolationMode: 'monotone',
+        pointRadius: 0,
+        pointHoverRadius: 0
       },
       // Upper bound of confidence interval
       {
@@ -184,8 +269,12 @@ export class ScatterPlotComponent implements OnChanges {
         data: confidenceInterval.upper,
         fill: '+1',
         borderColor: 'rgba(0, 255, 0, 0.5)',
+        backgroundColor: 'rgba(0, 255, 0, 0.1)',
+        borderWidth: 2,
         cubicInterpolationMode: 'monotone',
-        hidden: true
+        hidden: true,
+        pointRadius: 0,
+        pointHoverRadius: 0
       },
       // Lower bound of confidence interval
       {
@@ -194,13 +283,66 @@ export class ScatterPlotComponent implements OnChanges {
         data: confidenceInterval.lower,
         fill: '-1',
         borderColor: 'rgba(0, 0, 255, 0.5)',
+        backgroundColor: 'rgba(0, 0, 255, 0.1)',
+        borderWidth: 2,
         cubicInterpolationMode: 'monotone',
-        hidden: true
+        hidden: true,
+        pointRadius: 0,
+        pointHoverRadius: 0
       },
       this.calculateErrorBars(),
       this.calculateErrorSquares(),
       referenceLineDataset
     ];
+  }
+
+  private calculatePointRadiusWithDensity(index: number): number {
+    const baseRadius = this.calculatePointRadius();
+    const proximityThreshold = 0.15; // percentage of data range
+    
+    if (this.dataPoints.length < 20) return baseRadius;
+    
+    const point = this.dataPoints[index];
+    const xValues = this.dataPoints.map(p => p.x);
+    const yValues = this.dataPoints.map(p => p.y);
+    const xRange = Math.max(...xValues) - Math.min(...xValues);
+    const yRange = Math.max(...yValues) - Math.min(...yValues);
+    
+    // Count nearby points
+    let nearbyCount = 0;
+    for (let i = 0; i < this.dataPoints.length; i++) {
+      if (i === index) continue;
+      
+      const other = this.dataPoints[i];
+      const xDist = Math.abs(point.x - other.x) / xRange;
+      const yDist = Math.abs(point.y - other.y) / yRange;
+      const normalizedDist = Math.sqrt(xDist * xDist + yDist * yDist);
+      
+      if (normalizedDist < proximityThreshold) {
+        nearbyCount++;
+      }
+    }
+    
+    // Reduce size if crowded
+    if (nearbyCount >= 5) return Math.max(2, baseRadius - 2);
+    if (nearbyCount >= 3) return Math.max(3, baseRadius - 1);
+    
+    return baseRadius;
+  }
+
+  private calculatePointRadius(): number {
+    const dataCount = this.dataPoints.length;
+    
+    if (dataCount === 0) return 5;
+    if (dataCount <= 10) return 8;
+    if (dataCount <= 30) return 6;
+    if (dataCount <= 100) return 5;
+    if (dataCount <= 200) return 4;
+    return 3;
+  }
+
+  private calculateHoverRadius(): number {
+    return this.calculatePointRadius() + 3;
   }
 
   private onMouseDown(event: MouseEvent) {
