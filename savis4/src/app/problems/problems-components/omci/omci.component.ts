@@ -75,15 +75,26 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
   correctE: number = 0; // Correct final E
   correctMu: number = 0; // Correct final Mu
 
-
+  /**
+   * Constructor: Initializes the component and injects necessary services.
+   * @param translate - The translation service for internationalization.
+   */
   constructor(
     private translate: TranslateService,
   ) { }
 
+  /**
+   * Angular lifecycle hook. Called once after the component is initialized.
+   * Generates the first problem.
+   */
   ngOnInit(): void {
     this.generateProblem();
   }
 
+  /**
+   * Angular lifecycle hook. Called once after the component's view has been initialized.
+   * Creates the chart instance and performs the initial draw.
+   */
   ngAfterViewInit() {
     if (this.problemType !== 'samplesize') {
       this.createChart();
@@ -92,6 +103,10 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
     this.initializeWorkspace();
   }
 
+  /**
+   * Angular lifecycle hook. Called just before the component is destroyed.
+   * Cleans up and destroys the Chart.js instance to prevent memory leaks.
+   */
   ngOnDestroy(): void {
     if (this.problemChart) {
       this.problemChart.destroy();
@@ -99,7 +114,8 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   /**
-   * Generates a new random problem.
+   * Generates a new problem. This involves resetting all state, generating new
+   * population/sample data, calculating correct answers, and redrawing the graph.
    */
   generateProblem(): void {
     // 1. Reset state
@@ -204,12 +220,12 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
         this.isCorrect = this.isStep3Correct && this.isStep4Correct; 
 
         if (this.isCorrect) {
-          feedbackMessages.push(`✅ Correct! The 95% CI is (${this.correctLowerBound.toFixed(2)}, ${this.correctUpperBound.toFixed(2)}).`);
+          feedbackMessages.push(`Correct! The 95% CI is (${this.correctLowerBound.toFixed(2)}, ${this.correctUpperBound.toFixed(2)}).`);
           if (!this.isStep1Correct || !this.isStep2Correct) {
             feedbackMessages.push(`Your final interval is right, but check the steps below for rounding differences.`);
           }
         } else {
-          feedbackMessages.push(`❌ Incorrect. The correct interval is (${this.correctLowerBound.toFixed(2)}, ${this.correctUpperBound.toFixed(2)}).`);
+          feedbackMessages.push(`Incorrect. The correct interval is (${this.correctLowerBound.toFixed(2)}, ${this.correctUpperBound.toFixed(2)}).`);
           feedbackMessages.push(`Check your steps against the correct values shown below.`);
         }
         this.feedback = feedbackMessages.join('<br>');
@@ -228,12 +244,12 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
         this.isCorrect = this.isStep3Correct; 
         
         if (this.isCorrect) {
-          feedbackMessages.push(`✅ Correct! The minimum sample size is ${this.correctN}.`);
+          feedbackMessages.push(`Correct! The minimum sample size is ${this.correctN}.`);
           if (!this.isStep1Correct || !this.isStep2Correct) {
             feedbackMessages.push(`Your final answer is right, but check the steps below for rounding differences.`);
           }
         } else {
-          feedbackMessages.push(`❌ Incorrect. The correct minimum sample size is ${this.correctN}.`);
+          feedbackMessages.push(`Incorrect. The correct minimum sample size is ${this.correctN}.`);
           feedbackMessages.push(`Check your steps against the correct values shown below.`);
         }
         this.feedback = feedbackMessages.join('<br>');
@@ -249,12 +265,12 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
         this.isCorrect = this.isStep2Correct; // Grade on final E
 
         if (this.isCorrect) {
-          feedbackMessages.push(`✅ Correct! The margin of error (E) is ${this.correctE.toFixed(2)}.`);
+          feedbackMessages.push(`Correct! The margin of error (E) is ${this.correctE.toFixed(2)}.`);
           if (!this.isStep1Correct) {
              feedbackMessages.push(`Your final answer is right, but check the step below for rounding differences.`);
           }
         } else {
-           feedbackMessages.push(`❌ Incorrect. The correct margin of error is ${this.correctE.toFixed(2)}.`);
+           feedbackMessages.push(`Incorrect. The correct margin of error is ${this.correctE.toFixed(2)}.`);
            feedbackMessages.push(`Check your steps against the correct values shown below.`);
         }
         this.feedback = feedbackMessages.join('<br>');
@@ -271,12 +287,12 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
         this.isCorrect = this.isStep2Correct; // Grade on final xbar
 
         if (this.isCorrect) {
-          feedbackMessages.push(`✅ Correct! The sample mean (x̄) is ${this.correctXBar.toFixed(2)}.`);
+          feedbackMessages.push(`Correct! The sample mean (x̄) is ${this.correctXBar.toFixed(2)}.`);
            if (!this.isStep1Correct) {
              feedbackMessages.push(`Your final answer is right, but check the step below for rounding differences.`);
           }
         } else {
-           feedbackMessages.push(`❌ Incorrect. The correct sample mean (x̄) is ${this.correctXBar.toFixed(2)}.`);
+           feedbackMessages.push(`Incorrect. The correct sample mean (x̄) is ${this.correctXBar.toFixed(2)}.`);
            feedbackMessages.push(`Check your steps against the correct values shown below.`);
         }
         this.feedback = feedbackMessages.join('<br>');
@@ -288,8 +304,8 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
         this.isCorrect = this.isCloseEnough(ansMu, this.correctMu, 0.1); // Only one step
         this.isStep1Correct = this.isCorrect; // Use step 1 flag for consistency
         this.feedback = this.isCorrect ?
-          `✅ Correct! The mean of the sampling distribution is always equal to the population mean (μ), which is ${this.correctMu.toFixed(2)}.` :
-          `❌ Incorrect. The mean of the sample means is always equal to the true population mean (μ). The correct answer is ${this.correctMu.toFixed(2)}.`;
+          `Correct! The mean of the sampling distribution is always equal to the population mean (μ), which is ${this.correctMu.toFixed(2)}.` :
+          `Incorrect. The mean of the sample means is always equal to the true population mean (μ). The correct answer is ${this.correctMu.toFixed(2)}.`;
         
         this.drawGraph(false);
         break;
@@ -320,8 +336,13 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  // --- (drawGraph and helper functions remain the same) ---
-  // ... [omitted for brevity] ...
+  /**
+   * The main rendering function for the chart. It clears all existing data and
+   * dynamically adds datasets for the simulation (scatter), theoretical curve,
+   * and any relevant solution lines (like the true mean or CI) based on the
+   * problem state.
+   * @param showSolutionElements - If true, solution/answer elements are drawn on the graph.
+   */
   drawGraph(showSolution: boolean = false): void {
     if (!this.problemChart) return;
     
@@ -375,11 +396,44 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     }
 
-    const min = Math.min(...this.sampleMeansDist, this.populationMean - this.populationStdDev);
-    const max = Math.max(...this.sampleMeansDist, this.populationMean + this.populationStdDev);
-    const padding = (max - min) * 0.1;
-    this.problemChart.options.scales.xAxes[0].ticks.min = Math.floor(min - padding);
-    this.problemChart.options.scales.xAxes[0].ticks.max = Math.ceil(max + padding);
+    // This assumes `this.populationStdDev` is available as a class property.
+    const theoreticalSE = this.populationStdDev / Math.sqrt(this.sampleSize);
+
+    // 1. Calculate a sensible range based on the standard error,
+    //    not the population standard deviation. 4 SEs covers 99.99%.
+    const baseMin = this.populationMean - (4 * theoreticalSE);
+    const baseMax = this.populationMean + (4 * theoreticalSE);
+
+    // 2. Also consider the actual simulated data, in case of a rare outlier.
+    const allXValues = [...this.sampleMeansDist, baseMin, baseMax];
+    const finiteXValues = allXValues.filter(isFinite);
+    
+    let min, max;
+    if (finiteXValues.length > 0) {
+      min = Math.min(...finiteXValues);
+      max = Math.max(...finiteXValues);
+    } else {
+      // Fallback
+      min = this.populationMean - 10;
+      max = this.populationMean + 10;
+    }
+    
+    if (min === max) {
+      min -= 5;
+      max += 5;
+    }
+
+    // 3. Add 5% padding
+    const padding = (max - min) * 0.05 || 1;
+    
+    // 4. *Suggest* the min/max to Chart.js instead of forcing it.
+    //    Chart.js will automatically pick "nice" round numbers near these values.
+    //    This fixes the "weird numbers" problem (e.g., 86 -> 85 or 90).
+    this.problemChart.options.scales.xAxes[0].ticks.min = undefined; // Clear any old forced min
+    this.problemChart.options.scales.xAxes[0].ticks.max = undefined; // Clear any old forced max
+    this.problemChart.options.scales.xAxes[0].ticks.suggestedMin = min - padding;
+    this.problemChart.options.scales.xAxes[0].ticks.suggestedMax = max + padding;
+
     this.problemChart.options.scales.xAxes[0].scaleLabel.labelString = xAxisLabel;
     
     this.problemChart.options.scales.yAxes[0].ticks.min = 0;
@@ -388,6 +442,11 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
     this.problemChart.update();
   }
   
+  /**
+   * Graph Helper: Adds a vertical red dashed line to the chart representing the
+   * 'Population Mean' (μ).
+   * @param maxY - The maximum Y-value (height) to draw the line to.
+   */
   private addMuLine(maxY: number): void {
     if (!this.problemChart) return;
     this.problemChart.data.datasets.push({
@@ -401,6 +460,11 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
     });
   }
   
+  /**
+   * Graph Helper: Adds a vertical green dashed line to the chart representing the
+   * 'Sample Mean' (x̄).
+   * @param maxY - The maximum Y-value (height) to draw the line to.
+   */
   private addXBarLine(maxY: number): void {
     if (!this.problemChart) return;
     this.problemChart.data.datasets.push({
@@ -414,10 +478,15 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
     });
   }
   
+  /**
+   * Graph Helper: Adds the horizontal 95% Confidence Interval line to the chart.
+   * The line is color-coded (blue if it captured μ, red if it missed).
+   * @param yPosition - The Y-axis value at which to draw the horizontal line.
+   */
   private addCILine(yPosition: number): void {
     if (!this.problemChart) return;
     const didCapture = (this.correctCI.lower <= this.populationMean) && (this.correctCI.upper >= this.populationMean);
-    const color = didCapture ? 'rgba(0, 0, 255, 0.7)' : 'rgba(255, 0, 0, 0.7)'; // 70% opacity
+    const color = didCapture ? 'rgba(0, 0, 255, 0.3)' : 'rgba(255, 0, 0, 0.7)'; // 70% opacity
 
     this.problemChart.data.datasets.push({
       label: `Correct 95% CI (Interval ${didCapture ? 'captured' : 'missed'} μ)`,
@@ -430,6 +499,10 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Graph Helper: Calculates and adds the theoretical normal distribution (PDF)
+   * curve to the chart, based on the statistics of the simulated sampling distribution.
+   */
   private addNormalCurve(): void {
     if (!this.problemChart) return;
     const samplingMean = this.calculateMean(this.sampleMeansDist);
@@ -460,17 +533,41 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Math Helper: Calculates the Probability Density Function (PDF) value for a
+   * given x, mean, and standard deviation in a normal distribution.
+   * @param x - The value to evaluate.
+   * @param mean - The mean of the distribution.
+   * @param stdDev - The standard deviation of the distribution.
+   * @returns The PDF value (height of the curve) at x.
+   */
   private normalPdf(x: number, mean: number, stdDev: number): number {
     if (stdDev === 0) return 0;
     const exponent = -Math.pow(x - mean, 2) / (2 * Math.pow(stdDev, 2));
     return (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(exponent);
   }
-  
+
+
+  /**
+   * Math Helper: Checks if two numbers are within a given tolerance. This is used
+   * for grading floating-point answers and handles NaN.
+   * @param val1 - The first value (e.g., user's answer).
+   * @param val2 - The second value (e.g., correct answer).
+   * @param tolerance - The maximum allowed difference.
+   * @returns True if the absolute difference is within the tolerance.
+   */
   private isCloseEnough(val1: number, val2: number, tolerance: number): boolean {
     if (isNaN(val1)) return false;
     return Math.abs(val1 - val2) <= tolerance;
   }
 
+  /**
+   * Math Helper: Converts a raw 1D array of numbers into a 2D scatter plot
+   * format (ChartPoint[]). It "stacks" dots by rounding values and incrementing
+   * the 'y' coordinate for duplicate 'x' values, creating a dot plot.
+   * @param arr - The raw array of 1D numbers.
+   * @returns An array of ChartPoint objects ({x, y}).
+   */
   private rawToScatter(arr: number[]): ChartPoint[] {
     const counts: { [key: string]: number } = {};
     const scatter: ChartPoint[] = [];
@@ -484,6 +581,12 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
     return scatter;
   }
 
+  /**
+   * Math Helper: Calculates the arithmetic mean of a number array, safely
+   * ignoring non-finite (NaN, Infinity) values.
+   * @param data - The array of numbers.
+   * @returns The mean, or 0 if the array is empty.
+   */
   private calculateMean(data: number[]): number {
     const finiteData = data.filter(isFinite);
     if (finiteData.length === 0) return 0;
@@ -491,6 +594,13 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
     return sum / finiteData.length;
   }
 
+  /**
+   * Math Helper: Calculates the standard deviation of a number array, safely
+   * ignoring non-finite values.
+   * @param data - The array of numbers.
+   * @param useSample - If true, uses the sample standard deviation (n-1) denominator.
+   * @returns The standard deviation, or 0 if calculation is not possible.
+   */
   private calculateStdDev(data: number[], useSample: boolean = false): number {
     const finiteData = data.filter(isFinite);
     if (finiteData.length <= 1) return 0;
@@ -501,10 +611,24 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
     return Math.sqrt(sumOfSquares / denominator);
   }
 
+  /**
+   * Math Helper: Generates a random integer within a specified range
+   * (inclusive on both ends).
+   * @param min - The minimum value.
+   * @param max - The maximum value.
+   * @returns A random integer.
+   */
   private getRandomInt(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
+  /**
+   * Math Helper: Generates a single normally distributed (Gaussian) random
+   * number using the Box-Muller transform.
+   * @param mean - The desired mean.
+   * @param stddev - The desired standard deviation.
+   * @returns A single random number.
+   */
   private getNormallyDistributedRandom(mean: number, stddev: number): number {
     let u = 0, v = 0;
     while (u === 0) u = Math.random();
@@ -513,6 +637,13 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
     return z * stddev + mean;
   }
 
+  /**
+   * Math Helper: Selects a random subset of size 'n' from a given array
+   * (Fisher-Yates style).
+   * @param itr - The source array.
+   * @param n - The size of the subset.
+   * @returns A new array containing the random subset.
+   */
   private randomSubset(itr: number[], n: number): number[] {
     const result = new Array(n);
     let len = itr.length;
@@ -526,6 +657,11 @@ export class OMCIProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
     return result;
   }
 
+  /**
+   * Initializes the Chart.js instance. It destroys any existing chart, gets the
+   * 2D context from the canvas, and sets up the new Chart object with default
+   * options (scales, tooltips, etc.).
+   */
   createChart(): void {
     if (this.problemChart) {
       this.problemChart.destroy();
