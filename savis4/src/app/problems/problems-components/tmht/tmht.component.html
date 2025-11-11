@@ -8,45 +8,49 @@
   <div class="content">
     <div class="text-section">
       <div class="green-box">
-        <p [innerHTML]="problems[currProblemIndex].question"></p>
+        <p [innerHTML]="'problems_tmht_questions.' + currProblemIndex | translate"></p>
       </div>
       <div class="responseSection">
         <!--textbox for user to type their answer-->
-        <p><b>Null Hypothesis:</b></p>
+        <p><b>{{'problems_tmht_nullHyp'|translate}}</b></p>
         <textarea class = "textResp" rows = "1" placeholder="e.g., 100" [(ngModel)] = "nullHypResp"></textarea>
-
-        <p><b>p-value: (to 4 decimal places)</b></p>
+        <br>
+        <p><b>{{'problems_tmht_pVal'|translate}}</b></p>
         <textarea class = "textResp" rows = "1" placeholder="e.g., 0.0094" [(ngModel)] = "pValResp"></textarea>
-
+        <br>
         <div class="qBox">
-          <p><b>Test type:</b></p>
+          <p><b>{{'problems_tmht_testType'|translate}}</b></p>
           <input type="radio" id="zTest" name="testType" value="z-test" [(ngModel)] ='testTypeResp'>
-          <label for="zTest">z-test</label><br>
+          <label for="zTest">{{'problems_tmht_z'|translate}}</label><br>
           <input type="radio" id="tTest" name="testType" value="t-test"[(ngModel)] ='testTypeResp'>
-          <label for="tTest">t-test</label>
-
-          <p><b>Conclusion:</b></p>
+          <label for="tTest">{{'problems_tmht_t'|translate}}</label>
+          <br>
+          <p><b>{{'problems_tmht_concl'|translate}}</b></p>
           <input type="radio" id="rejectHyp" name="conclusion" value="Reject null hypothesis" [(ngModel)] ='conclResp'>
-          <label for="rejectHyp">Reject null hypothesis</label><br>
+          <label for="rejectHyp">{{'problems_tmht_rejh0'|translate}}</label><br>
           <input type="radio" id="acceptHyp" name="conclusion" value="Fail to reject null hypothesis" [(ngModel)] ='conclResp'>
-          <label for="acceptHyp">Fail to reject null hypothesis</label>
+          <label for="acceptHyp">{{'problems_tmht_failtorejh0'|translate}}</label>
+          <br>
         </div>
         <!--submit button-->
-        <button class = "submit-button" (click)="submitAnswer()">Submit Answer</button>
+        <button class = "submit-button" (click)="submitAnswer()">{{ 'problems_submit' | translate }}</button>
         <!--change question-->
-        <button class="qchange-button" (click)="nextQuestion()">Change Problem</button>
+        <button class="qchange-button" (click)="nextQuestion()">{{ 'problems_generator' | translate }}</button>
         <!--show if user answer is correct or incorrect-->
         <div *ngIf = "showAnswer" class = "answer-box" [ngClass] = "{correct: problemCorrect, incorrect: !problemCorrect}">
-          <p><b>{{problemCorrect? 'Correct!' : 'Incorrect answer. Please try again'}}</b></p>
+          <p *ngIf = "problemCorrect">
+            <b>{{'problems_correlation_correct'|translate}}</b>
+          </p>
           <p *ngIf = "!problemCorrect">
-            <b>Correct answer:</b><br><br>
-            <b>Null Hypothesis:</b> {{ correctAnswer }}<br>
+            <b>{{'problems_correlation_incorrect'|translate}}</b><br><br>
+            <b>{{'problems_tmht_corrAns'|translate}}</b><br><br>
+            <b>{{'problems_tmht_nullHyp'|translate}}</b> {{ correctAnswer }}<br>
             <b>p-value:</b> {{correctAnswer2}}<br>
-            <b>Test Type:</b> {{correctAnswer3}}<br>
-            <b>Conclusion:</b> {{correctAnswer4}}
+            <b>{{'problems_tmht_testType'|translate}}</b> {{correctAnswer3}}<br>
+            <b>{{'problems_tmht_concl'|translate}}</b> {{correctAnswer4}}
           </p>
           <!--hide answer button-->
-          <button (click) = "hideAnswer()" class="hide-button">Hide Answer</button>
+          <button (click) = "hideAnswer()" class="hide-button">{{ 'problems_hide' | translate }}</button>
         </div>
       </div>
     </div>

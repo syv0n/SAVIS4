@@ -12,33 +12,33 @@
       <div class="green-box">
         <h3>{{ getProblemTitle() }}</h3>
 
-        <p *ngIf="problemType === 'ci'">Using the sample stats below, what is the 95% confidence interval for μ? (Round bounds to two decimal places).</p>
+        <p *ngIf="problemType === 'ci'" [innerHTML]="'problems_omci_ci_q' | translate"></p>
 
-        <p *ngIf="problemType === 'samplesize'">Determine the minimum sample size required to estimate the population mean with a margin of error of {{E.toFixed(2)}} at <strong>95% confidence level</strong>. The population standard deviation (σ) is {{sigma.toFixed(2)}}. (Round up to the nearest whole number).</p>
+        <p *ngIf="problemType === 'samplesize'" [innerHTML]="'problems_omci_sampsize_q' | translate"></p>
 
-        <p *ngIf="problemType === 'find_xbar'">A <strong>95% confidence interval</strong> was constructed from a sample. The resulting interval is shown below. What is the <strong>point estimate (sample mean, x̄)?</strong> (Round to two decimal places).</p> 
-        <p *ngIf="problemType === 'find_e_from_ci'">A <strong>95% confidence interval</strong> was constructed from a sample. The resulting interval is shown below. What is the <strong>margin of error (E)? (Round to two decimal places).</strong></p>
+        <p *ngIf="problemType === 'find_xbar'" [innerHTML]="'problems_omci_xbar_q' | translate"></p> 
+        <p *ngIf="problemType === 'find_e_from_ci'" [innerHTML]="'problems_omci_efromci_q' | translate"></p>
 
-        <p *ngIf="problemType === 'sampling_dist'">A large population has a true mean (μ) of <strong>{{populationMean.toFixed(2)}}</strong>. If we take 1000 different random samples, each with a size of <strong>n = {{sampleSize}}</strong>, and calculate the sample mean (x̄) for all 1000 samples, what value would we expect the <strong>mean of all these sample means</strong> to be close to? (Round to two decimal places).</p>
+        <p *ngIf="problemType === 'sampling_dist'" [innerHTML]="'problems_omci_sampdist_q' | translate"></p>
 
         <br>
 
         <ul *ngIf="problemType === 'ci'">
-          <li>Sample Mean (x̄) = <strong>{{sampleMean.toFixed(2)}}</strong></li>
-          <li>Sample StdDev (s) = <strong>{{sampleStdDev.toFixed(2)}}</strong></li>
-          <li>Sample Size (N) = <strong>{{sampleSize}}</strong></li>
-          <li>Critical value (z) = <strong>{{criticalValue.toFixed(3)}}</strong></li>
+          <li>{{'problems_omci_sampMean'|translate}} <strong>{{sampleMean.toFixed(2)}}</strong></li>
+          <li>{{'problems_omci_sampStdDev'|translate}} <strong>{{sampleStdDev.toFixed(2)}}</strong></li>
+          <li>{{'problems_omci_sampSize'|translate}} <strong>{{sampleSize}}</strong></li>
+          <li>{{'problems_omci_critVal'|translate}} <strong>{{criticalValue.toFixed(3)}}</strong></li>
         </ul>
         <ul *ngIf="problemType === 'samplesize'">
-          <li>Confidence level = <strong>95%</strong></li>
-          <li>Critical value (z) = <strong>{{criticalValue.toFixed(3)}}</strong></li>
+          <li>{{'problems_omci_confLvl'|translate}} <strong>95%</strong></li>
+          <li>{{'problems_omci_critVal'|translate}} <strong>{{criticalValue.toFixed(3)}}</strong></li>
         </ul>
         <ul *ngIf="problemType === 'find_xbar' || problemType === 'find_e_from_ci'">
-          <li>Confidence Interval = <strong>({{correctCI.lower.toFixed(2)}}, {{correctCI.upper.toFixed(2)}})</strong></li>
+          <li>{{'problems_omci_confInterval'|translate}} <strong>({{correctCI.lower.toFixed(2)}}, {{correctCI.upper.toFixed(2)}})</strong></li>
         </ul>
         <ul *ngIf="problemType === 'sampling_dist'">
-          <li>Population Mean (μ) = <strong>{{populationMean.toFixed(2)}}</strong></li>
-          <li>Sample Size (n) = <strong>{{sampleSize}}</strong></li>
+          <li>{{'problems_omci_popMean'|translate}} <strong>{{populationMean.toFixed(2)}}</strong></li>
+          <li>{{'problems_omci_sampSize'|translate}} <strong>{{sampleSize}}</strong></li>
         </ul>
 
         <br>
@@ -49,7 +49,7 @@
         <p *ngIf="problemType === 'find_e_from_ci'"><strong>Formula: E = (Upper Bound - Lower Bound) / 2</strong></p>
       </div>
 
-      <button class="generate-button" (click)="generateProblem()"> New Problem </button>
+      <button class="generate-button" (click)="generateProblem()"> {{ 'problems_generator' | translate }} </button>
 
       <div *ngIf="problemType === 'ci'" class="input-section">
         <div class="input-group">
@@ -150,7 +150,7 @@
         </div>
       </div>
 
-      <button class="submit-button" (click)="submitAnswer()" *ngIf="!showAnswer"> Submit Answer </button>
+      <button class="submit-button" (click)="submitAnswer()" *ngIf="!showAnswer"> {{ 'problems_submit' | translate }} </button>
 
       <div *ngIf="showAnswer" class="feedback-section">
         <div class="feedback-box" [ngClass]="isCorrect ? 'correct' : 'incorrect'">
@@ -166,7 +166,7 @@
           </p>
         </div>
 
-        <button class="try-again-button" (click)="hideAnswer()"> Hide Answer </button>
+        <button class="try-again-button" (click)="hideAnswer()">{{ 'problems_hide' | translate }} </button>
       </div>
     </div>
 
@@ -174,6 +174,27 @@
       <canvas #inputChart width="1500" height="600"></canvas>
     </div>
   </div>
+  <div class="workspace-container">
+  <h2>Workspace</h2>
+  <div class="canvas-wrapper">
+    <canvas id="drawingCanvas" width="800" height="400" style="border:1px solid #000000;"></canvas>
+    <textarea id="textOverlay" class="text-overlay" placeholder="Click to type..." aria-label="Workspace text overlay"></textarea>
+  </div>
+  <div class="workspace-controls">
+      <div class="color-buttons">
+        <button class="color-button black" data-color="#000000"></button>
+        <button class="color-button red" data-color="#FF0000"></button>
+        <button class="color-button green" data-color="#00FF00"></button>
+        <button class="color-button blue" data-color="#0000FF"></button>
+        <button class="color-button yellow" data-color="#FFFF00"></button>
+      </div>
+      <div class="mode-buttons">
+        <button id="drawButton" class="workspace-button active">Draw</button>
+        <button id="textButton" class="workspace-button">Text</button>
+        <button id="eraserButton" class="workspace-button">Eraser</button>
+        <button id="clearButton" class="workspace-button">Clear All</button>
+      </div>
+    </div>
 </div>
 
 <footer class="static-footer">

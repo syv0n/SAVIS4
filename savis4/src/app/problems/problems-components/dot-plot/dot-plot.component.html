@@ -24,7 +24,7 @@
         </div>
       </div>
       <!-- Submit button -->
-      <button class="submit-button" (click)="submitAnswer()">Submit Answer</button>
+      <button class="submit-button" (click)="submitAnswer()">{{ 'problems_submit' | translate }}</button>
       <!-- Show if user answer is correct or incorrect -->
       <div
         *ngIf="showAnswer"
@@ -32,18 +32,14 @@
         [ngClass]="{ correct: answerIsCorrect, incorrect: !answerIsCorrect }"
       >
         <p>{{ answerIsCorrect ? 'Correct!' : 'Incorrect answer. Please try again!' }}</p>
-        <div class="answer-buttons">
-          <button *ngIf="!answerIsCorrect" (click)="toggleCorrectAnswer()" class="show-answer-button">
-            {{ showCorrectAnswer ? 'Hide Correct Answer' : 'Show Correct Answer' }}
-          </button>
-          <p *ngIf="!answerIsCorrect && showCorrectAnswer" class="correct-answer-text">
-            Correct answer: {{ correctAnswer }}
-          </p>
-          <button (click)="hideAnswer()" class="hide-button">Hide Feedback</button>
-        </div>
+        <p *ngIf="!answerIsCorrect">
+          Correct answer: {{ correctAnswer }}
+        </p>
+        <!-- Hide answer button -->
+        <button (click)="hideAnswer()" class="hide-button">{{ 'problems_hide' | translate }}</button>
       </div>
       <!-- Generate new problem button -->
-      <button class="generate-button" (click)="generateNewProblem()">Generate New Problem</button>
+      <button class="generate-button" (click)="generateNewProblem()">{{ 'problems_generator' | translate }}</button>
     </div>
 
     <!-- Right side: Dot Plot -->

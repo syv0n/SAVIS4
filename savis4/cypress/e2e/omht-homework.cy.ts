@@ -8,7 +8,7 @@ describe('One Mean Hypothesis Testing Problems', () => {
 
   it('should change word problem when pressing change problem button', () => {
     cy.get('.green-box p').invoke('text').then((initialText) => {
-      cy.contains('Change Problem').click()
+      cy.contains('Generate New Problem').click()
       
       cy.get('.green-box p').invoke('text').then((newText) => {
         expect(newText).not.to.equal(initialText)

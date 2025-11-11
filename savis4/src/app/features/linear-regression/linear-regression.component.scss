@@ -1,117 +1,186 @@
-.linearRegressionBox{
-    background-color: var(--fifth-col);
-    min-height: 100vh;
+.linearRegressionBox {
+  background-color: var(--fifth-col);
+  min-height: 100vh;
+  padding-bottom: 80px;
 }
-.header{
-    background-color: #333;
-    height: 100px;
-    color: #fff;
-    text-align: center;
 
-    .title {
-        text-align: center;
-        padding: 17px;
-        color: #54c242;
-    }
+.header {
+  background-color: #333;
+  height: 100px;
+  color: #fff;
+  text-align: center;
+
+  .title {
+    text-align: center;
+    padding: 17px;
+    color: #54c242;
+  }
 }
 
 .footer {
-    background-color: #333;
-    height: 100px;
-    color: #fff;
-    text-align: center;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+  background-color: #333;
+  height: 100px;
+  color: #fff;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 
-    .copyright{
-        text-align: center;
-        padding: 17px;
-    }
+  .copyright {
+    text-align: center;
+    padding: 17px;
+  }
 }
 
 .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--second-col);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  color: var(--second-col);
+  min-height: calc(100vh - 300px);
+  gap: 12px; // Smaller gap
 
-    .rhs, .lhs {
-        flex: 1;
-        margin: 10px;
-    }
-    
-    .lhs {
-        margin-left: 2vh;
-    }
+  .lhs {
+    flex: 0 0 260px; // Even narrower - from 360px to 320px
+    margin-left: 1.5vh; // Less margin
+    max-width: 260px;
+  }
+
+  .rhs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 10px 10px 10px 0; // Remove left margin
+    min-width: 0;
+  }
+}
+
+.chart-and-controls {
+  display: flex;
+  gap: 12px; // Smaller gap - from 15px to 12px
+  align-items: stretch;
+  min-height: 650px;
+  width: 100%;
 }
 
 .chart {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: 50px;
-    .chartData {
-        width: 1000px;
-        height: 500px;
-    }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  flex: 1;
+  min-height: 650px;
+  padding: 15px;
+
+  .chartData {
+    width: 100% !important;
+    height: 650px !important;
+    max-width: none !important;
+    min-width: 100% !important;
+    min-height: 650px;
+  }
+}
+
+.controls-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  width: 120px;
+  flex-shrink: 0;
+  justify-content: center;
+}
+
+.control-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: help;
+  transition: all 0.2s;
+  color: var(--second-col);
+  padding: 12px 6px;
+  border-radius: 8px;
+
+  &:hover {
+    transform: scale(1.05);
+    color: var(--third-col);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  span {
+    font-size: 10px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  svg {
+    width: 28px;
+    height: 28px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
 }
 
 .textarea {
-    background-color: var(--fifth-col);
-    border: 2px solid var(--ninth-col);
-    color:var(--second-col);
-    width: 450px;
-    height: 250px;
-    resize: none;
+  background-color: var(--fifth-col);
+  border: 2px solid var(--ninth-col);
+  color: var(--second-col);
+  width: 100%;
+  max-width: 300px;
+  height: 200px;
+  resize: none;
 }
 
 .inputFile {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 
 .static-footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background-color: #000000; 
-    color: #ffffff;
-    text-align: center;
-    padding: 10px 0; 
-  }
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #000000;
+  color: #ffffff;
+  text-align: center;
+  padding: 10px 0;
+}
 
-  h1 {
-    margin-top: 0.67em;
-    font-weight: bold;
-    color: var(--second-col);
-  }
+h1 {
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+  font-weight: bold;
+  color: var(--second-col);
+}
 
-  .btn{
-    background: var(--third-col);
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
+.btn {
+  background: var(--third-col);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+h1.text-center {
+  padding-top: 1rem;
+  padding-bottom: 0.5rem; 
+}
 
-  .btn:hover{
-    background: var(--fourth-col);
-  }
+.btn:hover {
+  background: var(--fourth-col);
+}
 
-  .btn:disabled {
-    background: var(--ninth-col);
-    cursor: not-allowed;
-  }
-
-.manual-link {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 0.5rem 1rem 0;  
-    margin-top: 16px;
-    margin-bottom: 0.5rem;  
+.btn:disabled {
+  background: var(--ninth-col);
+  cursor: not-allowed;
 }
 
 .manual-btn {
@@ -120,17 +189,70 @@
   gap: 0.4rem;
 }
 
-.problems-link{
+.problems-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.links-container {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 0.5rem 1rem 0;  
-  margin-top: 16px;
+  gap: 12px;
+  padding: 0.5rem 1rem 0;
+  margin-top: 50px;
   margin-bottom: 0.5rem;
 }
 
-.problems-btn{
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;   
+@media (max-width: 1200px) {
+  .container {
+    flex-direction: column;
+
+    .lhs {
+      max-width: 100%;
+      width: 100%;
+      flex: 0 0 auto;
+    }
+
+    .rhs {
+      width: 100%;
+    }
+  }
+
+  .chart-and-controls {
+    flex-direction: column;
+  }
+
+  .controls-sidebar {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .chart .chartData {
+    min-width: 100% !important;
+  }
+
+  .textarea {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .chart {
+    min-height: 500px;
+    padding: 10px;
+
+    .chartData {
+      height: 500px !important;
+      min-height: 500px;
+      min-width: 100% !important;
+      width: 100% !important;
+    }
+  }
+
+  .controls-sidebar {
+    flex-direction: column;
+    gap: 12px;
+  }
 }
