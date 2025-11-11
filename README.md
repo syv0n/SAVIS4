@@ -37,9 +37,9 @@ The Bar Chart on SAVIS allows users to see their data in a typical bar chart wit
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/DOT3.png">
 The Dot Chart on SAVIS allows users to see their data in a typical scatterplot with sidebar tables for reference along with a "Draw Samples" feature that can run simulations on the samples given.
 
-### Linear Regression Visualization (WIP)
+### Linear Regression Visualization 
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/Linear.png">
-Linear regression is a statistical method used to model the relationship between two or more variables by fitting a linear equation to observed data. In our project, we employ linear regression to analyze the linear relationship between a dependent variable and one or more independent variables, enabling us to make predictions and understand the underlying patterns in the data. This feature is currently a <b>Work in Progress (WIP)</b>, and is still being developed to refine any current rough draft features.
+Linear regression is a statistical method used to model the relationship between two or more variables by fitting a linear equation to observed data. In our project, we employ linear regression to analyze the linear relationship between a dependent variable and one or more independent variables, enabling us to make predictions and understand the underlying patterns in the data. SAVIS allows the user to move the line (adjust the y-intercept or adjust the slope) to see how it affects the calculation of the squared areas of each point. The point of interest details that are displayed on screen are the regression formula and the sqared area calculation. We supplement this visualization with practice problems that include a step by step solution as well as the answer to the questions.
 
 ### Correlation Visualization (WIP)
 <img width="1721" alt="savis_correlation" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/correlationS4.png">
