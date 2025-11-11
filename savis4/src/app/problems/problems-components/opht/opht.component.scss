@@ -300,3 +300,129 @@ answer-box{
   font-weight: bold;
   font-size: 1.1rem;
 }
+
+.opht-container {
+  padding-bottom: 120px; /* so the workspace isn't hidden by the footer */
+}
+
+/* --- If the workspace sits inside .content, make it span both columns and center it --- */
+.opht-container .content .opht-workspace {
+  grid-column: 1 / -1;      /* full-width row in the grid */
+  justify-self: center;     /* center the whole block */
+  margin-top: 1rem;
+}
+
+/* ===== Workspace (scoped to OPHT) ===== */
+.opht-workspace {
+  /* If you ever move the workspace outside the grid, this still centers it */
+  display: flex;
+  flex-direction: column;
+  align-items: center;     /* center the canvas + buttons */
+  gap: 12px;
+  text-align: center;        /* keep text left inside the canvas wrapper */
+
+  .ws-title {
+    margin: 0 0 .25rem 0;
+    font-weight: 700;
+    color: var(--second-col);
+    text-align: center;
+    align-self: center;   /* title left-aligns relative to wrapper */
+  }
+
+  .canvas-wrapper {
+    position: relative;
+    display: inline-block;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+
+  /* Canvas: keep intrinsic drawing size from HTML (width/height attrs),
+     but allow responsive scale down on smaller screens */
+  .ws-canvas {
+    display: block;
+    background: #fafafa;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 900px;   /* visual max width */
+    height: auto;       /* scale proportionally */
+  }
+
+  .text-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    color: #000;
+    resize: none;
+    font: 16px/1.4 Arial, sans-serif;
+    outline: none;
+    display: none;              /* shown in Text mode */
+    overflow: auto;
+  }
+  .text-overlay.active { display: block; }
+
+  .workspace-controls {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;    /* center the controls row */
+    gap: 12px 16px;
+    margin-top: 8px;
+  }
+
+  /* Color swatches: visible and clickable */
+  .color-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  .color-button {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid #cbd5e1;
+    cursor: pointer;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+    transition: transform .12s ease;
+  }
+  .color-button:hover { transform: scale(1.08); }
+  .color-button.selected { outline: 2px solid #0ea5e9; }
+
+  /* If you also keep the class names (black/red/green/blue/yellow), ensure they’re visibly colored even without inline styles */
+  .color-button.black  { background: #000000; }
+  .color-button.red    { background: #FF0000; }
+  .color-button.green  { background: #00AA55; }
+  .color-button.blue   { background: #0057FF; }
+  .color-button.yellow { background: #FFCC00; }
+
+  .mode-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .workspace-button {
+    padding: 8px 14px;
+    font-size: .95rem;
+    background-color: var(--third-col);
+    color: beige;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    transition: background-color .2s, transform .1s;
+  }
+  .workspace-button:hover  { background-color: var(--fourth-col); transform: translateY(-1px); }
+  .workspace-button.active { background-color: var(--fourth-col); }
+
+  /* Cursor hints on the canvas */
+  .drawing-mode { cursor: crosshair; }
+  .eraser-mode  { cursor: not-allowed; }
+  .text-mode    { cursor: text; }
+}
+
+
+

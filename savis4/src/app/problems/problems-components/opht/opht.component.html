@@ -122,6 +122,38 @@
       <canvas #zChart width="1200" height="600"></canvas>
     </div>
   </div>
+
+  <!-- Workspace (OPHT) -->
+<div id="ophtWorkspaceRoot" class="workspace-container opht-workspace">
+  <h3 class="ws-title">Workspace</h3>
+
+  <div class="canvas-wrapper">
+    <canvas id="ophtDrawingCanvas" class="ws-canvas" width="800" height="420"></canvas>
+    <textarea
+      id="ophtTextOverlay"
+      class="text-overlay"
+      placeholder="Click to type..."
+      aria-label="Workspace text overlay">
+    </textarea>
+  </div>
+
+  <div class="workspace-controls">
+    <div class="color-buttons">
+      <button class="color-button black"  data-color="#000000" title="Black"></button>
+      <button class="color-button red"    data-color="#FF0000" title="Red"></button>
+      <button class="color-button green"  data-color="#00AA55" title="Green"></button>
+      <button class="color-button blue"   data-color="#0057FF" title="Blue"></button>
+      <button class="color-button yellow" data-color="#FFCC00" title="Yellow"></button>
+    </div>
+
+    <div class="mode-buttons">
+      <button id="ophtDrawButton"   class="workspace-button active">Draw</button>
+      <button id="ophtTextButton"   class="workspace-button">Text</button>
+      <button id="ophtEraserButton" class="workspace-button">Eraser</button>
+      <button id="ophtClearButton"  class="workspace-button">Clear All</button>
+    </div>
+  </div>
+</div>
 </div>
 
 <footer class="static-footer">
