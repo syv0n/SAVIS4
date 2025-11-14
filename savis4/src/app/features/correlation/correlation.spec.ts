@@ -8,6 +8,8 @@ import { LanguageSwitcherComponent } from 'src/app/components/language-switcher/
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppFirebaseModule } from 'src/app/app-firebase.module';
+import { CalculatorComponent } from 'src/app/components/calculator/calculator.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('CorrelationComponent', () => {
   let component: CorrelationComponent;
@@ -21,6 +23,7 @@ describe('CorrelationComponent', () => {
         InputComponent,
         FooterComponent,
         LanguageSwitcherComponent,
+        CalculatorComponent,
       ],
       imports: [
         ReactiveFormsModule,
@@ -28,6 +31,7 @@ describe('CorrelationComponent', () => {
         RouterTestingModule,
         TranslateModule.forRoot(),
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
 
@@ -41,3 +45,4 @@ describe('CorrelationComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

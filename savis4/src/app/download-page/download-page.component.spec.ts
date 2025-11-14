@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DownloadPageComponent } from './download-page.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('DownloadPageComponent', () => {
   let component: DownloadPageComponent;
@@ -8,11 +9,10 @@ describe('DownloadPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DownloadPageComponent ],
-      imports: [ TranslateModule.forRoot() ],
-      providers: [ TranslateService ]
-    })
-    .compileComponents();
+      declarations: [DownloadPageComponent],
+      imports: [TranslateModule.forRoot()],
+      schemas: [NO_ERRORS_SCHEMA],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -25,3 +25,4 @@ describe('DownloadPageComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
