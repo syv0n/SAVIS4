@@ -1,31 +1,6 @@
 <div class="body-box">
   <app-navbar></app-navbar>
 
-  <!--link to user manual -->
-  <div class="manual-link">
-    <a
-      class="btn manual-btn"
-      type="button"
-      [routerLink]="['/correlation-manual']"
-      target="_blank"
-      rel="noopener norefferer">
-        {{"button_toGuide"|translate}}{{"homepage_Correlation_Visualization" | translate}}
-    </a>
-  </div>
-
-  <!--link to practice problems-->
-  <div class = "problems-link">
-      <a
-          class = "btn problems-btn"
-          type = "button"
-          [routerLink] ="['/problems-correlation']"
-          target="_blank"
-          rel="noopener norefferer">
-            {{"button_toPP"|translate}}{{"homepage_Correlation_Visualization" | translate}}
-      </a>
-  </div>
-
-
   <div class="p-4">
     <h1 class="text-2xl font-bold mb-2 text-center">
       {{ "correlation_correlation_component" | translate }}

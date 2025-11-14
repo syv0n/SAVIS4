@@ -1,30 +1,6 @@
 <div class="body-box">
     <app-navbar></app-navbar>
 
-    <!--link to user manual -->
-    <div class="manual-link">
-    <a
-        class="btn manual-btn"
-        type="button"
-        [routerLink]="['/omht']"
-        target="_blank"
-        rel="noopener norefferer">
-            {{"button_toGuide"|translate}}{{"homepage_One_Mean_Hypothesis_Testing" | translate}}
-    </a>
-    </div>
-
-    <!--link to practice problems-->
-    <div class="problems-link">
-    <a
-        class="btn problems-btn"
-        type="button"
-        [routerLink]="['/problems-omht']"
-        target="_blank"
-        rel="noopener norefferer">
-            {{"button_toPP"|translate}}{{"homepage_One_Mean_Hypothesis_Testing" | translate}}
-    </a>
-    </div>
-
     <body class="flex flex-col min-h-screen">
     <div id="dot-chart-tutorial">
         <h1 class="text-center">{{ 'one_mean_hypothesis_testing' | translate }}</h1>

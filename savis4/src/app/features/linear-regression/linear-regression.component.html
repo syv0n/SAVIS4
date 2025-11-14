@@ -2,27 +2,6 @@
 <!-- header -->
 <app-navbar></app-navbar>
 
-<!-- links container -->
-<div class="links-container">
-  <a
-    class="btn manual-btn"
-    type="button"
-    [routerLink]="['/regression']"
-    target="_blank"
-    rel="noopener norefferer">
-       {{"button_toGuide"|translate}}{{"homepage_Linear_Regression_Visualization" | translate}}
-  </a>
-  
-  <a
-    class="btn problems-btn"
-    type="button"
-    [routerLink]="['/problems-regression']"
-    target="_blank"
-    rel="noopener norefferer">
-      {{"button_toPP"|translate}}{{"homepage_Linear_Regression_Visualization" | translate}}
-  </a>
-</div>
-
 <!-- contents -->
 <h1 class="text-center py-4">{{ 'lr_title' | translate }}</h1>
 <div class="container">
