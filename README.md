@@ -2,7 +2,11 @@
 <p align="center">
     <img alt="savisLogo" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/SavisLogo.png">
 </p>
-SAVIS4 is a statistical analysis website built at the request of Professor Rafael Diaz who teaches at California State University, Sacramento. SAVIS4 aims to provide an open-source educational platform for students around the world to help them better understand statistics. This platform provides a myriad of visualization tools, allowing users to actively engage with various statistical concepts and enhance their comprehension. 
+SAVIS4 is a statistical analysis website built at the request of Professor Rafael Diaz who teaches at California State University, Sacramento. SAVIS4 aims to provide an open-source educational platform for students around the world to help them better understand statistics. This platform provides a myriad of visualization tools, allowing users to actively engage with various statistical concepts and enhance their comprehension.
+
+<p>
+    <a href="https://savias-c1f4d.web.app/homepage">Website Link</a>
+</p>
 
 # Features
 ### One Proportion Hypothesis Testing
