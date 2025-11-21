@@ -1,6 +1,6 @@
 # SAVIS Legacy Overview
 <p align="center">
-    <img alt="savisLogo" src="https://github.com/smcsus/SAVISLegacy/raw/SAVIS-Legacy/savis4/src/assets/MathematicalCrocodileLegacyLogo.png">
+    <img alt="savisLogo" src="https://github.com/smcsus/SAVISLegacy/raw/master/savis4/src/assets/MathematicalCrocodileLegacyLogo.png">
 </p>
 SAVIS Legacy is a statistical analysis website built at the request of Professor Rafael Diaz who teaches at California State University, Sacramento. SAVIS aims to provide an open-source educational platform for students around the world to help them better understand statistics. This platform provides a myriad of visualization tools, allowing users to actively engage with various statistical concepts and enhance their comprehension. 
 
