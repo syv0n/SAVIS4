@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -20,19 +18,13 @@ export class NavbarComponent implements OnInit{
   public modeIcon=this.onLightMode;
   // variable to show calculator
 
-  isAuth:  boolean = false;
   showCalculator: boolean = false;
 
   constructor(
-    private afAuth: AngularFireAuth,
-    private router: Router,
     private translate: TranslateService
   ) { }
 
   ngOnInit() {
-    this.afAuth.authState.subscribe(user => {
-      this.isAuth = !!user;
-    });
     // check local storage for dark mode or light mode so it doesnt refresh to light mode each time
     let getTheme=JSON.parse(localStorage.getItem('appMode'));
     if(getTheme=="DARK"){
@@ -79,18 +71,6 @@ export class NavbarComponent implements OnInit{
     }
     //save current mode state to local storage
     localStorage.setItem('appMode',JSON.stringify(mode));
-  }
-
-  signOut() {
-    this.afAuth.signOut().then(() => {
-      this.isAuth = false;
-      this.router.navigate(['/login'])
-    })
-  }
-
-  continueAsGuest() {
-    this.isAuth = false;
-    this.router.navigate(['/login'])
   }
 
 }
