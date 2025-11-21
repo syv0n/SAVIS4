@@ -73,7 +73,7 @@ import { TPCIProblemsComponent } from './problems/problems-components/tpci/tpci.
 import { TPHTProblemsComponent } from './problems/problems-components/tpht/tpht.component';
 
 export function HttpLoaderFactory(http: HttpClient){
-  return new TranslateHttpLoader(http)
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json')
 }
 
 export function setupTranslateFactory(service : TranslateService): Function {
