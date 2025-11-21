@@ -1,8 +1,8 @@
-# SAVIS4 Overview
+# SAVIS Legacy Overview
 <p align="center">
-    <img alt="savisLogo" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/SavisLogo.png">
+    <img alt="savisLogo" src="https://github.com/smcsus/SAVISLegacy/raw/SAVIS-Legacy/savis4/src/assets/MathematicalCrocodileLegacyLogo.png">
 </p>
-SAVIS4 is a statistical analysis website built at the request of Professor Rafael Diaz who teaches at California State University, Sacramento. SAVIS4 aims to provide an open-source educational platform for students around the world to help them better understand statistics. This platform provides a myriad of visualization tools, allowing users to actively engage with various statistical concepts and enhance their comprehension. 
+SAVIS Legacy is a statistical analysis website built at the request of Professor Rafael Diaz who teaches at California State University, Sacramento. SAVIS aims to provide an open-source educational platform for students around the world to help them better understand statistics. This platform provides a myriad of visualization tools, allowing users to actively engage with various statistical concepts and enhance their comprehension. 
 
 # Features
 ### One Proportion Hypothesis Testing
@@ -105,11 +105,7 @@ Every feature/component has its own spec, clicking on them will start the automa
 
 
 # Deployment 
-The project was originally setup with Github Actions to automatically deploy the project to Github Pages. Normally when deploying the project, one would simply push their changes to the `main` branch and the deployment will be triggered automatically. However, because development is currently underway, the Github Actions is currently disabled for SAVIS4. However, the deployed project from about a year ago is still running from the previous SAVIS3 Github Actions Page.
-
-You can visit the old deployed project at [savis3](https://savias-c1f4d.web.app/login).
-
-If you forked the repository, you can deploy the project by changing the Firebase API keys in `environment` directory and running `firebase init` and `firebase deploy` commands. A more detailed instruction video can be found here: [Firebase Deployment](https://www.youtube.com/watch?v=UNCggEPZQ0c)
+The project is deployed to GitHub Pages. You can visit the live site at [SAVIS Legacy](https://smcsus.github.io/SAVISLegacy/).
 
 # Developer Instructions 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.18.
@@ -121,20 +117,7 @@ Run `ng serve` or `npm run start` for a dev server. Navigate to `http://localhos
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
 ### Build
-Run `npm run electron:build` to build the project. The build artifacts will be stored in the `dist/electron` directory.
-
-Currently the downloadable packages are in github releases https://github.com/syv0n/SAVIS4/releases/tag/v1.0.0
-- Savis4-Portable-Linux.zip (linux machines)
-- Savis4-Portable-Windows.zip (windows machines)
-
-Windows 
-1. Unzip the package
-2. Launch Savis4.exe
-
-Linux
-1. Unzip the package
-2. Make binary executable (chmod +x Savis4)
-3. Run ./Savis4
+Run `ng build --prod` to build the project for production. The build artifacts will be stored in the `dist/` directory.
 
 
 ### Further help
