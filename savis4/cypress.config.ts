@@ -1,6 +1,13 @@
 import { defineConfig } from 'cypress';
 import * as fs from 'fs';
 
+// Generate current date and time in YYYY-MM-DD_HH-MM-SS format
+const today = new Date();
+const dateFolder = today.toISOString()
+  .replace('T', '_')
+  .replace(/:/g, '-')
+  .split('.')[0];
+
 export default defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
@@ -24,5 +31,8 @@ export default defineConfig({
         },
       });
     },
+    screenshotsFolder: `../cypress-artifacts/${dateFolder}/screenshots`,
+    videosFolder: `../cypress-artifacts/${dateFolder}/videos`,
+    video: true,
   },
 });
