@@ -51,6 +51,8 @@ export class TPHTProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
   ngAfterViewInit(): void {
     this.createChart();
     this.drawGraph(false);
+
+    this.initializeWorkspaceTPHT();
   }
 
   ngOnDestroy(): void {
@@ -298,4 +300,227 @@ export class TPHTProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
   getProblemTitle(): string {
     return 'Two-Proportion z-Test (Two-Sided)';
   }
+
+  /** Initializes the TPHT freehand/text workspace using DOM ids only. */
+private initializeWorkspaceTPHT(): void {
+  // Required element IDs in your HTML:
+  // #tphtDrawingCanvas, #tphtTextOverlay, #tphtDrawButton, #tphtTextButton, #tphtEraserButton, #tphtClearButton
+  // Optional wrapper (to scope color buttons to this workspace): #tphtWorkspaceRoot
+  const canvas = document.getElementById('tphtDrawingCanvas') as HTMLCanvasElement | null;
+  const overlay = document.getElementById('tphtTextOverlay') as HTMLTextAreaElement | null;
+  const drawBtn = document.getElementById('tphtDrawButton') as HTMLButtonElement | null;
+  const textBtn = document.getElementById('tphtTextButton') as HTMLButtonElement | null;
+  const eraserBtn = document.getElementById('tphtEraserButton') as HTMLButtonElement | null;
+  const clearBtn = document.getElementById('tphtClearButton') as HTMLButtonElement | null;
+
+  // Scope color buttons to a workspace container if present, otherwise search the whole doc
+  const wsRoot = document.getElementById('tphtWorkspaceRoot') || document;
+  const colorButtons = Array.from(
+    wsRoot.querySelectorAll<HTMLButtonElement>('.color-button')
+  );
+
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D | null;
+  if (!ctx) return;
+
+  // ---------- State ----------
+  let isDrawing = false;
+  let isErasing = false;
+  let isTextMode = false;
+  let isTextEditing = false;
+  let lastCommittedText = '';
+  let currentColor = '#000000';
+  let prevX = 0, prevY = 0;
+
+  // Make color swatches visibly colored even if theme styles are missing
+  colorButtons.forEach(b => {
+    if (b.dataset.color) b.style.backgroundColor = b.dataset.color;
+  });
+
+  // Default select black if present
+  const black = colorButtons.find(b => b.classList.contains('black'));
+  if (black) black.classList.add('selected');
+
+  // Initial cursor
+  canvas.classList.add('drawing-mode');
+
+  // ---------- Drawing handlers ----------
+  const toCanvasXY = (e: MouseEvent) => {
+    const r = canvas.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  };
+
+  const draw = (e: MouseEvent) => {
+    if (!isDrawing) return;
+    const { x, y } = toCanvasXY(e);
+
+    ctx.beginPath();
+    ctx.moveTo(prevX, prevY);
+    ctx.lineTo(x, y);
+
+    if (isErasing) {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.lineWidth = 20;
+      ctx.strokeStyle = 'rgba(0,0,0,1)';
+    } else {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = currentColor;
+    }
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    prevX = x; prevY = y;
+  };
+
+  const mousedown = (e: MouseEvent) => {
+    const { x, y } = toCanvasXY(e);
+    prevX = x; prevY = y;
+    isDrawing = true;
+  };
+
+  const mouseup = () => (isDrawing = false);
+  const mouseout = () => (isDrawing = false);
+
+  canvas.addEventListener('mousedown', mousedown);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', mouseup);
+  canvas.addEventListener('mouseout', mouseout);
+
+  // ---------- Colors ----------
+  colorButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      isErasing = false;
+      currentColor = target?.dataset?.color || '#000000';
+
+      colorButtons.forEach(b => b.classList.remove('selected'));
+      target.classList.add('selected');
+
+      canvas.classList.remove('eraser-mode');
+      canvas.classList.add('drawing-mode');
+      eraserBtn?.classList.remove('active');
+      drawBtn?.classList.add('active');
+      textBtn?.classList.remove('active');
+
+      if (overlay) overlay.style.color = currentColor;
+    });
+  });
+
+  // ---------- Eraser ----------
+  eraserBtn?.addEventListener('click', () => {
+    isErasing = true;
+    isTextMode = false;
+
+    canvas.classList.remove('drawing-mode', 'text-mode');
+    canvas.classList.add('eraser-mode');
+
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.lineWidth = 20;
+
+    eraserBtn.classList.add('active');
+    drawBtn?.classList.remove('active');
+    textBtn?.classList.remove('active');
+
+    overlay?.classList.remove('active');
+    colorButtons.forEach(b => b.classList.remove('selected'));
+  });
+
+  // ---------- Clear ----------
+  clearBtn?.addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (overlay) {
+      overlay.value = '';
+      lastCommittedText = '';
+    }
+  });
+
+  // ---------- Text mode ----------
+  textBtn?.addEventListener('click', () => {
+    isTextMode = true;
+    isErasing = false;
+
+    canvas.classList.remove('drawing-mode', 'eraser-mode');
+    canvas.classList.add('text-mode');
+
+    if (overlay) {
+      overlay.classList.add('active');
+      overlay.readOnly = false;
+      overlay.style.color = currentColor;
+      overlay.focus();
+      isTextEditing = true;
+    }
+
+    textBtn.classList.add('active');
+    drawBtn?.classList.remove('active');
+    eraserBtn?.classList.remove('active');
+  });
+
+  // Commit overlay text into canvas
+  const commitOverlayTextToCanvas = () => {
+    if (!overlay) return;
+    const text = overlay.value || '';
+    if (!text || text === lastCommittedText) return;
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = currentColor;
+    const fontSize = 16;
+    ctx.font = `${fontSize}px Arial`;
+    const lines = text.split('\n');
+    const startX = 8;
+    const lineHeight = fontSize * 1.4;
+    let startY = 20;
+    lines.forEach((line, i) => ctx.fillText(line, startX, startY + i * lineHeight));
+    lastCommittedText = text;
+  };
+
+  // ---------- Draw mode (exit text / eraser) ----------
+  drawBtn?.addEventListener('click', () => {
+    isTextMode = false;
+    isErasing = false;
+
+    canvas.classList.remove('text-mode', 'eraser-mode');
+    canvas.classList.add('drawing-mode');
+
+    drawBtn.classList.add('active');
+    textBtn?.classList.remove('active');
+    eraserBtn?.classList.remove('active');
+
+    if (overlay) {
+      if (overlay.value && overlay.value !== lastCommittedText) {
+        commitOverlayTextToCanvas();
+      }
+      overlay.classList.remove('active');
+      overlay.readOnly = true;
+      isTextEditing = false;
+    }
+  });
+
+  // Toggle overlay editing on click; commit when turning off
+  overlay?.addEventListener('click', () => {
+    if (!isTextMode || !overlay) return;
+    if (isTextEditing) {
+      overlay.readOnly = true;
+      isTextEditing = false;
+      commitOverlayTextToCanvas();
+    } else {
+      overlay.readOnly = false;
+      isTextEditing = true;
+      overlay.focus();
+    }
+  });
+
+  // Also commit on blur
+  overlay?.addEventListener('blur', () => {
+    if (!isTextMode || !overlay) return;
+    if (isTextEditing) {
+      overlay.readOnly = true;
+      isTextEditing = false;
+      commitOverlayTextToCanvas();
+    }
+  });
+}
+
+
 }
