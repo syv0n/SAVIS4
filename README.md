@@ -39,11 +39,11 @@ The Dot Chart on SAVIS allows users to see their data in a typical scatterplot w
 
 ### Linear Regression Visualization (WIP)
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/Linear.png">
-Linear regression is a statistical method used to model the relationship between two or more variables by fitting a linear equation to observed data. In our project, we employ linear regression to analyze the linear relationship between a dependent variable and one or more independent variables, enabling us to make predictions and understand the underlying patterns in the data. This feature is currently a <b>Work in Progress (WIP)</b>, and is still being developed to refine any current rough draft features.
+Linear regression is a statistical method used to model the relationship between two or more variables by fitting a linear equation to observed data. In our project, we employ linear regression to analyze the linear relationship between a dependent variable and one or more independent variables, enabling us to make predictions and understand the underlying patterns in the data. 
 
 ### Correlation Visualization (WIP)
 <img width="1721" alt="savis_correlation" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/correlationS4.png">
-The correlation feature allows users to analyze the relationship between two sets of data. It provides both manual and file upload options for inputting data and generates correlation coefficients along with visual cues for analysis. The visual cues includes a regression line, this line turns green for strong correlations (r > 0.7) and red for weak ones, with data points colored based on their distance and position relative to the line. Points far above the line appear red, points far below appear blue, and those closest to the line are shown in a darker shade of either color. This feature is currently a <b>Work in Progress (WIP)</b>, and is still being developed to properly display the line and will include more small features in the future.
+The correlation feature allows users to analyze the relationship between two sets of data. It provides both manual and file upload options for inputting data and generates correlation coefficients along with visual cues for analysis. The visual cues includes a movable regression line, this line turns green for strong correlations (r > 0.7) and red for weak ones, with data points colored based on their distance and position relative to the line. Points far above the line appear red, points far below appear blue, and those closest to the line are shown in a darker shade of either color.
 
 ### One Proportion Confidence Interval
 <img width="1721" alt="savis_regression" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/OPCI.png">
@@ -65,13 +65,17 @@ graphs where it checks if it covers the mean of the actual in the sample collect
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/2MCI2.png">
 Two Means Confidence Interval feature in our Angular application allows users to load, analyze, and visualize data for two distinct groups, calculating and displaying confidence intervals for their mean differences. Users can interactively adjust data, run simulations, and explore statistical results through dynamic charts, enhancing understanding of data distributions and variability.
 
-### User Manual (WIP)
+### User Manual
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/User-Manual-Screenshot.png">
-The User Manual page provides users with guidance on how to use the site's statistical tools, including hypothesis testing, graph generation, regression analysis, and confidence interval calculations. It explains each tool’s purpose and helps users interpret and apply the results for data analysis. This feature is currently a <b>Work in Progress (WIP)</b>, and is still being developed to explain more features such as the calculator, regression, correlation, and other features.
+The User Manual page provides users with guidance on how to use the site's statistical tools. It explains each tool’s purpose and helps users interpret and apply the results for data analysis. Users can use each graph's respective manual to gain more information on how each testing module works. They can also find links to the respective practice problems or the graph module page.
 
 ### Calculator
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/calculatorReadme.png">
-The Cacluator feature provides a user-friendly interface for performing basic arithmetic operations directly within the SAVIS4 platform. It is accessible by a toggle button on the top left on every page. It supports addition, substraction, multiplication, division, percentage calculations, and positive/negative toggling. The calculator is designed with a clean, responsive layout that adapts to light/dark mode, making it a convenient tool for students performing quick computations while engaging with statisitcal analysis. This feature is currently a <b>Work in Progress (WIP)</b>, and its "Advanced Mode" feature is still being developed to include several other calculation functions and symbols. Additionally, the calculator's ability to move its window dynamically and resize it is still being worked on.
+The Cacluator feature provides a user-friendly interface for performing basic arithmetic operations directly within the SAVIS4 platform. It is accessible by a toggle button on the top left on every page. It supports addition, substraction, multiplication, division, percentage calculations, and positive/negative toggling. The calculator is designed with a clean, responsive layout that adapts to light/dark mode, making it a convenient tool for students performing quick computations while engaging with statisitcal analysis. 
+
+### Practice Problems
+<img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/practiceProbsSelection.png">
+The Practice Problems feature allows for users to practice their knowledge on each testing module to better their understanding on each statistical concept. Users can cycle through problems and see if their answer is correct. Additionaly, some modules contain a workspace for the user to scribble their thinking process directly on the website.
 
 # Pre-requisites
 * NodeJS
