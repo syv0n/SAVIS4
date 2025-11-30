@@ -13,9 +13,10 @@ describe('Practice Problems E2E Tests', () => {
 
     it('should display all four main categories', () => {
         cy.get('.tool1').should('be.visible')
-        cy.get('.tool2').should('be.visible')
+        cy.get('.tool2').should('have.length', 2).each(($el) => {
+            cy.wrap($el).should('be.visible')
+        })
         cy.get('.tool3').should('be.visible')
-        cy.get('.tool4').should('be.visible')
     })
     
     describe('Hypothesis Testing Section', () => {
@@ -68,42 +69,43 @@ describe('Practice Problems E2E Tests', () => {
 
     describe('Regression Section', () => {
         it('should display all regression boxes', () => {
-            cy.get('.tool3').should('contain.text', 'Regression')
-            cy.get('.box3[routerLink="/problems-regression"]').should('be.visible')
+            cy.contains('.tool2', 'Regression').should('be.visible')
+            cy.get('.box2[routerLink="/problems-regression"]').should('be.visible')
+            cy.get('.box2[routerLink="/problems-correlation"]').should('be.visible')
         })
 
         it('should navigate to Regression', () => {
-            cy.get('.box3[routerLink="/problems-regression"]').click()
+            cy.get('.box2[routerLink="/problems-regression"]').click()
             cy.url().should('include', '/problems-regression')
         })
     })
 
     describe('Confidence Interval Section', () => {
         it('should display all confidence interval boxes', () => {
-            cy.get('.tool4').should('contain.text', 'Confidence Interval')
-            cy.get('.box4[routerLink="/problems-opci"]').should('be.visible')
-            cy.get('.box4[routerLink="/problems-tpci"]').should('be.visible')
-            cy.get('.box4[routerLink="/problems-omci"]').should('be.visible')
-            cy.get('.box4[routerLink="/problems-tmci"]').should('be.visible')
+            cy.get('.tool3').should('contain.text', 'Confidence Interval')
+            cy.get('.box3[routerLink="/problems-opci"]').should('be.visible')
+            cy.get('.box3[routerLink="/problems-tpci"]').should('be.visible')
+            cy.get('.box3[routerLink="/problems-omci"]').should('be.visible')
+            cy.get('.box3[routerLink="/problems-tmci"]').should('be.visible')
         })
 
         it('should navigate to One Proportion Confidence Interval', () => {
-            cy.get('.box4[routerLink="/problems-opci"]').click()
+            cy.get('.box3[routerLink="/problems-opci"]').click()
             cy.url().should('include', '/problems-opci')
         })
 
         it('should navigate to Two Proportion Confidence Interval', () => {
-            cy.get('.box4[routerLink="/problems-tpci"]').click()
+            cy.get('.box3[routerLink="/problems-tpci"]').click()
             cy.url().should('include', '/problems-tpci')
         })
 
         it('should navigate to One Mean Confidence Interval', () => {
-            cy.get('.box4[routerLink="/problems-omci"]').click()
+            cy.get('.box3[routerLink="/problems-omci"]').click()
             cy.url().should('include', '/problems-omci')
         })
 
         it('should navigate to Two Mean Confidence Interval', () => {
-            cy.get('.box4[routerLink="/problems-tmci"]').click()
+            cy.get('.box3[routerLink="/problems-tmci"]').click()
             cy.url().should('include', '/problems-tmci')
         })
     })
@@ -118,7 +120,7 @@ describe('Practice Problems E2E Tests', () => {
             cy.get('.box2[routerLink="/problems-bar-chart"]').click()
             cy.url().should('include', '/problems-bar-chart')
             cy.visit('localhost:4200/problems')
-            cy.get('.box3[routerLink="/problems-regression"]').click()
+            cy.get('.box2[routerLink="/problems-regression"]').click()
             cy.url().should('include', '/problems-regression')
         })
 
@@ -143,9 +145,8 @@ describe('Practice Problems E2E Tests', () => {
 
         it('should have consistent styling across all boxes', () => {
             cy.get('.box').should('have.length', 4)
-            cy.get('.box2').should('have.length', 2)
-            cy.get('.box3').should('have.length', 2)
-            cy.get('.box4').should('have.length', 4)
+            cy.get('.box2').should('have.length', 4)
+            cy.get('.box3').should('have.length', 4)
         })
     })
 

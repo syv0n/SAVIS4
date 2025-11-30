@@ -121,7 +121,7 @@ describe('TwoMeanCI', () => {
             
             // Export PDF
             cy.get('#export-pdf-btn').should('be.enabled').click()
-            cy.wait(2000) // Allow time for download
+            cy.wait(5000) // Wait 5 seconds for browser to finish writing the file
             
             // Verify button remains functional
             cy.get('#export-pdf-btn').should('be.enabled')
@@ -149,7 +149,7 @@ describe('TwoMeanCI', () => {
             
             // Export DOCX
             cy.get('#export-docx-btn').should('be.enabled').click()
-            cy.wait(2000) // Allow time for download
+            cy.wait(5000) // Wait 5 seconds for browser to finish writing the file
             
             // Verify button remains functional
             cy.get('#export-docx-btn').should('be.enabled')

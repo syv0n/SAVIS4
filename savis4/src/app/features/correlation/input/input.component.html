@@ -86,23 +86,32 @@
         <p class="text-sm text-gray-600 mb-3">
           {{ "correlation_select_two_columns" | translate }}
         </p>
-        <div class="flex gap-3 items-center">
-          <select [formControl]="select1" class="border border-gray-300 rounded px-3 py-2 bg-white focus:border-blue-500 focus:outline-none">
-            <option value="" disabled>{{ "correlation_select_column" | translate }}</option>
-            <option *ngFor="let header of headers" [ngValue]="header">
-              {{ header }}
-            </option>
-          </select>
-          <select [formControl]="select2" class="border border-gray-300 rounded px-3 py-2 bg-white focus:border-blue-500 focus:outline-none">
-            <option value="" disabled>{{ "correlation_select_column" | translate }}</option>
-            <option *ngFor="let header of headers" [ngValue]="header">
-              {{ header }}
-            </option>
-          </select>
-          <button class="btn" (click)="calculateFile()">
-            {{ "correlation_update_chart" | translate }}
-          </button>
+        <div class="flex gap-4 items-end">
+          <!-- X Column Selection -->
+          <div class="flex flex-col">
+            <label class="text-sm font-semibold text-gray-700 mb-2 text-center">X</label>
+            <select [formControl]="select1" class="border border-gray-300 rounded px-3 py-2 bg-white focus:border-blue-500 focus:outline-none min-w-[150px]">
+              <option value="" disabled>{{ "correlation_select_column" | translate }}</option>
+              <option *ngFor="let header of headers" [ngValue]="header">
+                {{ header }}
+              </option>
+            </select>
+          </div>
+          
+          <!-- Y Column Selection -->
+          <div class="flex flex-col">
+            <label class="text-sm font-semibold text-gray-700 mb-2 text-center">Y</label>
+            <select [formControl]="select2" class="border border-gray-300 rounded px-3 py-2 bg-white focus:border-blue-500 focus:outline-none min-w-[150px]">
+              <option value="" disabled>{{ "correlation_select_column" | translate }}</option>
+              <option *ngFor="let header of headers" [ngValue]="header">
+                {{ header }}
+              </option>
+            </select>
+          </div>
         </div>
+        <p class="text-xs text-gray-500 mt-2 italic">
+          {{ "correlation_auto_populate_hint" | translate }}
+        </p>
       </div>
 
       <!-- Data table -->

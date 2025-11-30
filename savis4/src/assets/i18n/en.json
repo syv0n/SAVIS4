@@ -293,6 +293,7 @@
     "correlation_two_columns": "Select any two Columns from Available Column Names:",
     "correlation_file_input": "File Input",
     "correlation_select_two_columns": "Select any two columns from the following",
+    "correlation_auto_populate_hint": "Once both X and Y columns are selected, the data will automatically populate the manual input area above.",
     "correlation_Displaying_File_Data:": "Displaying File Data",
     "correlation_correlation_component": "Correlation Visualization",
     "correlation_input_file": "File Input",

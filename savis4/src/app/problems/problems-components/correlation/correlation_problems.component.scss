@@ -56,11 +56,49 @@
         font-size: 1.1rem;
         line-height: 1.6;
 
-        h3 {
-          margin-top: 0;
+        .instructions-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
           margin-bottom: 10px;
+          gap: 15px;
+          flex-wrap: wrap;
+        }
+
+        h3 {
+          margin: 0;
           font-size: 1.3rem;
           color: #2d5016;
+          flex: 1;
+        }
+
+        .question-type-selector {
+          display: flex;
+          align-items: center;
+        }
+
+        .question-type-dropdown {
+          padding: 8px 12px;
+          font-size: 1rem;
+          border: 2px solid var(--third-col);
+          border-radius: 8px;
+          background-color: white;
+          color: var(--second-col);
+          cursor: pointer;
+          font-weight: 600;
+          min-width: 220px;
+          transition: all 0.3s ease;
+
+          &:hover {
+            border-color: var(--fourth-col);
+            background-color: #f8f9fa;
+          }
+
+          &:focus {
+            outline: none;
+            border-color: var(--fourth-col);
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.2);
+          }
         }
 
         p {
@@ -82,16 +120,23 @@
     .chart-container {
       flex: 1;
       max-width: 55%;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
+      height: 600px;
 
       canvas {
         background-color: var(--eighth-col);
         border-radius: 10px;
-        width: 100%;
+        width: 100% !important;
         max-width: 700px;
-        height: auto;
+        height: 500px !important;
+        max-height: 500px;
       }
 
       .chart-helper {
@@ -336,6 +381,191 @@
   }
 }
 
+// Simple Data Table for Calculate Question
+.simple-dataset-display {
+  margin: 15px 0;
+  
+  .simple-data-table {
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    thead {
+      background-color: var(--third-col);
+      color: beige;
+    }
+
+    th {
+      padding: 10px 15px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid #e0e0e0;
+        
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background-color: #f8f9fa;
+        }
+      }
+
+      td {
+        padding: 8px 15px;
+        text-align: center;
+        font-size: 1rem;
+        color: var(--second-col);
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.instruction-text {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1rem;
+}
+
+.formula-box {
+  background-color: #f0f0f0;
+  padding: 12px 15px;
+  border-radius: 6px;
+  margin: 15px 0;
+  border-left: 4px solid var(--third-col);
+  font-size: 0.95rem;
+  color: #333;
+  text-align: center;
+}
+
+.answer-label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--second-col);
+}
+
+// Calculation Steps for Calculate Question
+.calculation-steps {
+  margin-top: 20px;
+
+  .step-box {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 2px solid #dee2e6;
+
+    .step-label {
+      margin: 0 0 8px 0;
+      font-size: 1rem;
+      color: var(--second-col);
+    }
+
+    .step-hint {
+      margin: 5px 0 10px 0;
+      font-size: 0.9rem;
+      color: #666;
+      font-style: italic;
+    }
+
+    .step-hint-small {
+      margin: 5px 0 10px 0;
+      font-size: 0.85rem;
+      color: #888;
+      font-style: italic;
+    }
+
+    .step-input {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: var(--third-col);
+        box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.2);
+      }
+
+      &:disabled {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+      }
+
+      &.correct {
+        border-color: #28a745;
+        background-color: #d4edda;
+      }
+
+      &.incorrect {
+        border-color: #dc3545;
+        background-color: #f8d7da;
+      }
+    }
+  }
+}
+
+// Coefficient Input for Calculate Question
+.coefficient-input {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1.1rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--third-col);
+    box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.2);
+  }
+
+  &:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+  }
+}
+
+// Coefficient Select for Calculate Question (introductory)
+.coefficient-select {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  margin-top: 10px;
+  background-color: white;
+  color: var(--second-col);
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--third-col);
+    box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.2);
+  }
+
+  &:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+  }
+}
+
 // Footer
 .static-footer {
   position: fixed;
@@ -376,3 +606,4 @@
     }
   }
 }
+
