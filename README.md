@@ -77,6 +77,10 @@ The Cacluator feature provides a user-friendly interface for performing basic ar
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/practiceProbsSelection.png">
 The Practice Problems feature allows for users to practice their knowledge on each testing module to better their understanding on each statistical concept. Users can cycle through problems and see if their answer is correct. Additionaly, some modules contain a workspace for the user to scribble their thinking process directly on the website.
 
+### Export Functionality
+<img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/exportFunction.png">
+Users are able to export any graphs tabulated in each module by clicking either "Export as PDF" or "Export as DOCX". This feauture is unavailable until a graph is generated.
+
 # Pre-requisites
 * NodeJS
 * NPM
