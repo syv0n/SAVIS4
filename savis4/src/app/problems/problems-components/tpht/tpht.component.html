@@ -15,7 +15,6 @@
 
       <div class="buttons top">
         <button class="random-button" (click)="generateProblem()">{{ 'problems_generator' | translate }}</button>
-        <button class="reset-button" (click)="hideAnswer()">Reset</button>
       </div>
 
       <!-- Multi-step answers (OPHT-style) -->
@@ -141,6 +140,48 @@
       <canvas #zChart width="1200" height="600"></canvas>
     </div>
   </div>
+
+  <!-- Workspace (freehand / text) — sits below the content grid -->
+<div id="tphtWorkspaceRoot" class="workspace-container tpht-workspace">
+  <h3 class="ws-title">Workspace</h3>
+
+  <div class="canvas-wrapper">
+    <canvas
+      id="tphtDrawingCanvas"
+      class="ws-canvas"
+      width="800"
+      height="420">
+    </canvas>
+
+    <textarea
+      id="tphtTextOverlay"
+      class="text-overlay"
+      placeholder="Click to type..."
+      aria-label="Workspace text overlay">
+    </textarea>
+  </div>
+
+  <div class="workspace-controls">
+    <!-- Color swatches (the TS sets the background from data-color) -->
+    <div class="color-buttons">
+      <button class="color-button black"  data-color="#000000" title="Black"></button>
+      <button class="color-button red"    data-color="#FF0000" title="Red"></button>
+      <button class="color-button green"  data-color="#00AA55" title="Green"></button>
+      <button class="color-button blue"   data-color="#0057FF" title="Blue"></button>
+      <button class="color-button yellow" data-color="#FFCC00" title="Yellow"></button>
+    </div>
+
+    <!-- Mode buttons (type=button so they don't submit your TPHT form) -->
+    <div class="mode-buttons">
+      <button id="tphtDrawButton"   class="workspace-button active" type="button">Draw</button>
+      <button id="tphtTextButton"   class="workspace-button" type="button">Text</button>
+      <button id="tphtEraserButton" class="workspace-button" type="button">Eraser</button>
+      <button id="tphtClearButton"  class="workspace-button" type="button">Clear All</button>
+    </div>
+  </div>
+</div>
+
+
 </div>
 
 <footer class="static-footer">

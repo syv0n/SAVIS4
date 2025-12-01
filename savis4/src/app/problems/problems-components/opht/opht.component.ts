@@ -54,6 +54,7 @@ export class OPHTProblemsComponent implements AfterViewInit, OnInit, OnDestroy {
   ngAfterViewInit(): void {
     this.createChart();
     this.drawGraph(false);
+    this.initializeWorkspaceOPHT();
   }
 
   ngOnDestroy(): void {
@@ -292,4 +293,200 @@ private addShadeRegion(xFrom: number, xTo: number, color: string, label = 'Shade
   getProblemTitle(): string {
     return 'One-Proportion z-Test (Two-Sided)';
   }
+
+  /** Initializes the OPHT freehand/text workspace using DOM ids only. */
+private initializeWorkspaceOPHT(): void {
+  // expected HTML element IDs
+  const canvas = document.getElementById('ophtDrawingCanvas') as HTMLCanvasElement | null;
+  const overlay = document.getElementById('ophtTextOverlay') as HTMLTextAreaElement | null;
+  const drawBtn = document.getElementById('ophtDrawButton') as HTMLButtonElement | null;
+  const textBtn = document.getElementById('ophtTextButton') as HTMLButtonElement | null;
+  const eraserBtn = document.getElementById('ophtEraserButton') as HTMLButtonElement | null;
+  const clearBtn = document.getElementById('ophtClearButton') as HTMLButtonElement | null;
+
+  // scope color buttons to this workspace
+  const wsRoot = document.getElementById('ophtWorkspaceRoot') || document;
+  const colorButtons = Array.from(
+    wsRoot.querySelectorAll<HTMLButtonElement>('.color-button')
+  );
+
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D | null;
+  if (!ctx) return;
+
+  // --- state ---
+  let isDrawing = false;
+  let isErasing = false;
+  let isTextMode = false;
+  let isTextEditing = false;
+  let lastCommittedText = '';
+  let currentColor = '#000000';
+  let prevX = 0, prevY = 0;
+
+  // ensure color buttons visible
+  colorButtons.forEach(b => {
+    if (b.dataset.color) b.style.backgroundColor = b.dataset.color;
+  });
+
+  const black = colorButtons.find(b => b.classList.contains('black'));
+  if (black) black.classList.add('selected');
+
+  canvas.classList.add('drawing-mode');
+
+  const toXY = (e: MouseEvent) => {
+    const r = canvas.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  };
+
+  const draw = (e: MouseEvent) => {
+    if (!isDrawing) return;
+    const { x, y } = toXY(e);
+    ctx.beginPath();
+    ctx.moveTo(prevX, prevY);
+    ctx.lineTo(x, y);
+
+    if (isErasing) {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.lineWidth = 20;
+      ctx.strokeStyle = 'rgba(0,0,0,1)';
+    } else {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = currentColor;
+    }
+
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+    prevX = x; prevY = y;
+  };
+
+  const start = (e: MouseEvent) => {
+    const { x, y } = toXY(e);
+    prevX = x; prevY = y;
+    isDrawing = true;
+  };
+  const stop = () => (isDrawing = false);
+
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', stop);
+  canvas.addEventListener('mouseout', stop);
+
+  // colors
+  colorButtons.forEach(btn => {
+    btn.addEventListener('click', e => {
+      const target = e.currentTarget as HTMLButtonElement;
+      isErasing = false;
+      currentColor = target.dataset.color || '#000000';
+      colorButtons.forEach(b => b.classList.remove('selected'));
+      target.classList.add('selected');
+
+      canvas.classList.remove('eraser-mode');
+      canvas.classList.add('drawing-mode');
+      eraserBtn?.classList.remove('active');
+      drawBtn?.classList.add('active');
+      textBtn?.classList.remove('active');
+      if (overlay) overlay.style.color = currentColor;
+    });
+  });
+
+  // eraser
+  eraserBtn?.addEventListener('click', () => {
+    isErasing = true;
+    isTextMode = false;
+    canvas.classList.remove('drawing-mode', 'text-mode');
+    canvas.classList.add('eraser-mode');
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.lineWidth = 20;
+    eraserBtn.classList.add('active');
+    drawBtn?.classList.remove('active');
+    textBtn?.classList.remove('active');
+    overlay?.classList.remove('active');
+    colorButtons.forEach(b => b.classList.remove('selected'));
+  });
+
+  // clear
+  clearBtn?.addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (overlay) {
+      overlay.value = '';
+      lastCommittedText = '';
+    }
+  });
+
+  // text mode
+  textBtn?.addEventListener('click', () => {
+    isTextMode = true;
+    isErasing = false;
+    canvas.classList.remove('drawing-mode', 'eraser-mode');
+    canvas.classList.add('text-mode');
+    if (overlay) {
+      overlay.classList.add('active');
+      overlay.readOnly = false;
+      overlay.style.color = currentColor;
+      overlay.focus();
+      isTextEditing = true;
+    }
+    textBtn.classList.add('active');
+    drawBtn?.classList.remove('active');
+    eraserBtn?.classList.remove('active');
+  });
+
+  const commitText = () => {
+    if (!overlay) return;
+    const text = overlay.value || '';
+    if (!text || text === lastCommittedText) return;
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = currentColor;
+    const fontSize = 16;
+    ctx.font = `${fontSize}px Arial`;
+    const lines = text.split('\n');
+    const startX = 8;
+    let startY = 20;
+    const lh = fontSize * 1.4;
+    lines.forEach((line, i) => ctx.fillText(line, startX, startY + i * lh));
+    lastCommittedText = text;
+  };
+
+  drawBtn?.addEventListener('click', () => {
+    isTextMode = false;
+    isErasing = false;
+    canvas.classList.remove('text-mode', 'eraser-mode');
+    canvas.classList.add('drawing-mode');
+    drawBtn.classList.add('active');
+    textBtn?.classList.remove('active');
+    eraserBtn?.classList.remove('active');
+    if (overlay) {
+      if (overlay.value && overlay.value !== lastCommittedText) commitText();
+      overlay.classList.remove('active');
+      overlay.readOnly = true;
+      isTextEditing = false;
+    }
+  });
+
+  overlay?.addEventListener('click', () => {
+    if (!isTextMode || !overlay) return;
+    if (isTextEditing) {
+      overlay.readOnly = true;
+      isTextEditing = false;
+      commitText();
+    } else {
+      overlay.readOnly = false;
+      isTextEditing = true;
+      overlay.focus();
+    }
+  });
+
+  overlay?.addEventListener('blur', () => {
+    if (!isTextMode || !overlay) return;
+    if (isTextEditing) {
+      overlay.readOnly = true;
+      isTextEditing = false;
+      commitText();
+    }
+  });
+}
+
+
 }
