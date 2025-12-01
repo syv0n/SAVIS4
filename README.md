@@ -1,7 +1,9 @@
 # SAVIS4 Overview
+
 <p align="center">
     <img alt="savisLogo" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/SavisLogo.png">
 </p>
+
 SAVIS4 is a statistical analysis website built at the request of Professor Rafael Diaz who teaches at California State University, Sacramento. SAVIS4 aims to provide an open-source educational platform for students around the world to help them better understand statistics. This platform provides a myriad of visualization tools, allowing users to actively engage with various statistical concepts and enhance their comprehension.
 
 <p>
@@ -71,7 +73,7 @@ Two Means Confidence Interval feature in our Angular application allows users to
 
 ### User Manual
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/User-Manual-Screenshot.png">
-The User Manual page provides users with guidance on how to use the site's statistical tools. It explains each tool’s purpose and helps users interpret and apply the results for data analysis. Users can use each graph's respective manual to gain more information on how each testing module works. They can also find links to the respective practice problems or the graph module page.
+The User Manual page provides users with guidance on how to use the site's statistical tools. It explains each tool's purpose and helps users interpret and apply the results for data analysis. Users can use each graph's respective manual to gain more information on how each testing module works. They can also find links to the respective practice problems or the graph module page.
 
 ### Calculator
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/calculatorReadme.png">
@@ -81,38 +83,99 @@ The Cacluator feature provides a user-friendly interface for performing basic ar
 <img width="1721" src="https://github.com/syv0n/SAVIS4/raw/master/savis4/src/assets/practiceProbsSelection.png">
 The Practice Problems feature allows for users to practice their knowledge on each testing module to better their understanding on each statistical concept. Users can cycle through problems and see if their answer is correct. Additionaly, some modules contain a workspace for the user to scribble their thinking process directly on the website.
 
-# Pre-requisites
-* NodeJS
-* NPM
-* Angular CLI
+# System Requirements
 
-# Installation
-1. Clone to repository to your local machine.
-2. `Cd` into the `savis4` directory.
-3. Run `npm install` to install all the dependencies.
+* NodeJS Version: 16.14.0 or higher
+* Cypress: 15.4.0
+* NPM: 10.8.2 (other versions should also work)
+* Angular CLI Version: 12.2.18
+* TypeScript: 4.3.5
 
-# Testing 
-## Unit Testing 
+# Setup Instructions
 
-### Running unit tests
-Run `ng test` to execute the unit tests via [Jest] https://github.com/jestjs/jest.
+### 1. Clone the Repository
 
-### Running all test 
-Run `npm run test:coverage` to execute a test for all the features with a unit test. Once all the test has ran the results will show up in the terminal as well as in the file savis4 -> coverage -> index.html.
+Clone the GitHub repository by running the following command:
 
-## Functional Testing
+```bash
+git clone https://github.com/syv0n/SAVIS4
+```
 
-### Running end-to-end functional test
-Before running tests, the Angular project needs to be deployed into a local server using `ng serve`. This command compiles the application and starts a development server
+### 2. Navigate to the Project Directory
 
-Run `npm run cypress:open` to execute the automated tests via [Cypress] https://github.com/cypress-io/cypress
+Navigate to the savis4 directory by running the following command:
 
-Once Cypress is open select "E2E testing" then select the preferred browser then Start. 
+```bash
+cd SAVIS4/savis4
+```
 
-Every feature/component has its own spec, clicking on them will start the automated tests for that specific feature or component.
+### 3. Install Dependencies
 
+Install all required packages by running:
+
+```bash
+npm install
+```
+
+### 4. Running the Application Locally
+
+To start the development server:
+
+```bash
+npm start
+```
+
+Then navigate to `http://localhost:4200/` in your browser. The application will automatically reload if you change any source files.
+
+# Testing
+
+SAVIS4 primarily uses Cypress for comprehensive end-to-end testing that simulates real user interactions and validates the entire application flow.
+
+## End-to-End (E2E) Testing with Cypress
+
+### Prerequisites
+
+Before running Cypress tests, ensure the Angular development server is running (see Step 4 in Setup Instructions: `npm start`).
+
+### Running Cypress in Interactive Mode
+
+To run Cypress in interactive mode (Note: Recording not possible in this mode):
+
+```bash
+npm run cypress:open
+```
+
+Select "E2E Testing", choose your preferred browser, and click Start. Click on any spec file to run the automated tests for that specific feature or component.
+
+### Running Cypress in Headless Mode (SAVIS Preference)
+
+To run Cypress in headless mode and generate videos:
+
+```bash
+npm run cypress:run
+```
+
+Test artifacts (videos and screenshots) will be automatically saved to the `cypress-artifacts/` directory with timestamped folders in the format `YYYY-MM-DD_HH-MM-SS`.
+
+## Unit Testing
+
+SAVIS4 includes light unit tests using Jest for redundant component-level testing. These are optional and primarily for quick validation during development.
+
+Run `npm run test:coverage` to execute unit tests and view coverage in `savis4/coverage/index.html`.
+
+
+# Building the Application
+
+To build the project for production deployment, run:
+
+```bash
+npm run build:prod
+```
+
+The build artifacts will be stored in the `dist/Savis4/` directory.
 
 # Deployment 
+
 The project was originally setup with Github Actions to automatically deploy the project to Github Pages. Normally when deploying the project, one would simply push their changes to the `main` branch and the deployment will be triggered automatically. However, because development is currently underway, the Github Actions is currently disabled for SAVIS4. However, the deployed project from about a year ago is still running from the previous SAVIS3 Github Actions Page.
 
 You can visit the old deployed project at [savis3](https://savias-c1f4d.web.app/login).
@@ -120,45 +183,48 @@ You can visit the old deployed project at [savis3](https://savias-c1f4d.web.app/
 If you forked the repository, you can deploy the project by changing the Firebase API keys in `environment` directory and running `firebase init` and `firebase deploy` commands. A more detailed instruction video can be found here: [Firebase Deployment](https://www.youtube.com/watch?v=UNCggEPZQ0c)
 
 # Developer Instructions 
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.18.
 
 ### Development server
+
 Run `ng serve` or `npm run start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ### Code scaffolding
+
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
 ### Build
+
 Run `npm run electron:build` to build the project. The build artifacts will be stored in the `dist/electron` directory.
 
 Currently the downloadable packages are in github releases https://github.com/syv0n/SAVIS4/releases/tag/v1.0.0
+
 - Savis4-Portable-Linux.zip (linux machines)
 - Savis4-Portable-Windows.zip (windows machines)
 
 Windows 
+
 1. Unzip the package
 2. Launch Savis4.exe
 
 Linux
+
 1. Unzip the package
 2. Make binary executable (chmod +x Savis4)
 3. Run ./Savis4
 
-
 ### Further help
+
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference page](https://angular.io/cli).
 
+# Important Notes
+
+* Node environment requires the `--openssl-legacy-provider` flag for compatibility with older OpenSSL versions. This is automatically included in the npm scripts.
+* All test artifacts from Cypress are automatically organized by date and timestamp and should NOT be committed to the repository unless for documentation purposes.
+* The project uses Angular CLI Version: 12.2.18 and requires TypeScript v4.3.5 for compatibility.
+
 # Contributors
-### SAVIS3 Team
-- Bikram Singh (bikramsingh@csus.edu)
-- Jason Yu (jasonyu@csus.edu)
-- Albin Shabu (albinshabu@csus.edu)
-- Emad Sabir (sunnysabir@csus.edu)
-- Vaibhav Jain (vaibhavjain@csus.edu)
-- Hetvi Patel (hetviapatel@csus.edu)
-- Sri Charan (skondragunta@csus.edu)
-- Hormoz Halimi (hormozhalimi@csus.edu)
-- Sarthak Bhalla (sarthakbhalla@csus.edu)
 
 ### SAVIS4 Team
 - Shayn Voon (shaynvoon@csus.edu)
