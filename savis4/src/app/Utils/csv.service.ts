@@ -7,6 +7,10 @@ export class CSVService {
 
   constructor() { }
 
+  static stripHtml(content: string): string {
+    return content ? content.replace(/<[^>]*>/g, '') : '';
+  }
+
   static dropTextFileOnTextArea(textAreaElement: HTMLTextAreaElement) {
     if (textAreaElement) {
       textAreaElement.addEventListener("dragover", (e: DragEvent) => {

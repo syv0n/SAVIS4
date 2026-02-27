@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Chart } from 'chart.js';
 import { SharedService } from '../../services/shared.service';
 import type { Paragraph, Table } from 'docx'
+import { CSVService } from '../../Utils/csv.service';
 
 @Component({
   selector: 'app-one-mean',
@@ -571,9 +572,9 @@ export class OneMeanComponent implements AfterViewInit, OnInit, OnDestroy {
   sampleSelect(e: any) {
     let link = ''
     if(e.target.value == "sample1") {
-      link = '../../../assets/samp1.csv'
+      link = 'assets/samp1.csv'
     } else {
-      link = '../../../assets/samp2.csv'
+      link = 'assets/samp2.csv'
     }
     fetch(link).then(data => data.text())
       .then((data) => {
@@ -845,7 +846,7 @@ export class OneMeanComponent implements AfterViewInit, OnInit, OnDestroy {
     if (file) {
       const reader = new FileReader()
       reader.onload = (e: ProgressEvent<FileReader>) => {
-        this.csvTextArea = e.target?.result as string
+        this.csvTextArea = CSVService.stripHtml(e.target?.result as string)
       };
       reader.readAsText(file)
     }

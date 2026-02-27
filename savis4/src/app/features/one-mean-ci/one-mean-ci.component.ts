@@ -7,6 +7,7 @@ import {Chart} from 'chart.js';
 import { TranslateService } from '@ngx-translate/core';
 import { CoverageChartService } from './services/coverage-chart.service';
 import { SharedService } from '../../services/shared.service';
+import { CSVService } from '../../Utils/csv.service';
 @Component({
   selector: 'app-one-mean-ci',
   templateUrl: './one-mean-ci.component.html',
@@ -677,13 +678,13 @@ export class OneMeanCIComponent implements OnInit, AfterViewInit, OnDestroy {
   sampleSelect(e: any) {
     let link = ''
     if(e.target.value == "sample1") {
-      link = '../../../assets/samp1.csv'
+      link = 'assets/samp1.csv'
     } else {
-      link = '../../../assets/samp2.csv'
+      link = 'assets/samp2.csv'
     }
     fetch(link).then(data => data.text())
       .then((data) => {
-        this.csvTextArea = data
+        this.csvTextArea = CSVService.stripHtml(data)
       })
   }
 

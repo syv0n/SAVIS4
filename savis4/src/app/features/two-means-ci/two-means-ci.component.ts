@@ -413,9 +413,9 @@ export class TwoMeansCIComponent
     this.csv = null;
     let link = '';
     if (e.target.value == 'sample1') {
-      link = '../../../assets/twomean_sample1.csv';
+      link = 'assets/twomean_sample1.csv';
     } else {
-      link = '../../../assets/twomean_sample2.csv';
+      link = 'assets/twomean_sample2.csv';
     }
     fetch(link)
       .then((data) => data.text())

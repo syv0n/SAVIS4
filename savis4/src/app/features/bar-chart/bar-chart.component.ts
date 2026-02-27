@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy } fr
 import { TranslateService } from '@ngx-translate/core'
 import { Chart } from 'chart.js'
 import { SharedService } from '../../services/shared.service'
+import { CSVService } from '../../Utils/csv.service'
 import type { Paragraph, Table } from 'docx';
 
 /**
@@ -210,13 +211,13 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
   sampleSelect(e: any) {
     let link = ''
     if(e.target.value == "sample1") {
-      link = '../../../assets/barSample1.csv'
+      link = 'assets/barSample1.csv'
     } else {
-      link = '../../../assets/barSample2.csv'
+      link = 'assets/barSample2.csv'
     }
     fetch(link).then(data => data.text())
       .then((data) => {
-        this.csvTextArea = data
+        this.csvTextArea = CSVService.stripHtml(data)
       })
   }
 
@@ -434,8 +435,23 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
    * @returns array
    */
   sortAlphaNumString(rawData: any) {
-    let numbers = rawData.filter((x: any) => !isNaN(Number(x))).sort((a: any, b: any)=>a-b).map((x: any) => `${Number(x)}`)
-    let strings = rawData.filter((x: any) => isNaN(Number(x))).sort( (a: any, b: any) => a.localeCompare(b))
+    const numericValues = rawData
+      .filter((x: any) => !isNaN(Number(x)))
+      .map((x: any) => Number(x))
+
+    let numbers: string[] = []
+    if (numericValues.length) {
+      const min = Math.min(...numericValues)
+      const max = Math.max(...numericValues)
+      for (let v = Math.floor(min); v <= Math.ceil(max); v++) {
+        numbers.push(String(v))
+      }
+    }
+
+    const strings = rawData
+      .filter((x: any) => isNaN(Number(x)))
+      .sort((a: any, b: any) => a.localeCompare(b))
+
     return numbers.concat(strings)
   }
 
@@ -524,7 +540,7 @@ export class BarChartComponent implements AfterViewInit, OnInit, OnDestroy {
     if (file) {
       const reader = new FileReader()
       reader.onload = (e: ProgressEvent<FileReader>) => {
-        this.csvTextArea = e.target?.result as string
+        this.csvTextArea = CSVService.stripHtml(e.target?.result as string)
       };
       reader.readAsText(file)
     }

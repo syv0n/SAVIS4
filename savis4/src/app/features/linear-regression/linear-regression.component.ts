@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SharedService } from '../../services/shared.service';
 import { ScatterPlotComponent } from './scatter-plot/scatter-plot.component';
+import { CSVService } from '../../Utils/csv.service';
 
 @Component({
   selector: 'app-linear-regression',
@@ -38,7 +39,7 @@ export class LinearRegressionComponent implements OnInit{
     if (file) {
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
-        this.csvContent = e.target?.result as string;
+        this.csvContent = CSVService.stripHtml(e.target?.result as string);
       };
       reader.readAsText(file);
     }
